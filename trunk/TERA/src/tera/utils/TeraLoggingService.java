@@ -4,6 +4,7 @@ import java.io.File;
 import java.util.logging.FileHandler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.logging.SimpleFormatter;
 
 
 public class TeraLoggingService
@@ -14,7 +15,12 @@ public class TeraLoggingService
 	{
 		Logger logger = Logger.getLogger("tera.local-peer-" + listenPort);
 		logger.setLevel(Level.ALL);
-		try { logger.addHandler(new FileHandler(logsFolder + File.separator + "local-peer-" + listenPort + ".log")); }
+		try
+		{ 
+			FileHandler handler = new FileHandler(logsFolder + File.separator + "local-peer-" + listenPort + ".log");
+			handler.setFormatter(new SimpleFormatter());
+			logger.addHandler(handler);
+		}
 		catch (Exception ex) { ex.printStackTrace(); }
 	}
 	
@@ -22,7 +28,12 @@ public class TeraLoggingService
 	{
 		Logger logger = Logger.getLogger("tera.simulator");
 		logger.setLevel(Level.ALL);
-		try { logger.addHandler(new FileHandler(logsFolder + File.separator + "simulation.log")); }
+		try
+		{ 
+			FileHandler handler = new FileHandler(logsFolder + File.separator + "simulation.log");
+			handler.setFormatter(new SimpleFormatter());
+			logger.addHandler(handler);
+		}
 		catch (Exception ex) { ex.printStackTrace(); }
 	}
 		
