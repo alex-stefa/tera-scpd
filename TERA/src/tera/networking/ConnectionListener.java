@@ -15,11 +15,13 @@ public class ConnectionListener extends Thread
 		this.connectionManager = connectionManager;
 	}
 
+	@Override
 	public void run()
 	{
 		try
 		{
 			serverSocket = new ServerSocket(connectionManager.getListenPort());
+			connectionManager.showMessage("Started listening on port " + connectionManager.getListenPort());
 		}
 		catch (Exception ex)
 		{
@@ -48,6 +50,7 @@ public class ConnectionListener extends Thread
 
 		try
 		{
+			connectionManager.showMessage("Stopped listening on port " + connectionManager.getListenPort());
 			serverSocket.close();
 		}
 		catch (Exception ex)

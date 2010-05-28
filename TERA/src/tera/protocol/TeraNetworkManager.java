@@ -20,6 +20,7 @@ public class TeraNetworkManager implements MessageHandler
 	
 	public TeraNetworkManager(int listenPort, int cyclonePeriod)
 	{
+		TeraLoggingService.initLogger(listenPort);
 		logger = TeraLoggingService.getLogger(listenPort);
 		topics = new Hashtable<Long, TopicOverlay>(50);
 		baseOverlay = new CycloneOverlay(this, cyclonePeriod);

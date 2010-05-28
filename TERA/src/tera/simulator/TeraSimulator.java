@@ -5,6 +5,7 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Properties;
@@ -24,6 +25,7 @@ public class TeraSimulator implements Runnable
 	
 	public TeraSimulator(String settingsFile)
 	{
+		TeraLoggingService.initSimulationLogger();
 		logger = TeraLoggingService.getSimulationLogger();
 		loadSettings(settingsFile);
 	}
@@ -87,11 +89,13 @@ public class TeraSimulator implements Runnable
 	@Override
 	public void run()
 	{
+		logger.info("Simulation started on " + new Date());
 		List<TeraNetworkManager> peers = new LinkedList<TeraNetworkManager>();
 		for (int port = portMin; port <= portMax; port++)
 			peers.add(new TeraNetworkManager(port, cyclonePeriod));
 		try { Thread.sleep(5000); }
 		catch (Exception ex) {}
 		for (TeraNetworkManager peer : peers) peer.diconnect();
+		logger.info("Simulation ended on " + new Date());
 	}
 }
