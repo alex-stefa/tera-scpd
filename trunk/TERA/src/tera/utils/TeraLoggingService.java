@@ -11,6 +11,12 @@ public class TeraLoggingService
 {
 	public static final String logsFolder = "logs";
 	
+	static
+	{
+		File file = new File(logsFolder);
+		if (!file.exists()) file.mkdir();
+	}
+	
 	public static void initLogger(int listenPort)
 	{
 		Logger logger = Logger.getLogger("tera.local-peer-" + listenPort);
