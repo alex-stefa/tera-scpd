@@ -1,12 +1,11 @@
 package tera;
 
+import tera.simulator.TeraSimulator;
+
 public class TeraPeer
 {
-
 	public static void main(String[] args)
 	{
-		// TODO Auto-generated method stub
-
+		(new TeraSimulator("settings.properties")).simulate();
 	}
-
 }

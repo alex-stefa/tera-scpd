@@ -21,6 +21,14 @@ public class Node implements Serializable
 		this.port = port;
 		this.geoHash = GeoHashingService.GetGeoHash(address);
 	}
+	
+	public Node(String address, int port)
+	{
+		this.address = address;
+		this.port = port;
+		this.geoHash = GeoHashingService.GetGeoHash(address);
+		this.id = this.geoHash * (1 << 16) + port;
+	}
 
 	@Override
 	public String toString()
