@@ -15,7 +15,7 @@ import tera.protocol.TeraNetworkManager;
 import tera.utils.TeraLoggingService;
 
 
-public class TeraSimulator
+public class TeraSimulator implements Runnable
 {
 	private int portMin, portMax;
 	private List<String> peerAddresses;
@@ -78,11 +78,20 @@ public class TeraSimulator
         	logger.log(Level.WARNING, "Could not parse peer list file!", ex);
         }
 	}
-	
-	
+		
 	public void simulate()
 	{
+		(new Thread(this)).start();
+	}
+
+	@Override
+	public void run()
+	{
+		List<TeraNetworkManager> peers = new LinkedList<TeraNetworkManager>();
 		for (int port = portMin; port <= portMax; port++)
-			new TeraNetworkManager(port, cyclonePeriod);
+			peers.add(new TeraNetworkManager(port, cyclonePeriod));
+		try { Thread.sleep(5000); }
+		catch (Exception ex) {}
+		for (TeraNetworkManager peer : peers) peer.diconnect();
 	}
 }

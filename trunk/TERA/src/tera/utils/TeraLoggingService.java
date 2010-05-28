@@ -1,5 +1,6 @@
 package tera.utils;
 
+import java.io.File;
 import java.util.logging.FileHandler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -12,17 +13,17 @@ public class TeraLoggingService
 	public static void initLogger(int listenPort)
 	{
 		Logger logger = Logger.getLogger("tera.local-peer-" + listenPort);
-		logger.setLevel(Level.ALL);
-		try { logger.addHandler(new FileHandler(logsFolder + "\\local-peer-" + listenPort + ".txt")); }
+		try { logger.addHandler(new FileHandler(logsFolder + File.separator + "local-peer-" + listenPort + ".log")); }
 		catch (Exception ex) { ex.printStackTrace(); }
+		logger.setLevel(Level.ALL);
 	}
 	
 	public static void initSimulationLogger()
 	{
 		Logger logger = Logger.getLogger("tera.simulator");
-		logger.setLevel(Level.ALL);
-		try { logger.addHandler(new FileHandler(logsFolder + "\\simulation.txt")); }
+		try { logger.addHandler(new FileHandler(logsFolder + File.separator + "simulation.log")); }
 		catch (Exception ex) { ex.printStackTrace(); }
+		logger.setLevel(Level.ALL);
 	}
 		
 	public static synchronized Logger getLogger(int listenPort)
