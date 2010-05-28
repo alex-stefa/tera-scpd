@@ -53,7 +53,7 @@ public class TeraNetworkManager implements MessageHandler
 	
 	public void addPeer(String remoteIP, int remoteListenPort)
 	{
-		
+		baseOverlay.addNode(new Node(remoteIP, remoteListenPort));		
 	}
 	
 	
