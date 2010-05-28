@@ -9,12 +9,12 @@ public class GeoHashingService
 	{
 		// TODO: find public geohashing services 
 		
-		String[] bytes = ip.split(".");
-		assert (bytes.length == 4);
+		String[] bytes = ip.split("[.]");
+		assert bytes.length == 4;
 		
 		long hash = 0;
 		for (int i = 0; i < 4; i++)
-			hash += (1 << (8 * i)) * Byte.parseByte(bytes[i]);
+			hash += (1 << (8 * i)) * Integer.parseInt(bytes[i]);
 
 		return hash;
 	}

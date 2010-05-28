@@ -11,13 +11,15 @@ import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import tera.protocol.TeraNetworkManager;
 import tera.utils.TeraLoggingService;
+
 
 public class TeraSimulator
 {
 	private int portMin, portMax;
 	private List<String> peerAddresses;
-	private int cycloneCycle;
+	private int cyclonePeriod;
 	private Logger logger;
 	
 	public TeraSimulator(String settingsFile)
@@ -30,7 +32,7 @@ public class TeraSimulator
 	{
 		portMin = 65000;
 		portMax = 65010;
-		cycloneCycle = 5;
+		cyclonePeriod = 5;
 		peerAddresses = new LinkedList<String>();
 		String peerFile = "peers.txt";
 
@@ -40,7 +42,7 @@ public class TeraSimulator
 			props.load(new FileInputStream(settingsFile));
 			portMin = Integer.parseInt(props.getProperty("port-min"));
 			portMax = Integer.parseInt(props.getProperty("port-max"));
-			cycloneCycle = Integer.parseInt(props.getProperty("cyclone-cycle-duration"));
+			cyclonePeriod = Integer.parseInt(props.getProperty("cyclone-period"));
 			peerFile = props.getProperty("peers-file").trim();
 		}
         catch(IOException ioe)
@@ -49,7 +51,7 @@ public class TeraSimulator
             props.setProperty("port-min", portMin + "");
             props.setProperty("port-max", portMax + "");
             props.setProperty("peers-file", peerFile);
-            props.setProperty("cyclone-cycle-duration", cycloneCycle + "");
+            props.setProperty("cyclone-period", cyclonePeriod + "");
             try
             {
             	props.store(new FileOutputStream(settingsFile), "Tera simulation config file");
@@ -80,7 +82,7 @@ public class TeraSimulator
 	
 	public void simulate()
 	{
-		
-		
+		for (int port = portMin; port <= portMax; port++)
+			new TeraNetworkManager(port, cyclonePeriod);
 	}
 }
