@@ -6,6 +6,6 @@
 	<classpathentry kind="lib" path="lib/commons-configuration-1.6.jar"/>
 	<classpathentry kind="lib" path="lib/commons-lang-2.5.jar"/>
 	<classpathentry kind="lib" path="lib/commons-logging-1.1.1.jar"/>
-	<classpathentry kind="lib" path="lib/jade.jar"/>
+	<classpathentry kind="lib" path="lib/jade.jar" sourcepath="C:/lib/jade/JADE-src-4.0/jade/src"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
