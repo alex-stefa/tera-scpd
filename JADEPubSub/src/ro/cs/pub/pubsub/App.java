@@ -13,15 +13,16 @@ import java.util.Set;
 
 import org.apache.commons.configuration.PropertiesConfiguration;
 
-import ro.cs.pub.pubsub.agent.AgentArguments;
-import ro.cs.pub.pubsub.agent.PubSubAgent;
+import ro.cs.pub.pubsub.agent.logging.LoggingAgent;
+import ro.cs.pub.pubsub.agent.tera.TeraAgent;
+import ro.cs.pub.pubsub.agent.tera.TeraAgentArguments;
 
 public class App {
-	private static final String AGENT_PREFIX = "a_";
+	private static final String TERA_AGENT_PREFIX = "a_";
+	private static final String LOGGING_AGENT = "logger";
 
 	public static void main(String args[]) throws Exception {
-		PropertiesConfiguration config = new PropertiesConfiguration(
-				args[0]);
+		PropertiesConfiguration config = new PropertiesConfiguration(args[0]);
 		App app = new App(config);
 		app.start();
 	}
@@ -48,15 +49,22 @@ public class App {
 			rma.start();
 		}
 
+		// setup agents
 		Set<AgentController> agents = new HashSet<AgentController>();
-		
+
+		// TERA agents
 		int agentCount = configuration.getInt("pubsub.agent.count");
 		for (int id = 0; id < agentCount; id++) {
-			Object[] args = {new AgentArguments()};
-			agents.add(container.createNewAgent(AGENT_PREFIX + id,
-					PubSubAgent.class.getCanonicalName(), args));
+			Object[] args = { new TeraAgentArguments() };
+			agents.add(container.createNewAgent(TERA_AGENT_PREFIX + id,
+					TeraAgent.class.getCanonicalName(), args));
 		}
-		
+
+		// logging service
+		Object[] args = {};
+		agents.add(container.createNewAgent(LOGGING_AGENT, LoggingAgent.class
+				.getCanonicalName(), args));
+
 		System.out.println("Launching agents...");
 		for (AgentController ac : agents) {
 			ac.start();
