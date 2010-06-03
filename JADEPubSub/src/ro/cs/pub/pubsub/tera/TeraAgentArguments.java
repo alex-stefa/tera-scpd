@@ -1,4 +1,4 @@
-package ro.cs.pub.pubsub.agent.tera;
+package ro.cs.pub.pubsub.tera;
 
 public class TeraAgentArguments {
 

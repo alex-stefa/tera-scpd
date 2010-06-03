@@ -1,4 +1,4 @@
-package ro.cs.pub.pubsub.agent.logging;
+package ro.cs.pub.pubsub.logging;
 
 import jade.domain.FIPAAgentManagement.ServiceDescription;
 
@@ -8,7 +8,7 @@ import java.util.LinkedList;
 import ro.cs.pub.pubsub.Names;
 import ro.cs.pub.pubsub.agent.AgentContext;
 import ro.cs.pub.pubsub.agent.BaseAgent;
-import ro.cs.pub.pubsub.agent.logging.behaviour.LoggingMessageReceiver;
+import ro.cs.pub.pubsub.logging.behaviour.LoggingMessageReceiver;
 import ro.cs.pub.pubsub.message.MessageFactory;
 
 public class LoggingAgent extends BaseAgent {
@@ -20,7 +20,8 @@ public class LoggingAgent extends BaseAgent {
 	protected void setup() {
 		super.setup();
 
-		this.context = new AgentContext(new MessageFactory());
+		context = new AgentContext();
+		context.setMessageFactory(new MessageFactory());
 
 		addBehaviour(new LoggingMessageReceiver(this));
 	}

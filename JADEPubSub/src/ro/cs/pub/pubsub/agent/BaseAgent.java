@@ -14,6 +14,8 @@ import jade.domain.FIPAAgentManagement.ServiceDescription;
 public abstract class BaseAgent extends Agent {
 	private static final long serialVersionUID = 1L;
 
+	private long conversationId;
+
 	@Override
 	protected void setup() {
 		super.setup();
@@ -79,6 +81,11 @@ public abstract class BaseAgent extends Agent {
 
 	public void print(Object str) {
 		System.out.println(getAID().getLocalName() + ": " + str);
+	}
+
+	public String generateConversationId() {
+		long cId = conversationId++;
+		return "C" + getAID() + "_" + System.currentTimeMillis() + "_" + cId;
 	}
 
 	@Override

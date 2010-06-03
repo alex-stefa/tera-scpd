@@ -1,4 +1,4 @@
-package ro.cs.pub.pubsub.agent.tera.behaviour;
+package ro.cs.pub.pubsub.tera.behaviour;
 
 import jade.core.AID;
 import jade.core.behaviours.TickerBehaviour;
@@ -6,8 +6,8 @@ import jade.core.behaviours.TickerBehaviour;
 import java.util.Set;
 
 import ro.cs.pub.pubsub.Names;
-import ro.cs.pub.pubsub.agent.tera.TeraAgent;
 import ro.cs.pub.pubsub.message.LoggingMessageContent;
+import ro.cs.pub.pubsub.tera.TeraAgent;
 
 public class TeraNetDetector extends TickerBehaviour {
 	private static final long serialVersionUID = 1L;

@@ -1,11 +1,11 @@
-package ro.cs.pub.pubsub.agent.logging.behaviour;
+package ro.cs.pub.pubsub.logging.behaviour;
 
 import jade.lang.acl.ACLMessage;
 import jade.lang.acl.MessageTemplate;
 import ro.cs.pub.pubsub.Names;
 import ro.cs.pub.pubsub.agent.BaseTemplateBehaviour;
-import ro.cs.pub.pubsub.agent.logging.LoggingAgent;
 import ro.cs.pub.pubsub.exception.MessageException;
+import ro.cs.pub.pubsub.logging.LoggingAgent;
 import ro.cs.pub.pubsub.message.MessageContent;
 import ro.cs.pub.pubsub.message.MessageFactory;
 

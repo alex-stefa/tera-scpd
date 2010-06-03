@@ -13,9 +13,9 @@ import java.util.Set;
 
 import org.apache.commons.configuration.PropertiesConfiguration;
 
-import ro.cs.pub.pubsub.agent.logging.LoggingAgent;
-import ro.cs.pub.pubsub.agent.tera.TeraAgent;
-import ro.cs.pub.pubsub.agent.tera.TeraAgentArguments;
+import ro.cs.pub.pubsub.logging.LoggingAgent;
+import ro.cs.pub.pubsub.tera.TeraAgent;
+import ro.cs.pub.pubsub.tera.TeraAgentArguments;
 
 public class App {
 	private static final String TERA_AGENT_PREFIX = "a_";

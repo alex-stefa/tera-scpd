@@ -1,17 +1,19 @@
-package ro.cs.pub.pubsub.agent.tera;
+package ro.cs.pub.pubsub.tera;
 
 import jade.core.AID;
 import jade.domain.FIPAAgentManagement.ServiceDescription;
 import jade.lang.acl.ACLMessage;
 
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.LinkedList;
 
 import ro.cs.pub.pubsub.Names;
 import ro.cs.pub.pubsub.agent.BaseAgent;
-import ro.cs.pub.pubsub.agent.tera.behaviour.TeraNetDetector;
 import ro.cs.pub.pubsub.message.LoggingMessageContent;
 import ro.cs.pub.pubsub.message.MessageFactory;
+import ro.cs.pub.pubsub.protocol.AccessPointProvider;
+import ro.cs.pub.pubsub.tera.behaviour.TeraNetDetector;
 
 public class TeraAgent extends BaseAgent {
 	private static final long serialVersionUID = 1L;
@@ -24,7 +26,10 @@ public class TeraAgent extends BaseAgent {
 	protected void setup() {
 		super.setup();
 
-		context = new TeraAgentContext(new MessageFactory());
+		context = new TeraAgentContext();
+		context.setMessageFactory(new MessageFactory());
+		context.setAccessPointProvider(new AccessPointProvider());
+		context.setNeighbours(new HashSet<AID>());
 
 		addBehaviour(new TeraNetDetector(this, DISCOVERY_UPDATE_PERIOD));
 	}
