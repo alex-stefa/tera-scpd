@@ -14,4 +14,9 @@ public class AgentResponse implements RandomWalkResponse {
 	public AID getAgent() {
 		return agent;
 	}
+
+	@Override
+	public String toString() {
+		return "AgentResponse [agent=" + agent + "]";
+	}
 }

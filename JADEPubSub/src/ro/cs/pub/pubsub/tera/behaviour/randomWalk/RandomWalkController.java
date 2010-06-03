@@ -1,34 +1,40 @@
 package ro.cs.pub.pubsub.tera.behaviour.randomWalk;
 
 import jade.core.AID;
-import jade.core.behaviours.FSMBehaviour;
 import jade.core.behaviours.OneShotBehaviour;
+import jade.core.behaviours.SequentialBehaviour;
 import jade.lang.acl.ACLMessage;
+import jade.lang.acl.MessageTemplate;
 import ro.cs.pub.pubsub.Names;
+import ro.cs.pub.pubsub.agent.BaseTemplateBehaviour;
 import ro.cs.pub.pubsub.exception.MessageException;
 import ro.cs.pub.pubsub.message.MessageFactory;
 import ro.cs.pub.pubsub.tera.TeraAgent;
 import ro.cs.pub.pubsub.tera.behaviour.randomWalk.message.RandomWalkQuery;
 import ro.cs.pub.pubsub.tera.behaviour.randomWalk.message.RandomWalkRequest;
 
-public class RandomWalkController extends FSMBehaviour {
+public class RandomWalkController extends SequentialBehaviour {
 	private static final long serialVersionUID = 1L;
-
-	private static final String STATE_MESSAGE_SENDING = "message-sending";
 
 	private final TeraAgent agent;
 	private final AID peer;
 	private final int ttl;
 	private final RandomWalkQuery query;
 
-	public RandomWalkController(TeraAgent agent, AID peer, int ttl, RandomWalkQuery query) {
+	private final String conversationId;
+
+	public RandomWalkController(TeraAgent agent, AID peer, int ttl,
+			RandomWalkQuery query) {
 		super(agent);
 		this.agent = agent;
 		this.peer = peer;
 		this.ttl = ttl;
 		this.query = query;
 
-		registerFirstState(new MessageSender(), STATE_MESSAGE_SENDING);
+		conversationId = agent.generateConversationId();
+
+		addSubBehaviour(new MessageSender());
+		addSubBehaviour(new MessageReceiver(agent));
 	}
 
 	class MessageSender extends OneShotBehaviour {
@@ -40,7 +46,7 @@ public class RandomWalkController extends FSMBehaviour {
 			ACLMessage msg = mf.buildMessage(ACLMessage.REQUEST,
 					Names.PROTOCOL_RANDOM_WALK);
 			msg.addReceiver(peer);
-			msg.setConversationId(agent.generateConversationId());
+			msg.setConversationId(conversationId);
 			RandomWalkRequest content = new RandomWalkRequest( //
 					agent.getAID(), ttl, query);
 			try {
@@ -49,6 +55,27 @@ public class RandomWalkController extends FSMBehaviour {
 			} catch (MessageException e) {
 				e.printStackTrace();
 			}
+		}
+	}
+
+	class MessageReceiver extends BaseTemplateBehaviour<TeraAgent> {
+		private static final long serialVersionUID = 1L;
+
+		public MessageReceiver(TeraAgent agent) {
+			super(agent);
+		}
+
+		@Override
+		protected MessageTemplate setupTemplate() {
+			return MessageTemplate.and(
+					//
+					MessageTemplate.MatchProtocol(Names.PROTOCOL_RANDOM_WALK),
+					MessageTemplate.MatchPerformative(ACLMessage.INFORM));
+		}
+
+		@Override
+		protected void onMessage(ACLMessage message) {
+			
 		}
 	}
 }

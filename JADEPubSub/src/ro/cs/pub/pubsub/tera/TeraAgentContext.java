@@ -9,7 +9,7 @@ import ro.cs.pub.pubsub.protocol.AccessPointProvider;
 
 public class TeraAgentContext extends AgentContext {
 	private AccessPointProvider accessPointProvider;
-	private Set<AID> neighbours;
+	private Set<AID> neighbors;
 	
 	public void setAccessPointProvider(AccessPointProvider accessPointProvider) {
 		this.accessPointProvider = accessPointProvider;
@@ -19,11 +19,11 @@ public class TeraAgentContext extends AgentContext {
 		return accessPointProvider;
 	}
 	
-	public void setNeighbours(Set<AID> neighbours) {
-		this.neighbours = neighbours;
+	public void setNeighbors(Set<AID> neighbours) {
+		this.neighbors = neighbours;
 	}
 	
-	public Set<AID> getNeighbours() {
-		return neighbours;
+	public Set<AID> getNeighbors() {
+		return neighbors;
 	}
 }

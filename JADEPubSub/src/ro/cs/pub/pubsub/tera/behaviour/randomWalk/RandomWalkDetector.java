@@ -3,11 +3,6 @@ package ro.cs.pub.pubsub.tera.behaviour.randomWalk;
 import jade.core.AID;
 import jade.lang.acl.ACLMessage;
 import jade.lang.acl.MessageTemplate;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
-
 import ro.cs.pub.pubsub.Names;
 import ro.cs.pub.pubsub.agent.BaseTemplateBehaviour;
 import ro.cs.pub.pubsub.exception.MessageException;
@@ -18,6 +13,7 @@ import ro.cs.pub.pubsub.tera.behaviour.randomWalk.message.DistanceQuery;
 import ro.cs.pub.pubsub.tera.behaviour.randomWalk.message.RandomWalkQuery;
 import ro.cs.pub.pubsub.tera.behaviour.randomWalk.message.RandomWalkRequest;
 import ro.cs.pub.pubsub.tera.behaviour.randomWalk.message.TopicQuery;
+import ro.cs.pub.pubsub.util.Shuffle;
 
 public class RandomWalkDetector extends BaseTemplateBehaviour<TeraAgent> {
 	private static final long serialVersionUID = 1L;
@@ -42,7 +38,7 @@ public class RandomWalkDetector extends BaseTemplateBehaviour<TeraAgent> {
 			content = (RandomWalkRequest) mf.extractContent(message);
 			RandomWalkQuery query = content.getQuery();
 
-			if (query instanceof DistanceQuery && content.getTTL() == 0) {
+			if (query instanceof DistanceQuery && content.getTTL() <= 0) {
 				sendToOrigin(mf, message, content.getOrigin(),
 						new AgentResponse(agent.getAID()));
 				return;
@@ -59,7 +55,7 @@ public class RandomWalkDetector extends BaseTemplateBehaviour<TeraAgent> {
 				}
 			}
 
-			forward(message);
+			forward(mf, message, content);
 		} catch (MessageException e) {
 			e.printStackTrace();
 		}
@@ -69,32 +65,32 @@ public class RandomWalkDetector extends BaseTemplateBehaviour<TeraAgent> {
 			AID origin, AgentResponse responseContent) throws MessageException {
 		ACLMessage reply = originalMessage.createReply();
 		reply.setPerformative(ACLMessage.INFORM);
-		
-		// we only need the conversation id
-		reply.clearAllReceiver();
-		reply.clearAllReplyTo();
-		
+
+		prepare(reply);
+
 		reply.addReceiver(origin);
-		
 		mf.fillContent(reply, responseContent);
 		agent.send(reply);
 	}
 
-	private void forward(ACLMessage message) {
-		Set<AID> neighbours = agent.getContext().getNeighbours();
-		if (neighbours.size() == 1) {
+	private void forward(MessageFactory mf, ACLMessage originalMessage,
+			RandomWalkRequest randomWalkRequest) throws MessageException {
+		AID receiver = Shuffle.shuffle(agent.getContext().getNeighbors(),
+				originalMessage.getSender());
+		if (receiver == null) {
 			return;
 		}
-		
-		List<AID> ns = new ArrayList<AID>(neighbours);
-		ns.remove(message.getSender());
-		int r = (int) Math.random() * ns.size();
-		AID receiver = ns.get(r);
-		
+
+		prepare(originalMessage);
+
+		originalMessage.addReceiver(receiver);
+		mf.fillContent(originalMessage, randomWalkRequest.decreaseTTL());
+		agent.send(originalMessage);
+	}
+
+	private void prepare(ACLMessage message) {
+		// we only need the conversation id
 		message.clearAllReceiver();
 		message.clearAllReplyTo();
-		
-		message.addReceiver(receiver);
-		agent.send(message);
 	}
 }

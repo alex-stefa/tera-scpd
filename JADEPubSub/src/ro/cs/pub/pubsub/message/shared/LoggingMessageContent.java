@@ -1,4 +1,6 @@
-package ro.cs.pub.pubsub.message;
+package ro.cs.pub.pubsub.message.shared;
+
+import ro.cs.pub.pubsub.message.MessageContent;
 
 public class LoggingMessageContent implements MessageContent {
 	private static final long serialVersionUID = 1L;
