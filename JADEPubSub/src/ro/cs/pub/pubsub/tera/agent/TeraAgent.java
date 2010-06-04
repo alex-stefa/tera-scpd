@@ -1,25 +1,21 @@
-package ro.cs.pub.pubsub.tera;
+package ro.cs.pub.pubsub.tera.agent;
 
 import jade.core.AID;
-import jade.core.behaviours.WakerBehaviour;
 import jade.domain.FIPAAgentManagement.ServiceDescription;
 import jade.lang.acl.ACLMessage;
 
 import java.util.Collection;
-import java.util.HashSet;
 import java.util.LinkedList;
 
 import ro.cs.pub.pubsub.Names;
 import ro.cs.pub.pubsub.agent.BaseAgent;
 import ro.cs.pub.pubsub.message.MessageFactory;
 import ro.cs.pub.pubsub.message.shared.LoggingMessageContent;
-import ro.cs.pub.pubsub.protocol.AccessPointProvider;
 import ro.cs.pub.pubsub.tera.behaviour.TeraNetDetector;
-import ro.cs.pub.pubsub.tera.behaviour.randomWalk.RandomWalkController;
-import ro.cs.pub.pubsub.tera.behaviour.randomWalk.RandomWalkDetector;
-import ro.cs.pub.pubsub.tera.behaviour.randomWalk.message.DistanceQuery;
+import ro.cs.pub.pubsub.tera.behaviour.randomWalk.RandomWalkResponder;
 import ro.cs.pub.pubsub.tera.behaviour.shuffle.ShufflingInitiator;
 import ro.cs.pub.pubsub.tera.behaviour.shuffle.ShufflingResponder;
+import ro.cs.pub.pubsub.tera.behaviour.shuffle.ViewGenerator;
 
 public class TeraAgent extends BaseAgent {
 	private static final long serialVersionUID = 1L;
@@ -29,6 +25,8 @@ public class TeraAgent extends BaseAgent {
 	private static final long DISCOVERY_UPDATE_PERIOD = 100;
 	private static final int DISCOVERY_AGENT_COUNT = 5;
 	private static final long SHUFFLING_PERIOD = 2000;
+	private static final int NEIGHBORS_MAX = 5;
+	private static final int SHUFFLING_VIEW_SIZE = 5;
 
 	private TeraAgentContext context;
 
@@ -39,25 +37,28 @@ public class TeraAgent extends BaseAgent {
 		context = new TeraAgentContext();
 		context.setMessageFactory(new MessageFactory());
 		context.setAccessPointProvider(new AccessPointProvider());
-		context.setNeighbors(new HashSet<AID>());
+		context.setNeighborProvider(new NeighborProvider(NEIGHBORS_MAX));
+		context.setViewGenerator(new ViewGenerator(this));
 
 		addBehaviour(new TeraNetDetector(this, //
 				DISCOVERY_UPDATE_PERIOD, DISCOVERY_AGENT_COUNT));
-		addBehaviour(new RandomWalkDetector(this));
-		addBehaviour(new ShufflingInitiator(this, SHUFFLING_PERIOD));
+		addBehaviour(new RandomWalkResponder(this));
+		addBehaviour(new ShufflingInitiator(this, SHUFFLING_PERIOD, SHUFFLING_VIEW_SIZE));
 		addBehaviour(new ShufflingResponder(this));
 
-		if (CC < 0) {
-			addBehaviour(new WakerBehaviour(this, 2000) {
-				private static final long serialVersionUID = 1L;
-				
-				@Override
-				protected void onWake() {
-					AID peer = TeraAgent.this.getContext().getNeighbors().iterator().next();
-					addBehaviour(new RandomWalkController(TeraAgent.this, peer, 5, new DistanceQuery()));
-				}
-			});
-		}
+//		if (CC < 0) {
+//			addBehaviour(new WakerBehaviour(this, 2000) {
+//				private static final long serialVersionUID = 1L;
+//
+//				@Override
+//				protected void onWake() {
+//					AID peer = TeraAgent.this.getContext().getNeighbors()
+//							.iterator().next();
+//					addBehaviour(new RandomWalkInitiator(TeraAgent.this, peer,
+//							5, new DistanceQuery()));
+//				}
+//			});
+//		}
 
 		CC++;
 	}

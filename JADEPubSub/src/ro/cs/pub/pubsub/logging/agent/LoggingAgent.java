@@ -1,4 +1,4 @@
-package ro.cs.pub.pubsub.logging;
+package ro.cs.pub.pubsub.logging.agent;
 
 import jade.domain.FIPAAgentManagement.ServiceDescription;
 

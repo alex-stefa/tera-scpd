@@ -3,22 +3,29 @@ package ro.cs.pub.pubsub.tera.behaviour.randomWalk;
 import jade.core.AID;
 import jade.lang.acl.ACLMessage;
 import jade.lang.acl.MessageTemplate;
+
+import java.util.Iterator;
+
 import ro.cs.pub.pubsub.Names;
 import ro.cs.pub.pubsub.agent.BaseTemplateBehaviour;
 import ro.cs.pub.pubsub.exception.MessageException;
 import ro.cs.pub.pubsub.message.MessageFactory;
-import ro.cs.pub.pubsub.tera.TeraAgent;
+import ro.cs.pub.pubsub.tera.agent.NeighborProvider;
+import ro.cs.pub.pubsub.tera.agent.TeraAgent;
 import ro.cs.pub.pubsub.tera.behaviour.randomWalk.message.AgentResponse;
 import ro.cs.pub.pubsub.tera.behaviour.randomWalk.message.DistanceQuery;
 import ro.cs.pub.pubsub.tera.behaviour.randomWalk.message.RandomWalkQuery;
 import ro.cs.pub.pubsub.tera.behaviour.randomWalk.message.RandomWalkRequest;
 import ro.cs.pub.pubsub.tera.behaviour.randomWalk.message.TopicQuery;
-import ro.cs.pub.pubsub.util.Shuffle;
 
-public class RandomWalkDetector extends BaseTemplateBehaviour<TeraAgent> {
+/**
+ * Detects random walk requests. Tries to answer them or propagates the
+ * requests.
+ */
+public class RandomWalkResponder extends BaseTemplateBehaviour<TeraAgent> {
 	private static final long serialVersionUID = 1L;
 
-	public RandomWalkDetector(TeraAgent agent) {
+	public RandomWalkResponder(TeraAgent agent) {
 		super(agent);
 	}
 
@@ -75,9 +82,21 @@ public class RandomWalkDetector extends BaseTemplateBehaviour<TeraAgent> {
 
 	private void forward(MessageFactory mf, ACLMessage originalMessage,
 			RandomWalkRequest randomWalkRequest) throws MessageException {
-		AID receiver = Shuffle.shuffle(agent.getContext().getNeighbors(),
-				originalMessage.getSender());
+		// find the current set of neighbors and pick a random one
+		NeighborProvider np = agent.getContext().getNeighborProvider();
+		
+		AID receiver = null;
+		Iterator<AID> it = np.randomIterator();
+		while (it.hasNext()) {
+			AID r = it.next();
+			if (!r.equals(originalMessage.getSender())) {
+				// stop when we find a suitable receiver
+				receiver = r;
+				break;
+			}
+		}
 		if (receiver == null) {
+			// we have no neighbors to forward the message to
 			return;
 		}
 
@@ -88,6 +107,11 @@ public class RandomWalkDetector extends BaseTemplateBehaviour<TeraAgent> {
 		agent.send(originalMessage);
 	}
 
+	/**
+	 * Clears unnecessary fields.
+	 * 
+	 * @param message
+	 */
 	private void prepare(ACLMessage message) {
 		// we only need the conversation id
 		message.clearAllReceiver();

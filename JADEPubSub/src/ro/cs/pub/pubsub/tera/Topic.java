@@ -1,4 +1,4 @@
-package ro.cs.pub.pubsub.protocol;
+package ro.cs.pub.pubsub.tera;
 
 public class Topic {
 	private final String id;

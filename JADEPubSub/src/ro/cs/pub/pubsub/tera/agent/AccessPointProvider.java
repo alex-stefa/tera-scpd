@@ -1,12 +1,14 @@
-package ro.cs.pub.pubsub.protocol;
+package ro.cs.pub.pubsub.tera.agent;
 
 import jade.core.AID;
 
 import java.util.HashMap;
 import java.util.Map;
 
+import ro.cs.pub.pubsub.tera.Topic;
+
 /**
- * Provides one agent for a given topic.
+ * Provides one agent for each known topic.
  * 
  * @author Mihai Paraschiv
  */

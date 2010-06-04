@@ -1,6 +1,6 @@
 package ro.cs.pub.pubsub.tera.behaviour.randomWalk.message;
 
-import ro.cs.pub.pubsub.protocol.Topic;
+import ro.cs.pub.pubsub.tera.Topic;
 
 public class TopicQuery implements RandomWalkQuery {
 	private static final long serialVersionUID = 1L;

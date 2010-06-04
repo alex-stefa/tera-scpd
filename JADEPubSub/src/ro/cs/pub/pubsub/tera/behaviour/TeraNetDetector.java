@@ -6,8 +6,8 @@ import jade.core.behaviours.TickerBehaviour;
 import java.util.Set;
 
 import ro.cs.pub.pubsub.Names;
-import ro.cs.pub.pubsub.message.shared.LoggingMessageContent;
-import ro.cs.pub.pubsub.tera.TeraAgent;
+import ro.cs.pub.pubsub.tera.agent.NeighborProvider;
+import ro.cs.pub.pubsub.tera.agent.TeraAgent;
 
 public class TeraNetDetector extends TickerBehaviour {
 	private static final long serialVersionUID = 1L;
@@ -26,11 +26,9 @@ public class TeraNetDetector extends TickerBehaviour {
 		Set<AID> peers = agent.findAgents(Names.SERVICE_TERA);
 
 		if (peers.size() >= agentCount) {
-			LoggingMessageContent c = new LoggingMessageContent("Found "
-					+ agentCount + " agents.");
-			agent.print(c);
+			NeighborProvider np = agent.getContext().getNeighborProvider();
 			for (AID peer : peers) {
-				agent.getContext().getNeighbors().add(peer);
+				np.add(peer);
 			}
 			stop();
 		}
