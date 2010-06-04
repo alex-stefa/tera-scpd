@@ -1,15 +1,16 @@
 package ro.cs.pub.pubsub.agent;
 
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Set;
-
 import jade.core.AID;
 import jade.core.Agent;
 import jade.domain.DFService;
 import jade.domain.FIPAException;
 import jade.domain.FIPAAgentManagement.DFAgentDescription;
+import jade.domain.FIPAAgentManagement.SearchConstraints;
 import jade.domain.FIPAAgentManagement.ServiceDescription;
+
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
 
 public abstract class BaseAgent extends Agent {
 	private static final long serialVersionUID = 1L;
@@ -51,12 +52,7 @@ public abstract class BaseAgent extends Agent {
 		DFService.register(this, dfd);
 	}
 
-	/**
-	 * Searches for agents.
-	 * 
-	 * @param serviceType
-	 */
-	public Set<AID> findAgents(String serviceType) {
+	public Set<AID> findAgents(String serviceType, SearchConstraints constraints) {
 		DFAgentDescription template = new DFAgentDescription();
 		ServiceDescription sd = new ServiceDescription();
 		sd.setType(serviceType);
@@ -64,7 +60,7 @@ public abstract class BaseAgent extends Agent {
 
 		DFAgentDescription[] ds;
 		try {
-			ds = DFService.search(this, template);
+			ds = DFService.search(this, template, constraints);
 		} catch (FIPAException e) {
 			throw new RuntimeException(e);
 		}
@@ -77,6 +73,10 @@ public abstract class BaseAgent extends Agent {
 		agents.remove(getAID());
 
 		return agents;
+	}
+	
+	public Set<AID> findAgents(String serviceType) {
+		return findAgents(serviceType, null);
 	}
 
 	public void print(Object str) {

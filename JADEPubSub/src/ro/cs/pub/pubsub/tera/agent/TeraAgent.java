@@ -20,12 +20,10 @@ import ro.cs.pub.pubsub.tera.behaviour.shuffle.ViewGenerator;
 public class TeraAgent extends BaseAgent {
 	private static final long serialVersionUID = 1L;
 
-	private static int CC = 0;
-
 	private static final long DISCOVERY_UPDATE_PERIOD = 100;
-	private static final int DISCOVERY_AGENT_COUNT = 5;
-	private static final long SHUFFLING_PERIOD = 2000;
-	private static final int NEIGHBORS_MAX = 5;
+	private static final int DISCOVERY_AGENT_COUNT = 10;
+	private static final long SHUFFLING_PERIOD = 10000;
+	private static final int NEIGHBORS_MAX = 30;
 	private static final int SHUFFLING_VIEW_SIZE = 5;
 
 	private TeraAgentContext context;
@@ -33,34 +31,32 @@ public class TeraAgent extends BaseAgent {
 	@Override
 	protected void setup() {
 		super.setup();
-
+		
 		context = new TeraAgentContext();
 		context.setMessageFactory(new MessageFactory());
 		context.setAccessPointProvider(new AccessPointProvider());
 		context.setNeighborProvider(new NeighborProvider(NEIGHBORS_MAX));
 		context.setViewGenerator(new ViewGenerator(this));
 
+		// start the agent at a random time
+//		addBehaviour(new WakerBehaviour(this, (int)Math.random() * 500) {
+//			private static final long serialVersionUID = 1L;
+//
+//			@Override
+//			protected void onWake() {
+//				setupBehaviors();
+//			}
+//		});
+		
+		setupBehaviors();
+	}
+
+	protected void setupBehaviors() {
 		addBehaviour(new TeraNetDetector(this, //
 				DISCOVERY_UPDATE_PERIOD, DISCOVERY_AGENT_COUNT));
 		addBehaviour(new RandomWalkResponder(this));
 		addBehaviour(new ShufflingInitiator(this, SHUFFLING_PERIOD, SHUFFLING_VIEW_SIZE));
 		addBehaviour(new ShufflingResponder(this));
-
-//		if (CC < 0) {
-//			addBehaviour(new WakerBehaviour(this, 2000) {
-//				private static final long serialVersionUID = 1L;
-//
-//				@Override
-//				protected void onWake() {
-//					AID peer = TeraAgent.this.getContext().getNeighbors()
-//							.iterator().next();
-//					addBehaviour(new RandomWalkInitiator(TeraAgent.this, peer,
-//							5, new DistanceQuery()));
-//				}
-//			});
-//		}
-
-		CC++;
 	}
 
 	@Override

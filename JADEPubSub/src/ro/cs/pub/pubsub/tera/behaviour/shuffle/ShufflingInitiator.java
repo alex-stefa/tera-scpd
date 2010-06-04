@@ -40,7 +40,7 @@ public class ShufflingInitiator extends TickerBehaviour {
 			msg.addReceiver(view.getReceiver());
 			
 			// build the content
-			ShufflingMessage content = new ShufflingMessage(view.getNeighbors(), true);
+			ShufflingMessage content = new ShufflingMessage(view.getNeighbors(), false);
 			mf.fillContent(msg, content);
 			
 			// send the message

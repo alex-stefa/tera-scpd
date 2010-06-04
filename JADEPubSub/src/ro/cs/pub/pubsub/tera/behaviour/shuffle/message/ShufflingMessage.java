@@ -10,24 +10,24 @@ public class ShufflingMessage implements MessageContent {
 	private static final long serialVersionUID = 1L;
 
 	private final Set<AID> neighbors;
-	private final boolean first;
+	private final boolean reply;
 
-	public ShufflingMessage(Set<AID> neighbors, boolean first) {
+	public ShufflingMessage(Set<AID> neighbors, boolean reply) {
 		this.neighbors = neighbors;
-		this.first = first;
+		this.reply = reply;
 	}
-	
+
 	public Set<AID> getNeighbors() {
 		return neighbors;
 	}
-	
-	public boolean isFirst() {
-		return first;
+
+	public boolean isReply() {
+		return reply;
 	}
 
 	@Override
 	public String toString() {
-		return "ShuffleMessage [first=" + first + ", neighbors=" + neighbors
+		return "ShufflingMessage [neighbors=" + neighbors + ", reply=" + reply
 				+ "]";
 	}
 }

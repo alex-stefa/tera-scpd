@@ -3,11 +3,15 @@ package ro.cs.pub.pubsub.tera.behaviour;
 import jade.core.AID;
 import jade.core.behaviours.TickerBehaviour;
 
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Random;
 
 import ro.cs.pub.pubsub.Names;
 import ro.cs.pub.pubsub.tera.agent.NeighborProvider;
 import ro.cs.pub.pubsub.tera.agent.TeraAgent;
+import ro.cs.pub.pubsub.util.RandomIterator;
 
 public class TeraNetDetector extends TickerBehaviour {
 	private static final long serialVersionUID = 1L;
@@ -23,12 +27,15 @@ public class TeraNetDetector extends TickerBehaviour {
 
 	@Override
 	public void onTick() {
-		Set<AID> peers = agent.findAgents(Names.SERVICE_TERA);
+		List<AID> peers = new ArrayList<AID>(agent.findAgents(Names.SERVICE_TERA));
 
 		if (peers.size() >= agentCount) {
 			NeighborProvider np = agent.getContext().getNeighborProvider();
-			for (AID peer : peers) {
-				np.add(peer);
+			
+			// add the discovered peers
+			Iterator<AID> it = new RandomIterator<AID>(peers, new Random());
+			while (it.hasNext() && !np.isFull()) {
+				np.add(it.next());
 			}
 			stop();
 		}
