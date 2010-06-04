@@ -1,62 +1,56 @@
 package ro.cs.pub.pubsub.tera.agent;
 
 import jade.core.AID;
+import jade.core.behaviours.SequentialBehaviour;
 import jade.domain.FIPAAgentManagement.ServiceDescription;
 import jade.lang.acl.ACLMessage;
 
 import java.util.Collection;
 import java.util.LinkedList;
 
+import org.apache.commons.configuration.Configuration;
+
 import ro.cs.pub.pubsub.Names;
 import ro.cs.pub.pubsub.agent.BaseAgent;
 import ro.cs.pub.pubsub.message.MessageFactory;
-import ro.cs.pub.pubsub.message.shared.LoggingMessageContent;
-import ro.cs.pub.pubsub.tera.behaviour.TeraNetDetector;
-import ro.cs.pub.pubsub.tera.behaviour.randomWalk.RandomWalkResponder;
-import ro.cs.pub.pubsub.tera.behaviour.shuffle.ShufflingInitiator;
-import ro.cs.pub.pubsub.tera.behaviour.shuffle.ShufflingResponder;
+import ro.cs.pub.pubsub.message.shared.LogMessageContent;
+import ro.cs.pub.pubsub.tera.behaviour.MainBehaviour;
+import ro.cs.pub.pubsub.tera.behaviour.initiation.InitiationReceiver;
+import ro.cs.pub.pubsub.tera.behaviour.initiation.InitiationRequester;
 import ro.cs.pub.pubsub.tera.behaviour.shuffle.ViewGenerator;
 
 public class TeraAgent extends BaseAgent {
 	private static final long serialVersionUID = 1L;
-
-	private static final long DISCOVERY_UPDATE_PERIOD = 100;
-	private static final int DISCOVERY_AGENT_COUNT = 10;
-	private static final long SHUFFLING_PERIOD = 10000;
-	private static final int NEIGHBORS_MAX = 30;
-	private static final int SHUFFLING_VIEW_SIZE = 5;
 
 	private TeraAgentContext context;
 
 	@Override
 	protected void setup() {
 		super.setup();
-		
+
+		TeraAgentArguments args = (TeraAgentArguments) getArguments()[0];
+		Configuration configuration = args.getConfiguration();
+
 		context = new TeraAgentContext();
 		context.setMessageFactory(new MessageFactory());
 		context.setAccessPointProvider(new AccessPointProvider());
-		context.setNeighborProvider(new NeighborProvider(NEIGHBORS_MAX));
+		context.setNeighborProvider(new NeighborProvider( //
+				this, configuration.getInt("neighbors.max")));
 		context.setViewGenerator(new ViewGenerator(this));
 
-		// start the agent at a random time
-//		addBehaviour(new WakerBehaviour(this, (int)Math.random() * 500) {
-//			private static final long serialVersionUID = 1L;
-//
-//			@Override
-//			protected void onWake() {
-//				setupBehaviors();
-//			}
-//		});
-		
-		setupBehaviors();
-	}
+		// setup behaviors
+		SequentialBehaviour root = new SequentialBehaviour(this);
 
-	protected void setupBehaviors() {
-		addBehaviour(new TeraNetDetector(this, //
-				DISCOVERY_UPDATE_PERIOD, DISCOVERY_AGENT_COUNT));
-		addBehaviour(new RandomWalkResponder(this));
-		addBehaviour(new ShufflingInitiator(this, SHUFFLING_PERIOD, SHUFFLING_VIEW_SIZE));
-		addBehaviour(new ShufflingResponder(this));
+		// initiation
+		root.addSubBehaviour(new InitiationRequester(this, //
+				configuration.getLong("initiation.detection.period")));
+		root.addSubBehaviour(new InitiationReceiver(this));
+
+		// main
+		root.addSubBehaviour(new MainBehaviour(this, configuration));
+
+		// add root behavior
+		addBehaviour(root);
 	}
 
 	@Override
@@ -82,7 +76,7 @@ public class TeraAgent extends BaseAgent {
 	 * 
 	 * @param content
 	 */
-	public void sendLoggingMessage(LoggingMessageContent content) {
+	public void sendLoggingMessage(LogMessageContent content) {
 		try {
 			MessageFactory mf = context.getMessageFactory();
 			ACLMessage msg;

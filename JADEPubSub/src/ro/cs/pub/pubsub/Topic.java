@@ -1,4 +1,4 @@
-package ro.cs.pub.pubsub.tera;
+package ro.cs.pub.pubsub;
 
 public class Topic {
 	private final String id;

@@ -17,12 +17,15 @@ import ro.cs.pub.pubsub.util.RandomIterator;
  * TODO consider the age of the entries
  */
 public class NeighborProvider implements Iterable<AID> {
+	private final TeraAgent agent;
 	private final int maxSize;
 	private final Set<AID> neighbors;
+	
 
-	public NeighborProvider(int maxSize) {
+	public NeighborProvider(TeraAgent agent, int maxSize) {
+		this.agent = agent;
 		this.maxSize = maxSize;
-		neighbors = new HashSet<AID>();
+		this.neighbors = new HashSet<AID>();
 	}
 
 	@Override
@@ -35,10 +38,16 @@ public class NeighborProvider implements Iterable<AID> {
 		return new RandomIterator<AID>(list, new Random());
 	}
 
-	public boolean add(AID e) {
+	public void add(AID e) {
+		if (e.equals(agent.getAID())) {
+			// TODO maybe we should throw an exception
+			return;
+		}
+		
 		if (isFull())
 			throw new IllegalArgumentException();
-		return neighbors.add(e);
+		
+		neighbors.add(e);
 	}
 
 	public boolean contains(AID o) {
@@ -59,5 +68,11 @@ public class NeighborProvider implements Iterable<AID> {
 	
 	public boolean isFull() {
 		return size() == maxSize;
+	}
+
+	@Override
+	public String toString() {
+		return "NeighborProvider [maxSize=" + maxSize + ", neighbors="
+				+ neighbors + "]";
 	}
 }

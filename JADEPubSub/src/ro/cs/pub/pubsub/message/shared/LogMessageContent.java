@@ -2,12 +2,12 @@ package ro.cs.pub.pubsub.message.shared;
 
 import ro.cs.pub.pubsub.message.MessageContent;
 
-public class LoggingMessageContent implements MessageContent {
+public class LogMessageContent implements MessageContent {
 	private static final long serialVersionUID = 1L;
 
 	private String message;
 
-	public LoggingMessageContent(String message) {
+	public LogMessageContent(String message) {
 		super();
 		this.message = message;
 	}

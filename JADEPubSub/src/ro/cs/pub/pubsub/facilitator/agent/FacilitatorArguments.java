@@ -1,11 +1,11 @@
-package ro.cs.pub.pubsub.tera.agent;
+package ro.cs.pub.pubsub.facilitator.agent;
 
 import org.apache.commons.configuration.Configuration;
 
-public class TeraAgentArguments {
+public class FacilitatorArguments {
 	private final Configuration configuration;
 
-	public TeraAgentArguments(Configuration configuration) {
+	public FacilitatorArguments(Configuration configuration) {
 		this.configuration = configuration;
 	}
 	

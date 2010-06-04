@@ -5,7 +5,7 @@ import jade.core.AID;
 import java.util.HashMap;
 import java.util.Map;
 
-import ro.cs.pub.pubsub.tera.Topic;
+import ro.cs.pub.pubsub.Topic;
 
 /**
  * Provides one agent for each known topic.

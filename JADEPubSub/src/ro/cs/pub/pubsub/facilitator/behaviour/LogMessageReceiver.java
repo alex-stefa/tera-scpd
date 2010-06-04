@@ -1,18 +1,18 @@
-package ro.cs.pub.pubsub.logging.behaviour;
+package ro.cs.pub.pubsub.facilitator.behaviour;
 
 import jade.lang.acl.ACLMessage;
 import jade.lang.acl.MessageTemplate;
 import ro.cs.pub.pubsub.Names;
 import ro.cs.pub.pubsub.agent.BaseTemplateBehaviour;
 import ro.cs.pub.pubsub.exception.MessageException;
-import ro.cs.pub.pubsub.logging.agent.LoggingAgent;
+import ro.cs.pub.pubsub.facilitator.agent.Facilitator;
 import ro.cs.pub.pubsub.message.MessageContent;
 import ro.cs.pub.pubsub.message.MessageFactory;
 
-public class LoggingMessageReceiver extends BaseTemplateBehaviour<LoggingAgent> {
+public class LogMessageReceiver extends BaseTemplateBehaviour<Facilitator> {
 	private static final long serialVersionUID = 1L;
 
-	public LoggingMessageReceiver(LoggingAgent agent) {
+	public LogMessageReceiver(Facilitator agent) {
 		super(agent);
 	}
 
@@ -26,10 +26,9 @@ public class LoggingMessageReceiver extends BaseTemplateBehaviour<LoggingAgent> 
 
 	@Override
 	protected void onMessage(ACLMessage message) {
-		MessageContent content;
 		try {
 			MessageFactory mf = agent.getContext().getMessageFactory();
-			content = mf.extractContent(message);
+			MessageContent content = mf.extractContent(message);
 			agent.print(content);
 		} catch (MessageException e) {
 			e.printStackTrace();

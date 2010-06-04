@@ -67,6 +67,8 @@ public class ShufflingResponder extends BaseTemplateBehaviour<TeraAgent> {
 
 	private void updateNeighbors(Set<AID> incoming) {
 		NeighborProvider np = agent.getContext().getNeighborProvider();
+		
+		agent.print("\t   " + round++ + "    " + np.size());
 
 		// remove neighbors in a random fashion
 		// TODO we should remove only the ones that were sent by the initiator
@@ -80,7 +82,5 @@ public class ShufflingResponder extends BaseTemplateBehaviour<TeraAgent> {
 		for (AID n : incoming) {
 			np.add(n);
 		}
-		
-		agent.print("\t   " + round++ + "    " + np.size());
 	}
 }
