@@ -1,4 +1,4 @@
-package ro.cs.pub.pubsub.tera.behaviour.randomWalk;
+package ro.cs.pub.pubsub.tera.randomWalk.behaviour;
 
 import jade.core.AID;
 import jade.core.behaviours.OneShotBehaviour;
@@ -10,10 +10,10 @@ import ro.cs.pub.pubsub.agent.BaseTemplateBehaviour;
 import ro.cs.pub.pubsub.exception.MessageException;
 import ro.cs.pub.pubsub.message.MessageFactory;
 import ro.cs.pub.pubsub.tera.agent.TeraAgent;
-import ro.cs.pub.pubsub.tera.behaviour.randomWalk.message.RandomWalkQuery;
-import ro.cs.pub.pubsub.tera.behaviour.randomWalk.message.RandomWalkRequest;
-import ro.cs.pub.pubsub.tera.behaviour.randomWalk.message.RandomWalkResponse;
-import ro.cs.pub.pubsub.tera.behaviour.randomWalk.message.RandomWalkResult;
+import ro.cs.pub.pubsub.tera.randomWalk.message.RandomWalkQuery;
+import ro.cs.pub.pubsub.tera.randomWalk.message.RandomWalkRequest;
+import ro.cs.pub.pubsub.tera.randomWalk.message.RandomWalkResponse;
+import ro.cs.pub.pubsub.tera.randomWalk.message.RandomWalkResult;
 
 /**
  * Initiates a random walk. The behavior has two states: Message Sending and

@@ -1,4 +1,4 @@
-package ro.cs.pub.pubsub.tera.behaviour.advertisement;
+package ro.cs.pub.pubsub.tera.advertisement;
 
 import jade.core.AID;
 import jade.core.behaviours.TickerBehaviour;

@@ -1,4 +1,4 @@
-package ro.cs.pub.pubsub.tera.behaviour.randomWalk;
+package ro.cs.pub.pubsub.tera.randomWalk.behaviour;
 
 import jade.core.AID;
 import jade.lang.acl.ACLMessage;
@@ -12,10 +12,10 @@ import ro.cs.pub.pubsub.exception.MessageException;
 import ro.cs.pub.pubsub.message.MessageFactory;
 import ro.cs.pub.pubsub.tera.agent.TeraAgent;
 import ro.cs.pub.pubsub.tera.agent.context.NeighborProvider;
-import ro.cs.pub.pubsub.tera.behaviour.randomWalk.message.RandomWalkRequest;
-import ro.cs.pub.pubsub.tera.behaviour.randomWalk.message.RandomWalkResponse;
-import ro.cs.pub.pubsub.tera.behaviour.randomWalk.processor.ProcessingResult;
-import ro.cs.pub.pubsub.tera.behaviour.randomWalk.processor.RequestProcessor;
+import ro.cs.pub.pubsub.tera.randomWalk.message.RandomWalkRequest;
+import ro.cs.pub.pubsub.tera.randomWalk.message.RandomWalkResponse;
+import ro.cs.pub.pubsub.tera.randomWalk.processor.ProcessingResult;
+import ro.cs.pub.pubsub.tera.randomWalk.processor.RequestProcessor;
 
 /**
  * Detects random walk requests and tries to answer. If it cannot answer

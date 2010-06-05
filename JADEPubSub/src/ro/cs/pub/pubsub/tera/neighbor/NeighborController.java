@@ -1,4 +1,4 @@
-package ro.cs.pub.pubsub.tera.behaviour.neighbor;
+package ro.cs.pub.pubsub.tera.neighbor;
 
 import jade.core.Agent;
 import jade.core.behaviours.ParallelBehaviour;

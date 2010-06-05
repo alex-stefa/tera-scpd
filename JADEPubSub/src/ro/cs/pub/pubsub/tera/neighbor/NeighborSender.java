@@ -1,4 +1,4 @@
-package ro.cs.pub.pubsub.tera.behaviour.neighbor;
+package ro.cs.pub.pubsub.tera.neighbor;
 
 import jade.core.AID;
 import jade.core.behaviours.OneShotBehaviour;

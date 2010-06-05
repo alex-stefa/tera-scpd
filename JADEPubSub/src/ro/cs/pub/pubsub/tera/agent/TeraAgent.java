@@ -19,9 +19,8 @@ import ro.cs.pub.pubsub.message.shared.LogMessageContent;
 import ro.cs.pub.pubsub.tera.agent.context.AccessPointProvider;
 import ro.cs.pub.pubsub.tera.agent.context.NeighborProvider;
 import ro.cs.pub.pubsub.tera.agent.context.TeraAgentContext;
-import ro.cs.pub.pubsub.tera.behaviour.MainBehaviour;
-import ro.cs.pub.pubsub.tera.behaviour.initiation.InitiationReceiver;
-import ro.cs.pub.pubsub.tera.behaviour.initiation.InitiationRequester;
+import ro.cs.pub.pubsub.tera.initiation.InitiationReceiver;
+import ro.cs.pub.pubsub.tera.initiation.InitiationRequester;
 
 public class TeraAgent extends BaseAgent {
 	private static final long serialVersionUID = 1L;

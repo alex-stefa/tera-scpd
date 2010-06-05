@@ -1,13 +1,13 @@
-package ro.cs.pub.pubsub.tera.behaviour.randomWalk.processor;
+package ro.cs.pub.pubsub.tera.randomWalk.processor;
 
 import jade.core.AID;
 import ro.cs.pub.pubsub.tera.agent.TeraAgent;
-import ro.cs.pub.pubsub.tera.behaviour.randomWalk.message.AgentResult;
-import ro.cs.pub.pubsub.tera.behaviour.randomWalk.message.DistanceQuery;
-import ro.cs.pub.pubsub.tera.behaviour.randomWalk.message.RandomWalkQuery;
-import ro.cs.pub.pubsub.tera.behaviour.randomWalk.message.RandomWalkRequest;
-import ro.cs.pub.pubsub.tera.behaviour.randomWalk.message.RandomWalkResponse;
-import ro.cs.pub.pubsub.tera.behaviour.randomWalk.message.TopicQuery;
+import ro.cs.pub.pubsub.tera.randomWalk.message.AgentResult;
+import ro.cs.pub.pubsub.tera.randomWalk.message.DistanceQuery;
+import ro.cs.pub.pubsub.tera.randomWalk.message.RandomWalkQuery;
+import ro.cs.pub.pubsub.tera.randomWalk.message.RandomWalkRequest;
+import ro.cs.pub.pubsub.tera.randomWalk.message.RandomWalkResponse;
+import ro.cs.pub.pubsub.tera.randomWalk.message.TopicQuery;
 
 /**
  * Processes a random walk request and creates a {@link ProcessingResult}.

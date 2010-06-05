@@ -1,12 +1,11 @@
-package ro.cs.pub.pubsub.tera.behaviour;
+package ro.cs.pub.pubsub.tera.agent;
 
 import jade.core.behaviours.ParallelBehaviour;
 
 import org.apache.commons.configuration.Configuration;
 
-import ro.cs.pub.pubsub.tera.agent.TeraAgent;
-import ro.cs.pub.pubsub.tera.behaviour.neighbor.NeighborController;
-import ro.cs.pub.pubsub.tera.behaviour.randomWalk.RandomWalkResponder;
+import ro.cs.pub.pubsub.tera.neighbor.NeighborController;
+import ro.cs.pub.pubsub.tera.randomWalk.behaviour.RandomWalkResponder;
 
 public class MainBehaviour extends ParallelBehaviour {
 	private static final long serialVersionUID = 1L;
