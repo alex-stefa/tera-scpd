@@ -17,7 +17,6 @@ import ro.cs.pub.pubsub.message.shared.LogMessageContent;
 import ro.cs.pub.pubsub.tera.behaviour.MainBehaviour;
 import ro.cs.pub.pubsub.tera.behaviour.initiation.InitiationReceiver;
 import ro.cs.pub.pubsub.tera.behaviour.initiation.InitiationRequester;
-import ro.cs.pub.pubsub.tera.behaviour.shuffle.ViewGenerator;
 
 public class TeraAgent extends BaseAgent {
 	private static final long serialVersionUID = 1L;
@@ -36,7 +35,6 @@ public class TeraAgent extends BaseAgent {
 		context.setAccessPointProvider(new AccessPointProvider());
 		context.setNeighborProvider(new NeighborProvider( //
 				this, configuration.getInt("neighbors.max")));
-		context.setViewGenerator(new ViewGenerator(this));
 
 		// setup behaviors
 		SequentialBehaviour root = new SequentialBehaviour(this);
