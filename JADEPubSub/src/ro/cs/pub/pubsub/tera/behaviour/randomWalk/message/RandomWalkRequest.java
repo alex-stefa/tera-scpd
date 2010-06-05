@@ -3,6 +3,9 @@ package ro.cs.pub.pubsub.tera.behaviour.randomWalk.message;
 import ro.cs.pub.pubsub.message.MessageContent;
 import jade.core.AID;
 
+/**
+ * Contains the query and the state of the message.
+ */
 public class RandomWalkRequest implements MessageContent {
 	private static final long serialVersionUID = 1L;
 

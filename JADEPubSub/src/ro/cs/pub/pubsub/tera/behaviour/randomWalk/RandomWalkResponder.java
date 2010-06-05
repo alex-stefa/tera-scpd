@@ -12,21 +12,26 @@ import ro.cs.pub.pubsub.exception.MessageException;
 import ro.cs.pub.pubsub.message.MessageFactory;
 import ro.cs.pub.pubsub.tera.agent.NeighborProvider;
 import ro.cs.pub.pubsub.tera.agent.TeraAgent;
-import ro.cs.pub.pubsub.tera.behaviour.randomWalk.message.AgentResponse;
-import ro.cs.pub.pubsub.tera.behaviour.randomWalk.message.DistanceQuery;
-import ro.cs.pub.pubsub.tera.behaviour.randomWalk.message.RandomWalkQuery;
 import ro.cs.pub.pubsub.tera.behaviour.randomWalk.message.RandomWalkRequest;
-import ro.cs.pub.pubsub.tera.behaviour.randomWalk.message.TopicQuery;
+import ro.cs.pub.pubsub.tera.behaviour.randomWalk.message.RandomWalkResponse;
+import ro.cs.pub.pubsub.tera.behaviour.randomWalk.processor.ProcessingResult;
+import ro.cs.pub.pubsub.tera.behaviour.randomWalk.processor.RequestProcessor;
 
 /**
- * Detects random walk requests. Tries to answer them or propagates the
- * requests.
+ * Detects random walk requests and tries to answer. If it cannot answer
+ * properly, the responder propagates the requests.
+ * 
+ * This class contains the propagation algorithms. The response decisions are
+ * made by a {@link RequestProcessor}.
  */
 public class RandomWalkResponder extends BaseTemplateBehaviour<TeraAgent> {
 	private static final long serialVersionUID = 1L;
 
+	private final RequestProcessor processor;
+
 	public RandomWalkResponder(TeraAgent agent) {
 		super(agent);
+		this.processor = new RequestProcessor(agent);
 	}
 
 	@Override
@@ -41,45 +46,56 @@ public class RandomWalkResponder extends BaseTemplateBehaviour<TeraAgent> {
 	protected void onMessage(ACLMessage message) {
 		try {
 			MessageFactory mf = agent.getContext().getMessageFactory();
-			RandomWalkRequest content;
-			content = (RandomWalkRequest) mf.extractContent(message);
-			RandomWalkQuery query = content.getQuery();
+			RandomWalkRequest request;
+			request = (RandomWalkRequest) mf.extractContent(message);
 
-			if (query instanceof DistanceQuery && content.getTTL() <= 0) {
-				sendToOrigin(mf, message, content.getOrigin(),
-						new AgentResponse(agent.getAID()));
-				return;
+			// process the request
+			ProcessingResult processingResult = processor.process(request);
+
+			switch (processingResult.getType()) {
+			case SEND_TO_ORIGIN:
+				sendToOrigin(mf, message, request.getOrigin(), //
+						(RandomWalkResponse) processingResult.getContent());
+				break;
+			case FORWARD:
+				forward(mf, message, //
+						(RandomWalkRequest) processingResult.getContent());
+				break;
 			}
-
-			if (query instanceof TopicQuery) {
-				// find peer for given topic
-				AID peer = agent.getContext().getAccessPointProvider(). //
-						get(((TopicQuery) query).getTopic());
-				if (peer != null) {
-					sendToOrigin(mf, message, content.getOrigin(),
-							new AgentResponse(peer));
-					return;
-				}
-			}
-
-			forward(mf, message, content);
 		} catch (MessageException e) {
 			e.printStackTrace();
 		}
 	}
 
+	/**
+	 * Sends a response to the origin.
+	 * 
+	 * @param mf
+	 * @param originalMessage
+	 * @param origin
+	 * @param content
+	 * @throws MessageException
+	 */
 	private void sendToOrigin(MessageFactory mf, ACLMessage originalMessage,
-			AID origin, AgentResponse responseContent) throws MessageException {
+			AID origin, RandomWalkResponse content) throws MessageException {
 		ACLMessage reply = originalMessage.createReply();
 		reply.setPerformative(ACLMessage.INFORM);
 
 		prepare(reply);
 
 		reply.addReceiver(origin);
-		mf.fillContent(reply, responseContent);
+		mf.fillContent(reply, content);
 		agent.send(reply);
 	}
 
+	/**
+	 * Forwards the message to a random peer.
+	 * 
+	 * @param mf
+	 * @param originalMessage
+	 * @param randomWalkRequest
+	 * @throws MessageException
+	 */
 	private void forward(MessageFactory mf, ACLMessage originalMessage,
 			RandomWalkRequest randomWalkRequest) throws MessageException {
 		// find the current set of neighbors and pick a random one

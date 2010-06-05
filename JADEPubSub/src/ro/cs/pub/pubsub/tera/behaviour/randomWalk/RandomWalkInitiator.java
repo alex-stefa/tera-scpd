@@ -13,9 +13,12 @@ import ro.cs.pub.pubsub.tera.agent.TeraAgent;
 import ro.cs.pub.pubsub.tera.behaviour.randomWalk.message.RandomWalkQuery;
 import ro.cs.pub.pubsub.tera.behaviour.randomWalk.message.RandomWalkRequest;
 import ro.cs.pub.pubsub.tera.behaviour.randomWalk.message.RandomWalkResponse;
+import ro.cs.pub.pubsub.tera.behaviour.randomWalk.message.RandomWalkResult;
 
 /**
- * Initiates and interprets the result of a random walk.
+ * Initiates a random walk. The behavior has two states: Message Sending and
+ * Message Receiving. When the behavior finishes, the result is available
+ * through getResult().
  */
 public class RandomWalkInitiator extends SequentialBehaviour {
 	private static final long serialVersionUID = 1L;
@@ -31,9 +34,9 @@ public class RandomWalkInitiator extends SequentialBehaviour {
 	private final String conversationId;
 
 	/**
-	 * The response of the random walk.
+	 * The result of the random walk.
 	 */
-	private RandomWalkResponse response;
+	private RandomWalkResult result;
 
 	public RandomWalkInitiator(TeraAgent agent, AID peer, int ttl,
 			RandomWalkQuery query) {
@@ -100,14 +103,15 @@ public class RandomWalkInitiator extends SequentialBehaviour {
 		protected void onMessage(ACLMessage message) {
 			MessageFactory mf = agent.getContext().getMessageFactory();
 			try {
-				response = (RandomWalkResponse) mf.extractContent(message);
+				result = ((RandomWalkResponse) mf.extractContent(message))
+						.getResult();
 			} catch (MessageException e) {
 				e.printStackTrace();
 			}
 		}
 	}
 
-	public RandomWalkResponse getResponse() {
-		return response;
+	public RandomWalkResult getResult() {
+		return result;
 	}
 }

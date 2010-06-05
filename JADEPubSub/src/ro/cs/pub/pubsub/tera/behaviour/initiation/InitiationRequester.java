@@ -10,6 +10,9 @@ import ro.cs.pub.pubsub.Names;
 import ro.cs.pub.pubsub.message.MessageFactory;
 import ro.cs.pub.pubsub.tera.agent.TeraAgent;
 
+/**
+ * Makes a request to an initiation service in order to enter the network.
+ */
 public class InitiationRequester extends TickerBehaviour {
 	private static final long serialVersionUID = 1L;
 

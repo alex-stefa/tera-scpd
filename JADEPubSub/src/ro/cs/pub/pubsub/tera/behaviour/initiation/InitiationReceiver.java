@@ -14,6 +14,9 @@ import ro.cs.pub.pubsub.message.shared.InitiationReply;
 import ro.cs.pub.pubsub.tera.agent.NeighborProvider;
 import ro.cs.pub.pubsub.tera.agent.TeraAgent;
 
+/**
+ * Receives the initiation acceptance message, which contains a set of seeds.
+ */
 public class InitiationReceiver extends BaseTemplateBehaviour<TeraAgent> {
 	private static final long serialVersionUID = 1L;
 
