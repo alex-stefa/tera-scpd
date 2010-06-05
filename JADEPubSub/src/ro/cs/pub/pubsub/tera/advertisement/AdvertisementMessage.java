@@ -11,7 +11,6 @@ public class AdvertisementMessage implements MessageContent {
 	private final Set<Topic> topics;
 
 	public AdvertisementMessage(Set<Topic> topics) {
-		super();
 		this.topics = topics;
 	}
 	
