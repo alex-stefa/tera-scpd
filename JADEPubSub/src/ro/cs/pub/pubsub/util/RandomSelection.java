@@ -9,8 +9,8 @@ public class RandomSelection {
 	 * Selects a random element from a collection.
 	 * 
 	 * @param <T>
-	 *            a collection with at least one element
 	 * @param collection
+	 *            a collection with at least one element
 	 * @return a random element
 	 */
 	public static <T> T selectOne(Collection<T> collection) {
