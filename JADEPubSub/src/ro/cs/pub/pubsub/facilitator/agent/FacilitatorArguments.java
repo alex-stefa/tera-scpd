@@ -8,7 +8,7 @@ public class FacilitatorArguments {
 	public FacilitatorArguments(Configuration configuration) {
 		this.configuration = configuration;
 	}
-	
+
 	public Configuration getConfiguration() {
 		return configuration;
 	}

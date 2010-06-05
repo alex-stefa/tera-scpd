@@ -3,7 +3,7 @@ package ro.cs.pub.pubsub.tera.behaviour.neighbor.message;
 import ro.cs.pub.pubsub.message.MessageContent;
 import ro.cs.pub.pubsub.tera.behaviour.neighbor.View;
 
-public class ShufflingMessage implements MessageContent {
+public class NeighborMessage implements MessageContent {
 	private static final long serialVersionUID = 1L;
 
 	/**
@@ -11,16 +11,26 @@ public class ShufflingMessage implements MessageContent {
 	 */
 	private final View view;
 
-	public ShufflingMessage(View view) {
+	/**
+	 * The type of message.
+	 */
+	private final boolean reply;
+
+	public NeighborMessage(View view, boolean reply) {
 		this.view = view;
+		this.reply = reply;
 	}
 
 	public View getView() {
 		return view;
 	}
 
+	public boolean isReply() {
+		return reply;
+	}
+
 	@Override
 	public String toString() {
-		return "ShufflingMessage [view=" + view + "]";
+		return "NeighborMessage [reply=" + reply + ", view=" + view + "]";
 	}
 }

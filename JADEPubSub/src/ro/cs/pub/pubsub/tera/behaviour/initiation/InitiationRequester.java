@@ -12,9 +12,9 @@ import ro.cs.pub.pubsub.tera.agent.TeraAgent;
 
 public class InitiationRequester extends TickerBehaviour {
 	private static final long serialVersionUID = 1L;
-	
+
 	private final TeraAgent agent;
-	
+
 	public InitiationRequester(TeraAgent agent, long period) {
 		super(agent, period);
 		this.agent = agent;
@@ -26,9 +26,10 @@ public class InitiationRequester extends TickerBehaviour {
 		if (agents.size() == 0) {
 			return;
 		}
-		
+
 		MessageFactory mf = agent.getContext().getMessageFactory();
-		ACLMessage msg = mf.buildMessage(ACLMessage.CFP, Names.PROTOCOL_INITIATION);
+		ACLMessage msg = mf.buildMessage(ACLMessage.CFP,
+				Names.PROTOCOL_INITIATION);
 		msg.addReceiver(agents.iterator().next());
 		agent.send(msg);
 		stop();

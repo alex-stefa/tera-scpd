@@ -5,14 +5,13 @@ import jade.core.behaviours.OneShotBehaviour;
 import jade.lang.acl.ACLMessage;
 
 import java.util.Iterator;
-import java.util.Map;
 
 import ro.cs.pub.pubsub.Names;
 import ro.cs.pub.pubsub.exception.MessageException;
 import ro.cs.pub.pubsub.message.MessageFactory;
 import ro.cs.pub.pubsub.tera.agent.NeighborProvider;
 import ro.cs.pub.pubsub.tera.agent.TeraAgent;
-import ro.cs.pub.pubsub.tera.behaviour.neighbor.message.ShufflingMessage;
+import ro.cs.pub.pubsub.tera.behaviour.neighbor.message.NeighborMessage;
 
 /**
  * Sends a shuffling message.
@@ -21,10 +20,12 @@ public class NeighborSender extends OneShotBehaviour {
 	private static final long serialVersionUID = 1L;
 
 	private final NeighborController controller;
+	private final ACLMessage initialMessage;
 
 	public NeighborSender(NeighborController controller,
 			ACLMessage initialMessage) {
 		this.controller = controller;
+		this.initialMessage = initialMessage;
 	}
 
 	public NeighborSender(NeighborController controller) {
@@ -38,41 +39,67 @@ public class NeighborSender extends OneShotBehaviour {
 			NeighborProvider np = agent.getContext().getNeighborProvider();
 			MessageFactory mf = agent.getContext().getMessageFactory();
 
-			if (np.size() == 0) {
-				// we don't know any other agent
-				return;
+			if (initialMessage == null) {
+				sendInitialMessage(agent, np, mf);
+			} else {
+				sendReplyMessage(agent, np, mf);
 			}
-
-			// even if we know only one other agent, send a view in order to
-			// receive a reply
-
-			// pick a random peer
-			Iterator<AID> it = np.randomIterator();
-			AID receiver = it.next();
-
-			// generate the view
-			ViewGenerator generator = controller.getViewGenerator();
-			View view = generator.generateView(receiver, //
-					controller.getViewSize());
-
-			// prepare the message
-			ACLMessage msg = mf.buildMessage( //
-					ACLMessage.INFORM, Names.PROTOCOL_NEIGHBOR_GOSSIP);
-			msg.addReceiver(receiver);
-
-			// build the content
-			ShufflingMessage content = new ShufflingMessage(view);
-			mf.fillContent(msg, content);
-			
-			// register conversation
-			String conversationId = agent.generateConversationId();
-			Map<String, View> conversationViews = controller.getConversationViews();
-			conversationViews.put(conversationId, view);
-
-			// send the message
-			agent.send(msg);
 		} catch (MessageException e) {
 			e.printStackTrace();
 		}
+	}
+
+	private void sendInitialMessage(TeraAgent agent, NeighborProvider np,
+			MessageFactory mf) throws MessageException {
+		if (np.size() == 0) {
+			// we don't know any other agent
+			return;
+		}
+
+		// even if we know only one other agent, send a view in order to
+		// receive a reply
+
+		// pick a random peer
+		Iterator<AID> it = np.randomIterator();
+		AID receiver = it.next();
+
+		// generate the view
+		ViewGenerator generator = controller.getViewGenerator();
+		View view = generator.generateView(receiver, //
+				controller.getViewSize());
+
+		// prepare the message
+		ACLMessage msg = mf.buildMessage( //
+				ACLMessage.INFORM, Names.PROTOCOL_NEIGHBOR_GOSSIP);
+		msg.addReceiver(receiver);
+
+		// build the content
+		NeighborMessage content = new NeighborMessage(view, false);
+		mf.fillContent(msg, content);
+
+		// send the message
+		agent.send(msg);
+	}
+
+	private void sendReplyMessage(TeraAgent agent, NeighborProvider np,
+			MessageFactory mf) throws MessageException {
+		// pick a random peer
+		AID receiver = initialMessage.getSender();
+
+		// generate the view
+		ViewGenerator generator = controller.getViewGenerator();
+		View view = generator.generateView(receiver, //
+				controller.getViewSize());
+
+		// prepare the message
+		ACLMessage reply = initialMessage.createReply();
+		reply.setPerformative(ACLMessage.INFORM);
+
+		// build the content
+		NeighborMessage content = new NeighborMessage(view, true);
+		mf.fillContent(reply, content);
+
+		// send the message
+		agent.send(reply);
 	}
 }

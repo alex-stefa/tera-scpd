@@ -29,7 +29,7 @@ public class RandomWalkInitiator extends SequentialBehaviour {
 	 * Kept throughout the random walk.
 	 */
 	private final String conversationId;
-	
+
 	/**
 	 * The response of the random walk.
 	 */
@@ -106,7 +106,7 @@ public class RandomWalkInitiator extends SequentialBehaviour {
 			}
 		}
 	}
-	
+
 	public RandomWalkResponse getResponse() {
 		return response;
 	}

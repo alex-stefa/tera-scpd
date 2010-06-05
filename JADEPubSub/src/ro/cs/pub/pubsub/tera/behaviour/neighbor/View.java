@@ -7,7 +7,7 @@ import java.util.Set;
 
 public class View implements Serializable {
 	private static final long serialVersionUID = 1L;
-	
+
 	private final Set<AID> neighbors;
 
 	public View(Set<AID> neighbors) {

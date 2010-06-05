@@ -51,8 +51,8 @@ public class App {
 		}
 
 		// facilitator
-		Object[] fArgs = {new FacilitatorArguments( //
-				configuration.subset("pubsub.facilitator"))};
+		Object[] fArgs = { new FacilitatorArguments( //
+				configuration.subset("pubsub.facilitator")) };
 		container.createNewAgent(FACILITATOR_AGENT, //
 				Facilitator.class.getCanonicalName(), fArgs).start();
 

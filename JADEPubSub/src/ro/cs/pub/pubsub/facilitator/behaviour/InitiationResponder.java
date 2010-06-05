@@ -24,8 +24,7 @@ import ro.cs.pub.pubsub.message.shared.InitiationReply;
  * are added to a list of seeds. The following requests are replied immediately
  * with the set of seeds.
  */
-public class InitiationResponder extends
-		BaseTemplateBehaviour<Facilitator> {
+public class InitiationResponder extends BaseTemplateBehaviour<Facilitator> {
 	private static final long serialVersionUID = 1L;
 	private final int waitFor;
 	private final List<ACLMessage> seedMessages;
@@ -50,7 +49,7 @@ public class InitiationResponder extends
 			if (seedMessages.size() < waitFor) {
 				// add to the seed message list
 				seedMessages.add(message);
-				
+
 				if (seedMessages.size() == waitFor) {
 					// reply to seeders first
 					for (ACLMessage msg : seedMessages) {
@@ -69,17 +68,17 @@ public class InitiationResponder extends
 		MessageFactory mf = agent.getContext().getMessageFactory();
 		ACLMessage reply = message.createReply();
 		reply.setPerformative(ACLMessage.PROPOSE);
-		
+
 		// select neighbors
 		Set<AID> neighbors = new HashSet<AID>();
-		for (ACLMessage sm: seedMessages) {
+		for (ACLMessage sm : seedMessages) {
 			AID n = sm.getSender();
 			if (!n.equals(message.getSender())) {
 				// do not add the sender to its own list
 				neighbors.add(n);
 			}
 		}
-		
+
 		MessageContent content = new InitiationReply(neighbors);
 		mf.fillContent(reply, content);
 		agent.send(reply);

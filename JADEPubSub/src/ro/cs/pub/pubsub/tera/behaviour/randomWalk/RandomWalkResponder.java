@@ -84,7 +84,7 @@ public class RandomWalkResponder extends BaseTemplateBehaviour<TeraAgent> {
 			RandomWalkRequest randomWalkRequest) throws MessageException {
 		// find the current set of neighbors and pick a random one
 		NeighborProvider np = agent.getContext().getNeighborProvider();
-		
+
 		AID receiver = null;
 		Iterator<AID> it = np.randomIterator();
 		while (it.hasNext()) {

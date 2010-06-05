@@ -14,13 +14,16 @@ import ro.cs.pub.pubsub.exception.MessageException;
 import ro.cs.pub.pubsub.message.MessageFactory;
 import ro.cs.pub.pubsub.tera.agent.NeighborProvider;
 import ro.cs.pub.pubsub.tera.agent.TeraAgent;
-import ro.cs.pub.pubsub.tera.behaviour.neighbor.message.ShufflingMessage;
+import ro.cs.pub.pubsub.tera.behaviour.neighbor.message.NeighborMessage;
 
 public class NeighborReceiver extends BaseTemplateBehaviour<TeraAgent> {
 	private static final long serialVersionUID = 1L;
-	
+
+	private final NeighborController controller;
+
 	public NeighborReceiver(NeighborController controller) {
 		super(controller.getAgent());
+		this.controller = controller;
 	}
 
 	@Override
@@ -35,11 +38,17 @@ public class NeighborReceiver extends BaseTemplateBehaviour<TeraAgent> {
 	protected void onMessage(ACLMessage message) {
 		try {
 			MessageFactory mf = agent.getContext().getMessageFactory();
-			ShufflingMessage content = (ShufflingMessage) mf
+			NeighborMessage content = (NeighborMessage) mf
 					.extractContent(message);
-			
+
 			// update the neighbor set
 			updateNeighbors(content.getView());
+
+			if (!content.isReply()) {
+				// send the agent's own view
+				controller.addSubBehaviour( //
+						new NeighborSender(controller, message));
+			}
 		} catch (MessageException e) {
 			e.printStackTrace();
 		}
@@ -50,7 +59,7 @@ public class NeighborReceiver extends BaseTemplateBehaviour<TeraAgent> {
 	private void updateNeighbors(View view) {
 		NeighborProvider np = agent.getContext().getNeighborProvider();
 		Set<AID> incoming = new HashSet<AID>(view.getNeighbors());
-		
+
 		// remove the nodes we know about
 		Iterator<AID> it = incoming.iterator();
 		while (it.hasNext()) {
@@ -58,7 +67,7 @@ public class NeighborReceiver extends BaseTemplateBehaviour<TeraAgent> {
 				it.remove();
 			}
 		}
-		
+
 		// remove neighbors in a random fashion
 		int viewSize = incoming.size();
 		while (np.size() > np.getMaxSize() - viewSize) {
@@ -70,7 +79,7 @@ public class NeighborReceiver extends BaseTemplateBehaviour<TeraAgent> {
 		for (AID n : incoming) {
 			np.add(n);
 		}
-		
+
 		agent.print("\t   " + round++ + "    " + np.size());
 	}
 }

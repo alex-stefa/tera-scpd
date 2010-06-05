@@ -23,14 +23,15 @@ public class Facilitator extends BaseAgent {
 	protected void setup() {
 		super.setup();
 
-		FacilitatorArguments args = (FacilitatorArguments)getArguments()[0];
+		FacilitatorArguments args = (FacilitatorArguments) getArguments()[0];
 		Configuration configuration = args.getConfiguration();
-		
+
 		context = new AgentContext();
 		context.setMessageFactory(new MessageFactory());
 
 		addBehaviour(new LogMessageReceiver(this));
-		addBehaviour(new InitiationResponder(this, configuration.getInt("initiation.waitFor")));
+		addBehaviour(new InitiationResponder(this, configuration
+				.getInt("initiation.waitFor")));
 	}
 
 	@Override
@@ -43,7 +44,7 @@ public class Facilitator extends BaseAgent {
 		sd.setType(Names.SERVICE_LOGGING);
 		sd.setName(getLocalName());
 		descriptions.add(sd);
-		
+
 		// initiation
 		sd = new ServiceDescription();
 		sd.setType(Names.SERVICE_INITIATION);

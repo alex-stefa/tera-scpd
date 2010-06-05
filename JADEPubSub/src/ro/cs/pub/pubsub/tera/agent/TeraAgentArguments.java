@@ -8,7 +8,7 @@ public class TeraAgentArguments {
 	public TeraAgentArguments(Configuration configuration) {
 		this.configuration = configuration;
 	}
-	
+
 	public Configuration getConfiguration() {
 		return configuration;
 	}

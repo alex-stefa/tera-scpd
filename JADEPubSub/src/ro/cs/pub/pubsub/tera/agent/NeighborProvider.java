@@ -20,7 +20,6 @@ public class NeighborProvider implements Iterable<AID> {
 	private final TeraAgent agent;
 	private final int maxSize;
 	private final Set<AID> neighbors;
-	
 
 	public NeighborProvider(TeraAgent agent, int maxSize) {
 		this.agent = agent;
@@ -43,10 +42,10 @@ public class NeighborProvider implements Iterable<AID> {
 			// TODO maybe we should throw an exception
 			return;
 		}
-		
+
 		if (isFull())
 			throw new IllegalArgumentException();
-		
+
 		neighbors.add(e);
 	}
 
@@ -61,11 +60,11 @@ public class NeighborProvider implements Iterable<AID> {
 	public int size() {
 		return neighbors.size();
 	}
-	
+
 	public int getMaxSize() {
 		return maxSize;
 	}
-	
+
 	public boolean isFull() {
 		return size() == maxSize;
 	}

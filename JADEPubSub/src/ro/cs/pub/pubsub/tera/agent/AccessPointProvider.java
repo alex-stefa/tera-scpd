@@ -14,15 +14,15 @@ import ro.cs.pub.pubsub.Topic;
  */
 public class AccessPointProvider {
 	private Map<Topic, AID> map;
-	
+
 	public AccessPointProvider() {
 		map = new HashMap<Topic, AID>();
 	}
-	
+
 	public void put(Topic topic, AID agent) {
 		map.put(topic, agent);
 	}
-	
+
 	public AID get(Topic topic) {
 		return map.get(topic);
 	}

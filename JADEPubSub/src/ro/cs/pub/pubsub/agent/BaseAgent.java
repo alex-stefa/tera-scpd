@@ -74,7 +74,7 @@ public abstract class BaseAgent extends Agent {
 
 		return agents;
 	}
-	
+
 	public Set<AID> findAgents(String serviceType) {
 		return findAgents(serviceType, null);
 	}

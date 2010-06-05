@@ -8,7 +8,7 @@ public class AgentContext {
 	public void setMessageFactory(MessageFactory messageFactory) {
 		this.messageFactory = messageFactory;
 	}
-	
+
 	public MessageFactory getMessageFactory() {
 		return messageFactory;
 	}

@@ -5,7 +5,7 @@ import jade.core.AID;
 
 public class RandomWalkRequest implements MessageContent {
 	private static final long serialVersionUID = 1L;
-	
+
 	private final AID origin;
 	private final int ttl;
 	private final RandomWalkQuery query;
@@ -19,11 +19,11 @@ public class RandomWalkRequest implements MessageContent {
 	public AID getOrigin() {
 		return origin;
 	}
-	
+
 	public int getTTL() {
 		return ttl;
 	}
-	
+
 	public RandomWalkQuery getQuery() {
 		return query;
 	}
