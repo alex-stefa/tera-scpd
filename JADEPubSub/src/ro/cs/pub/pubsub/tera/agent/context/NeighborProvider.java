@@ -1,4 +1,4 @@
-package ro.cs.pub.pubsub.tera.agent;
+package ro.cs.pub.pubsub.tera.agent.context;
 
 import jade.core.AID;
 
@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Random;
 import java.util.Set;
 
+import ro.cs.pub.pubsub.tera.agent.TeraAgent;
 import ro.cs.pub.pubsub.util.RandomIterator;
 
 /**

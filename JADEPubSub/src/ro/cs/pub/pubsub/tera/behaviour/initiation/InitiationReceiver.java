@@ -11,8 +11,8 @@ import ro.cs.pub.pubsub.agent.BaseTemplateBehaviour;
 import ro.cs.pub.pubsub.exception.MessageException;
 import ro.cs.pub.pubsub.message.MessageFactory;
 import ro.cs.pub.pubsub.message.shared.InitiationReply;
-import ro.cs.pub.pubsub.tera.agent.NeighborProvider;
 import ro.cs.pub.pubsub.tera.agent.TeraAgent;
+import ro.cs.pub.pubsub.tera.agent.context.NeighborProvider;
 
 /**
  * Receives the initiation acceptance message, which contains a set of seeds.

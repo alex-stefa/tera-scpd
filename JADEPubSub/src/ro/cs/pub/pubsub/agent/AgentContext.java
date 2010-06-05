@@ -3,9 +3,9 @@ package ro.cs.pub.pubsub.agent;
 import ro.cs.pub.pubsub.message.MessageFactory;
 
 public class AgentContext {
-	private MessageFactory messageFactory;
+	private final MessageFactory messageFactory;
 
-	public void setMessageFactory(MessageFactory messageFactory) {
+	public AgentContext(MessageFactory messageFactory) {
 		this.messageFactory = messageFactory;
 	}
 

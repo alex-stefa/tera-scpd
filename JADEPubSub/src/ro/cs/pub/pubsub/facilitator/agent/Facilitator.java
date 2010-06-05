@@ -26,8 +26,7 @@ public class Facilitator extends BaseAgent {
 		FacilitatorArguments args = (FacilitatorArguments) getArguments()[0];
 		Configuration configuration = args.getConfiguration();
 
-		context = new AgentContext();
-		context.setMessageFactory(new MessageFactory());
+		context = new AgentContext(new MessageFactory());
 
 		addBehaviour(new LogMessageReceiver(this));
 		addBehaviour(new InitiationResponder(this, configuration

@@ -1,6 +1,10 @@
 package ro.cs.pub.pubsub;
 
-public class Topic {
+import java.io.Serializable;
+
+public class Topic implements Serializable {
+	private static final long serialVersionUID = 1L;
+	
 	private final String id;
 
 	public Topic(String id) {

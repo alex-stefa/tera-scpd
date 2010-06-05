@@ -9,9 +9,8 @@ import java.util.Iterator;
 import ro.cs.pub.pubsub.Names;
 import ro.cs.pub.pubsub.exception.MessageException;
 import ro.cs.pub.pubsub.message.MessageFactory;
-import ro.cs.pub.pubsub.tera.agent.NeighborProvider;
 import ro.cs.pub.pubsub.tera.agent.TeraAgent;
-import ro.cs.pub.pubsub.tera.behaviour.neighbor.message.NeighborMessage;
+import ro.cs.pub.pubsub.tera.agent.context.NeighborProvider;
 
 /**
  * Sends a shuffling message.

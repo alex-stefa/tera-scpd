@@ -1,4 +1,4 @@
-package ro.cs.pub.pubsub.tera.behaviour;
+package ro.cs.pub.pubsub.tera.behaviour.lookup;
 
 import ro.cs.pub.pubsub.agent.BaseBehaviour;
 import ro.cs.pub.pubsub.tera.agent.TeraAgent;

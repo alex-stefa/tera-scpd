@@ -6,14 +6,19 @@ import jade.domain.FIPAAgentManagement.ServiceDescription;
 import jade.lang.acl.ACLMessage;
 
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.LinkedList;
 
 import org.apache.commons.configuration.Configuration;
 
 import ro.cs.pub.pubsub.Names;
+import ro.cs.pub.pubsub.Topic;
 import ro.cs.pub.pubsub.agent.BaseAgent;
 import ro.cs.pub.pubsub.message.MessageFactory;
 import ro.cs.pub.pubsub.message.shared.LogMessageContent;
+import ro.cs.pub.pubsub.tera.agent.context.AccessPointProvider;
+import ro.cs.pub.pubsub.tera.agent.context.NeighborProvider;
+import ro.cs.pub.pubsub.tera.agent.context.TeraAgentContext;
 import ro.cs.pub.pubsub.tera.behaviour.MainBehaviour;
 import ro.cs.pub.pubsub.tera.behaviour.initiation.InitiationReceiver;
 import ro.cs.pub.pubsub.tera.behaviour.initiation.InitiationRequester;
@@ -29,12 +34,17 @@ public class TeraAgent extends BaseAgent {
 
 		TeraAgentArguments args = (TeraAgentArguments) getArguments()[0];
 		Configuration configuration = args.getConfiguration();
+		
+		// setup context elements
+		MessageFactory messageFactory = new MessageFactory();
+		AccessPointProvider accessPointProvider = new AccessPointProvider();
+		NeighborProvider neighborProvider = new NeighborProvider( //
+				this, configuration.getInt("neighbors.max"));
+		HashSet<Topic> subscribedTopics = new HashSet<Topic>();
 
-		context = new TeraAgentContext();
-		context.setMessageFactory(new MessageFactory());
-		context.setAccessPointProvider(new AccessPointProvider());
-		context.setNeighborProvider(new NeighborProvider( //
-				this, configuration.getInt("neighbors.max")));
+		// setup context
+		context = new TeraAgentContext(messageFactory, accessPointProvider,
+				neighborProvider, subscribedTopics);
 
 		// setup behaviors
 		SequentialBehaviour root = new SequentialBehaviour(this);

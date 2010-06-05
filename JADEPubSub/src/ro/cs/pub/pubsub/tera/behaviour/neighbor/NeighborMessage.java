@@ -1,7 +1,6 @@
-package ro.cs.pub.pubsub.tera.behaviour.neighbor.message;
+package ro.cs.pub.pubsub.tera.behaviour.neighbor;
 
 import ro.cs.pub.pubsub.message.MessageContent;
-import ro.cs.pub.pubsub.tera.behaviour.neighbor.View;
 
 public class NeighborMessage implements MessageContent {
 	private static final long serialVersionUID = 1L;
