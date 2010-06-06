@@ -1,7 +1,6 @@
 package tera.networking;
 
 import java.net.InetAddress;
-import java.util.Collection;
 import java.util.Hashtable;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -13,14 +12,14 @@ import tera.utils.TeraLoggingService;
 public class ConnectionManager 
 {
 	private int listenPort;
+	private int maxActive;
 	private boolean running;
 	private ConnectionListener listener;
 	private MessageHandler messageHandler;
 	private Logger logger;
-
 	private Hashtable<String, ConnectionHandler> connections;
 	
-	public ConnectionManager(MessageHandler messageHandler, int listenPort)
+	public ConnectionManager(MessageHandler messageHandler, int listenPort, int maxActive)
 	{
 		this.messageHandler = messageHandler;
 		this.listenPort = listenPort;
@@ -77,8 +76,7 @@ public class ConnectionManager
 	{
 		if (!running) return;
 		running = false;
-		Collection<ConnectionHandler> cconns = connections.values();
-		for (ConnectionHandler conn : cconns) conn.close();
+		for (ConnectionHandler conn : connections.values()) conn.close();
 		connections.clear();
 		if (listener != null) listener.close();
 	}
@@ -89,11 +87,11 @@ public class ConnectionManager
 		{
 			GreetingMessage msg = (GreetingMessage) oMsg;
 			connectionHandler.setRemoteListenPort(msg.sourceListenPort());
-			connections.put(connectionHandler.toString(), connectionHandler);
+			addHandler(connectionHandler);
 			showMessage(connectionHandler + " says '" + msg.message() + "'");
 		}
 		else
-			if (messageHandler != null) messageHandler.handleMessage(oMsg);
+			if (messageHandler != null) messageHandler.handleMessageReceived(oMsg);
 	}
 
 	public void sendMessage(Object oMsg, String remoteIP, int remoteListenPort)
@@ -104,8 +102,49 @@ public class ConnectionManager
 		if (handler == null)
 		{
 			handler = new ConnectionHandler(this, remoteIP, remoteListenPort);
-			connections.put(handler.toString(), handler);
+			addHandler(handler);
 		}
 		handler.sendMessage(oMsg);	
+	}
+
+	public void signalConnectionClosed(ConnectionHandler connectionHandler)
+	{
+		connections.remove(connectionHandler.toString());
+	}
+	
+	private void addHandler(ConnectionHandler connectionHandler)
+	{
+		if (connectionHandler == null) return;
+		if (connections.size() >= maxActive)
+		{
+			long oldestTime = -1;
+			ConnectionHandler oldestConn = null;
+			for (ConnectionHandler conn : connections.values())
+				if (oldestTime > conn.getLastUsed() || oldestTime < 0)
+				{
+					oldestConn = conn;
+					oldestTime = conn.getLastUsed();
+				}
+			connections.remove(oldestConn.toString());
+		}
+		ConnectionHandler previous = connections.get(connectionHandler.toString());
+		if (previous != null) previous.close();
+		connections.put(connectionHandler.toString(), connectionHandler);
+	}
+	
+	public int getMaxActiveConnections()
+	{
+		return maxActive;
+	}
+	
+	public int getConnectionCount()
+	{
+		return connections.size();
+	}
+
+	public void signalUnreachablePeer(ConnectionHandler connectionHandler)
+	{
+		// TODO: propagate to cyclone overlay
+		
 	}
 }

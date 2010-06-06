@@ -18,7 +18,7 @@ import tera.utils.TeraLoggingService;
 
 public class TeraSimulator implements Runnable
 {
-	private int portMin, portMax;
+	private int portMin, portMax, maxConns;
 	private List<String> peerAddresses;
 	private int cyclonePeriod;
 	private Logger logger;
@@ -35,6 +35,7 @@ public class TeraSimulator implements Runnable
 		portMin = 65000;
 		portMax = 65010;
 		cyclonePeriod = 5;
+		maxConns = 5;
 		peerAddresses = new LinkedList<String>();
 		String peerFile = "peers.txt";
 
@@ -44,6 +45,7 @@ public class TeraSimulator implements Runnable
 			props.load(new FileInputStream(settingsFile));
 			portMin = Integer.parseInt(props.getProperty("port-min"));
 			portMax = Integer.parseInt(props.getProperty("port-max"));
+			maxConns = Integer.parseInt(props.getProperty("max-conns"));
 			cyclonePeriod = Integer.parseInt(props.getProperty("cyclone-period"));
 			peerFile = props.getProperty("peers-file").trim();
 		}
@@ -52,6 +54,7 @@ public class TeraSimulator implements Runnable
             logger.log(Level.WARNING, "Simulation config file '" + settingsFile + "' could not be found!");
             props.setProperty("port-min", portMin + "");
             props.setProperty("port-max", portMax + "");
+            props.setProperty("max-conns", maxConns + "");
             props.setProperty("peers-file", peerFile);
             props.setProperty("cyclone-period", cyclonePeriod + "");
             try
@@ -92,7 +95,7 @@ public class TeraSimulator implements Runnable
 		logger.info("Simulation started on " + new Date());
 		List<TeraNetworkManager> peers = new LinkedList<TeraNetworkManager>();
 		for (int port = portMin; port <= portMax; port++)
-			peers.add(new TeraNetworkManager(port, cyclonePeriod));
+			peers.add(new TeraNetworkManager(port, cyclonePeriod, maxConns));
 		try { Thread.sleep(5000); }
 		catch (Exception ex) {}
 		for (TeraNetworkManager peer : peers) peer.diconnect();

@@ -16,12 +16,13 @@ public class ConnectionHandler
 	private ObjectOutputStream oos;
 	private ConnectionManager connectionManager;
 	private boolean closed;
+	private long lastUsed;	
 
 	class MessageReader extends Thread {
 		@Override
 		public void run()
 		{
-			while (!closed) readMessage();
+			readMessage();
 		}};
 
 	public ConnectionHandler(ConnectionManager connectionManager, Socket clientSocket)
@@ -35,6 +36,7 @@ public class ConnectionHandler
 			connectionManager.dealError("Could not get remote IP!", ex, false);
 		}
 
+		this.lastUsed = System.currentTimeMillis();
 		this.connectionManager = connectionManager;
 		this.socket = clientSocket;
 
@@ -66,6 +68,8 @@ public class ConnectionHandler
 		catch (Exception ex)
 		{
 			connectionManager.dealError("Could not connect to " + this + "!", ex, false);
+			connectionManager.signalUnreachablePeer(this);
+			close();
 			return;
 		}
 		sendMessage(new GreetingMessage(connectionManager.getLocalIP(), connectionManager.getListenPort()));
@@ -111,6 +115,7 @@ public class ConnectionHandler
 			oos.writeObject(oMsg);
 			oos.flush();
 			oos.reset();
+			this.lastUsed = System.currentTimeMillis();
 		}
 		catch (Exception ex)
 		{
@@ -127,6 +132,7 @@ public class ConnectionHandler
 		{
 			try
 			{
+				this.lastUsed = System.currentTimeMillis();
 				connectionManager.handleMessage(ois.readObject(), this);
 			}
 			catch (Exception ex)
@@ -143,6 +149,7 @@ public class ConnectionHandler
 	public void close()
 	{
 		connectionManager.showMessage("Closing connection to " + this);
+		connectionManager.signalConnectionClosed(this);
 		closed = true;
 		if (ois != null)
 			try { ois. close(); }
@@ -178,5 +185,10 @@ public class ConnectionHandler
 	public void setRemoteListenPort(int port)
 	{
 		remoteListenPort = port;
+	}
+	
+	public long getLastUsed()
+	{
+		return lastUsed;
 	}
 }
