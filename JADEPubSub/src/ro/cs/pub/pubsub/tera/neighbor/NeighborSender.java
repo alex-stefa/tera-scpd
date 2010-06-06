@@ -13,7 +13,15 @@ import ro.cs.pub.pubsub.tera.agent.TeraAgent;
 import ro.cs.pub.pubsub.tera.agent.context.NeighborProvider;
 
 /**
- * Sends a shuffling message.
+ * Sends a {@link View} that contains a random selection of neighbors.
+ * 
+ * Phases:
+ * 
+ * - Initial: The {@link NeighborController} request the sending of a message. a
+ * view is sent to a randomly chosen neighbor. the selected peer is removed from
+ * the agent's neighbor set, being put again after a reply is received.
+ * 
+ * - Reply: A reply message is sent to the sender of the initial message.
  */
 public class NeighborSender extends OneShotBehaviour {
 	private static final long serialVersionUID = 1L;
@@ -66,6 +74,9 @@ public class NeighborSender extends OneShotBehaviour {
 		ViewGenerator generator = controller.getViewGenerator();
 		View view = generator.generateView(receiver, //
 				controller.getViewSize());
+
+		// remove the receiver from the neighbor set
+		np.remove(receiver);
 
 		// prepare the message
 		ACLMessage msg = mf.buildMessage( //
