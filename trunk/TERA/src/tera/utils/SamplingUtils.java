@@ -10,6 +10,7 @@ public class SamplingUtils
 	
 	public static <T> List<T> getRandomSamples(List<T> elements, int count)
 	{
+		if (elements == null || elements.size() == 0) return null;
 		if (count >= elements.size()) return elements;
 		List<Integer> unused = new ArrayList<Integer>(elements.size());
 		List<T> samples = new ArrayList<T>(count);
@@ -23,5 +24,9 @@ public class SamplingUtils
 		return samples;
 	}
 	
-
+	public static <T> T getRandomSample(List<T> elements)
+	{
+		if (elements.size() == 0) return null;
+		return elements.get(rnd.nextInt(elements.size()));
+	}
 }
