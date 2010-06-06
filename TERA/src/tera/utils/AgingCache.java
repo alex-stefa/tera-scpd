@@ -58,24 +58,24 @@ public class AgingCache<T> implements Serializable
 		return new CacheEntry<T>(oldestEntry.getKey(), oldestEntry.getValue());
 	}
 	
-	public CacheEntry<T> put(CacheEntry<T> entry)
+	public CacheEntry<T> put(CacheEntry<T> newEntry)
 	{
-		if (entry == null) return null;
-		Integer prevAge = cache.get(entry.getEntry());
-		int newAge = entry.getAge();
+		if (newEntry == null) return null;
+		Integer prevAge = cache.get(newEntry.entry);
+		int newAge = newEntry.age;
 		if (prevAge != null) newAge = Math.min(newAge, prevAge.intValue());
 		
 		if (cache.size() < maxSize || prevAge != null)
 		{
-			cache.put(entry.getEntry(), newAge);
+			cache.put(newEntry.entry, newAge);
 			return null;
 		}
 
 		CacheEntry<T> oldestEntry = peekOldest();
 		if (oldestEntry == null) return null;
-		if (oldestEntry.getAge() < newAge) return null;
-		cache.remove(oldestEntry.getEntry());
-		cache.put(entry.getEntry(), newAge);
+		if (oldestEntry.age < newAge) return null;
+		cache.remove(oldestEntry.entry);
+		cache.put(newEntry.entry, newAge);
 		return oldestEntry;
 	}
 	
@@ -93,10 +93,15 @@ public class AgingCache<T> implements Serializable
 		return new CacheEntry<T>(key, age);
 	}
 	
-	public void incAge()
+	public void incAge(int ammount)
 	{
 		for (Entry<T, Integer> entry : cache.entrySet())
-			entry.setValue(new Integer(entry.getValue().intValue() + 1));
+			entry.setValue(new Integer(entry.getValue().intValue() + ammount));
+	}
+	
+	public void incAge()
+	{
+		incAge(1);
 	}
 	
 	public List<CacheEntry<T>> getEntries()
@@ -112,8 +117,8 @@ public class AgingCache<T> implements Serializable
 	{
 		private static final long serialVersionUID = 1L;
 
-		private T entry;
-		private int age;
+		public T entry;
+		public int age;
 		
 		public CacheEntry(T entry)
 		{
@@ -127,35 +132,10 @@ public class AgingCache<T> implements Serializable
 			this.age = age;
 		}
 		
-		public int getAge()
-		{
-			return age;
-		}
-		
-		public T getEntry()
-		{
-			return entry;
-		}
-		
-		public void setAge(int age)
-		{
-			this.age = age;
-		}
-		
-		public void setEntry(T entry)
-		{
-			this.entry = entry;
-		}
-		
-		public void incAge()
-		{
-			age++;
-		}
-
 		@Override
 		public int compareTo(CacheEntry<T> other) // oldest first!
 		{
-			return other.getAge() - this.age; 
+			return other.age - this.age; 
 		}
 	}
 }
