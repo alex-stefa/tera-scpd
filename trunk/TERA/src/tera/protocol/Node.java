@@ -1,7 +1,7 @@
 package tera.protocol;
 
 import java.io.Serializable;
-
+import java.util.
 import tera.utils.GeoHashingService;
 
 
@@ -55,4 +55,13 @@ public class Node implements Serializable
 	{
 		return geoHash;
 	}
+	
+	@Override
+	public boolean equals(Object other)
+	{
+		if (!(other instanceof Node)) return false;
+		Node node = (Node) other;
+		return this.id == node.getID();
+	}
+
 }

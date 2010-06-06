@@ -19,17 +19,17 @@ public class TeraMessage implements Serializable
 		this.timestamp = System.currentTimeMillis();
 	}
 
-	public long timestamp()
+	public long getTimestamp()
 	{
 		return timestamp;
 	}
 
-	public Node source()
+	public Node getSource()
 	{
 		return source;
 	}
 
-	public Node destination()
+	public Node getDestination()
 	{
 		return destination;
 	}
