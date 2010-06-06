@@ -36,13 +36,13 @@ public class App {
 	}
 
 	public void start() throws StaleProxyException {
-		// setup platform
+		// set up platform
 		Runtime rt = Runtime.instance();
 		rt.setCloseVM(true);
 		Profile pMain = new ProfileImpl(null,
 				configuration.getInt("jade.port"), null);
 
-		// setup the main container
+		// set up the main container
 		AgentContainer container = rt.createMainContainer(pMain);
 		if (configuration.getBoolean("jade.gui")) {
 			AgentController rma = container.createNewAgent("rma", //

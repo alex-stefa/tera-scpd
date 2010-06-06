@@ -1,0 +1,30 @@
+package ro.cs.pub.pubsub.overlay.context;
+
+import ro.cs.pub.pubsub.overlay.NeighborProvider;
+import ro.cs.pub.pubsub.overlay.OverlayCommunicationInitiator;
+import ro.cs.pub.pubsub.overlay.view.ViewGenerator;
+
+public class OverlayContext {
+	private final NeighborProvider neighborProvider;
+	private final ViewGenerator viewGenerator;
+	private final OverlayCommunicationInitiator initiator;
+
+	protected OverlayContext(NeighborProvider neighborProvider,
+			ViewGenerator viewGenerator, OverlayCommunicationInitiator initiator) {
+		this.neighborProvider = neighborProvider;
+		this.viewGenerator = viewGenerator;
+		this.initiator = initiator;
+	}
+
+	public NeighborProvider getNeighborProvider() {
+		return neighborProvider;
+	}
+
+	public ViewGenerator getViewGenerator() {
+		return viewGenerator;
+	}
+
+	public OverlayCommunicationInitiator getInitiator() {
+		return initiator;
+	}
+}

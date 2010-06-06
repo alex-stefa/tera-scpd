@@ -2,13 +2,14 @@ package ro.cs.pub.pubsub.overlay;
 
 import jade.core.behaviours.TickerBehaviour;
 
-public class OverlayMessageInitiator extends TickerBehaviour {
+public class OverlayCommunicationInitiator extends TickerBehaviour {
 	private static final long serialVersionUID = 1L;
-	
+
 	private final OverlayManager manager;
 	private final OverlayId id;
 
-	public OverlayMessageInitiator(OverlayManager manager, OverlayId id, long period) {
+	public OverlayCommunicationInitiator(OverlayManager manager, OverlayId id,
+			long period) {
 		super(manager.getAgent(), period);
 		this.manager = manager;
 		this.id = id;

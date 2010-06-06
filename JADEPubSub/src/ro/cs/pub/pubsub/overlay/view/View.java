@@ -1,4 +1,4 @@
-package ro.cs.pub.pubsub.overlay;
+package ro.cs.pub.pubsub.overlay.view;
 
 import jade.core.AID;
 import jade.util.leap.Serializable;

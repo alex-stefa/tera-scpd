@@ -1,4 +1,4 @@
-package ro.cs.pub.pubsub.tera.randomWalk.behaviour;
+package ro.cs.pub.pubsub.tera.randomWalk;
 
 import jade.core.AID;
 import jade.core.behaviours.OneShotBehaviour;

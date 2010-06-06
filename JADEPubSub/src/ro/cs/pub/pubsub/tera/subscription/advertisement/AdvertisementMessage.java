@@ -1,4 +1,4 @@
-package ro.cs.pub.pubsub.tera.advertisement;
+package ro.cs.pub.pubsub.tera.subscription.advertisement;
 
 import java.util.Set;
 

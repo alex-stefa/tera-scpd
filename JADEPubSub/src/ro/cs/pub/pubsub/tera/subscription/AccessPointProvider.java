@@ -1,4 +1,4 @@
-package ro.cs.pub.pubsub.tera.agent;
+package ro.cs.pub.pubsub.tera.subscription;
 
 import jade.core.AID;
 

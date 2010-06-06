@@ -8,7 +8,7 @@ public class Topic extends OverlayId {
 	public Topic(String id) {
 		super(id);
 	}
-	
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;

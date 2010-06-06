@@ -22,8 +22,8 @@ public class NeighborProvider implements Iterable<AID> {
 	private final int maxSize;
 	private final Set<AID> neighbors;
 
-	public NeighborProvider(Agent agent, int maxSize) {
-		this.agent = agent;
+	public NeighborProvider(OverlayManager manager, int maxSize) {
+		this.agent = manager.getAgent();
 		this.maxSize = maxSize;
 		this.neighbors = new HashSet<AID>();
 	}

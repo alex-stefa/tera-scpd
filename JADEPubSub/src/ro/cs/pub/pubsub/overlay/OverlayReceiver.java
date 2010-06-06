@@ -13,6 +13,7 @@ import ro.cs.pub.pubsub.agent.BaseAgent;
 import ro.cs.pub.pubsub.agent.BaseTemplateBehaviour;
 import ro.cs.pub.pubsub.exception.MessageException;
 import ro.cs.pub.pubsub.message.MessageFactory;
+import ro.cs.pub.pubsub.overlay.view.View;
 
 public class OverlayReceiver extends BaseTemplateBehaviour<BaseAgent> {
 	private static final long serialVersionUID = 1L;
@@ -28,7 +29,8 @@ public class OverlayReceiver extends BaseTemplateBehaviour<BaseAgent> {
 	protected MessageTemplate setupTemplate() {
 		return MessageTemplate.and(
 				//
-				MessageTemplate.MatchProtocol(Names.PROTOCOL_OVERLAY_MANAGEMENT),
+				MessageTemplate
+						.MatchProtocol(Names.PROTOCOL_OVERLAY_MANAGEMENT),
 				MessageTemplate.MatchPerformative(ACLMessage.INFORM));
 	}
 

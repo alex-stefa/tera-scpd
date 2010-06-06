@@ -6,27 +6,25 @@ import jade.domain.FIPAAgentManagement.ServiceDescription;
 import jade.lang.acl.ACLMessage;
 
 import java.util.Collection;
-import java.util.HashSet;
 import java.util.LinkedList;
 
 import org.apache.commons.configuration.Configuration;
 
 import ro.cs.pub.pubsub.Names;
-import ro.cs.pub.pubsub.Topic;
 import ro.cs.pub.pubsub.agent.BaseAgent;
 import ro.cs.pub.pubsub.message.MessageFactory;
 import ro.cs.pub.pubsub.message.shared.LogMessageContent;
 import ro.cs.pub.pubsub.overlay.OverlayManager;
 import ro.cs.pub.pubsub.tera.initiation.InitiationReceiver;
 import ro.cs.pub.pubsub.tera.initiation.InitiationRequester;
+import ro.cs.pub.pubsub.tera.subscription.AccessPointProvider;
 
 public class TeraAgent extends BaseAgent {
 	private static final long serialVersionUID = 1L;
 
 	private MessageFactory messageFactory;
 	private AccessPointProvider accessPointProvider;
-	private HashSet<Topic> subscribedTopics;
-	private OverlayManager overlayManager;
+	private MainBehaviour mainBehaviour;
 
 	@Override
 	protected void setup() {
@@ -35,12 +33,11 @@ public class TeraAgent extends BaseAgent {
 		TeraAgentArguments args = (TeraAgentArguments) getArguments()[0];
 		Configuration configuration = args.getConfiguration();
 
-		// setup context
+		// set up context
 		messageFactory = new MessageFactory();
 		accessPointProvider = new AccessPointProvider();
-		subscribedTopics = new HashSet<Topic>();
 
-		// setup behaviors
+		// set up behaviors
 		SequentialBehaviour root = new SequentialBehaviour(this);
 
 		// initiation
@@ -48,17 +45,9 @@ public class TeraAgent extends BaseAgent {
 				configuration.getLong("initiation.detection.period")));
 		root.addSubBehaviour(new InitiationReceiver(this));
 
-		// overlay management
-		overlayManager = new OverlayManager(this);
-		overlayManager.registerOverlay( //
-				OverlayManager.BASE_OVERLAY_ID, //
-				configuration.getInt("neighbors.max"), //
-				configuration.getInt("shuffling.view.size"), //
-				configuration.getLong("shuffling.period"));
-		root.addSubBehaviour(overlayManager);
-
 		// main
-		root.addSubBehaviour(new MainBehaviour(this, configuration));
+		mainBehaviour = new MainBehaviour(this, configuration);
+		root.addSubBehaviour(mainBehaviour);
 
 		// add root behavior
 		addBehaviour(root);
@@ -100,11 +89,7 @@ public class TeraAgent extends BaseAgent {
 		return accessPointProvider;
 	}
 
-	public HashSet<Topic> getSubscribedTopics() {
-		return subscribedTopics;
-	}
-
 	public OverlayManager getOverlayManager() {
-		return overlayManager;
+		return mainBehaviour.getOverlayManager();
 	}
 }

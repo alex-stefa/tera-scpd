@@ -1,4 +1,4 @@
-package ro.cs.pub.pubsub.tera.advertisement;
+package ro.cs.pub.pubsub.tera.subscription.advertisement;
 
 import jade.lang.acl.ACLMessage;
 import jade.lang.acl.MessageTemplate;
@@ -10,14 +10,19 @@ import ro.cs.pub.pubsub.Topic;
 import ro.cs.pub.pubsub.agent.BaseTemplateBehaviour;
 import ro.cs.pub.pubsub.exception.MessageException;
 import ro.cs.pub.pubsub.message.MessageFactory;
-import ro.cs.pub.pubsub.tera.agent.AccessPointProvider;
 import ro.cs.pub.pubsub.tera.agent.TeraAgent;
+import ro.cs.pub.pubsub.tera.subscription.AccessPointProvider;
+import ro.cs.pub.pubsub.tera.subscription.SubscriptionManager;
 
+/**
+ * Receives subscription advertisements and saves them using the agent's
+ * {@link AccessPointProvider}.
+ */
 public class AdvertisementReceiver extends BaseTemplateBehaviour<TeraAgent> {
 	private static final long serialVersionUID = 1L;
 
-	public AdvertisementReceiver(TeraAgent agent) {
-		super(agent);
+	public AdvertisementReceiver(SubscriptionManager manager) {
+		super(manager.getAgent());
 	}
 
 	@Override

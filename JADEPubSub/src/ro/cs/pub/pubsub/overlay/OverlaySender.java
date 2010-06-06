@@ -10,6 +10,8 @@ import ro.cs.pub.pubsub.Names;
 import ro.cs.pub.pubsub.agent.BaseAgent;
 import ro.cs.pub.pubsub.exception.MessageException;
 import ro.cs.pub.pubsub.message.MessageFactory;
+import ro.cs.pub.pubsub.overlay.view.View;
+import ro.cs.pub.pubsub.overlay.view.ViewGenerator;
 
 /**
  * Sends a {@link View} that contains a random selection of neighbors.
@@ -46,8 +48,7 @@ public class OverlaySender extends OneShotBehaviour {
 			BaseAgent agent = manager.getAgent();
 			NeighborProvider np = manager.getOverlayContext(id)
 					.getNeighborProvider();
-			ViewGenerator vg = manager.getOverlayContext(id)
-					.getViewGenerator();
+			ViewGenerator vg = manager.getOverlayContext(id).getViewGenerator();
 			MessageFactory mf = agent.getMessageFactory();
 
 			if (initialMessage == null) {

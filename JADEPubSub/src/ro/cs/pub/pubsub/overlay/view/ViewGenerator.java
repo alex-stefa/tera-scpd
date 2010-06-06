@@ -1,4 +1,4 @@
-package ro.cs.pub.pubsub.overlay;
+package ro.cs.pub.pubsub.overlay.view;
 
 import jade.core.AID;
 
@@ -7,15 +7,17 @@ import java.util.Iterator;
 import java.util.Set;
 
 import ro.cs.pub.pubsub.agent.BaseAgent;
+import ro.cs.pub.pubsub.overlay.NeighborProvider;
+import ro.cs.pub.pubsub.overlay.OverlayManager;
 
 public class ViewGenerator {
 	private final BaseAgent agent;
 	private final NeighborProvider provider;
 	private final int viewSize;
 
-	public ViewGenerator(BaseAgent agent, NeighborProvider provider,
+	public ViewGenerator(OverlayManager manager, NeighborProvider provider,
 			int viewSize) {
-		this.agent = agent;
+		this.agent = manager.getAgent();
 		this.provider = provider;
 		this.viewSize = viewSize;
 	}
