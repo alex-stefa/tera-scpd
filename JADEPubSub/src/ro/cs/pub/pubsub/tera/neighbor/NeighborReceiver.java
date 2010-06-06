@@ -12,8 +12,8 @@ import ro.cs.pub.pubsub.Names;
 import ro.cs.pub.pubsub.agent.BaseTemplateBehaviour;
 import ro.cs.pub.pubsub.exception.MessageException;
 import ro.cs.pub.pubsub.message.MessageFactory;
+import ro.cs.pub.pubsub.tera.agent.NeighborProvider;
 import ro.cs.pub.pubsub.tera.agent.TeraAgent;
-import ro.cs.pub.pubsub.tera.agent.context.NeighborProvider;
 
 public class NeighborReceiver extends BaseTemplateBehaviour<TeraAgent> {
 	private static final long serialVersionUID = 1L;
@@ -36,7 +36,7 @@ public class NeighborReceiver extends BaseTemplateBehaviour<TeraAgent> {
 	@Override
 	protected void onMessage(ACLMessage message) {
 		try {
-			MessageFactory mf = agent.getContext().getMessageFactory();
+			MessageFactory mf = agent.getMessageFactory();
 			NeighborMessage content = (NeighborMessage) mf
 					.extractContent(message);
 
@@ -56,7 +56,7 @@ public class NeighborReceiver extends BaseTemplateBehaviour<TeraAgent> {
 	int round = 0;
 
 	private void updateNeighbors(View view) {
-		NeighborProvider np = agent.getContext().getNeighborProvider();
+		NeighborProvider np = agent.getNeighborProvider();
 		Set<AID> incoming = new HashSet<AID>(view.getNeighbors());
 
 		// remove the nodes we know about

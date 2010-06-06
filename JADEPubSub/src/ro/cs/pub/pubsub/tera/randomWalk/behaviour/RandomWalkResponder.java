@@ -10,8 +10,8 @@ import ro.cs.pub.pubsub.Names;
 import ro.cs.pub.pubsub.agent.BaseTemplateBehaviour;
 import ro.cs.pub.pubsub.exception.MessageException;
 import ro.cs.pub.pubsub.message.MessageFactory;
+import ro.cs.pub.pubsub.tera.agent.NeighborProvider;
 import ro.cs.pub.pubsub.tera.agent.TeraAgent;
-import ro.cs.pub.pubsub.tera.agent.context.NeighborProvider;
 import ro.cs.pub.pubsub.tera.randomWalk.message.RandomWalkRequest;
 import ro.cs.pub.pubsub.tera.randomWalk.message.RandomWalkResponse;
 import ro.cs.pub.pubsub.tera.randomWalk.processor.ProcessingResult;
@@ -45,7 +45,7 @@ public class RandomWalkResponder extends BaseTemplateBehaviour<TeraAgent> {
 	@Override
 	protected void onMessage(ACLMessage message) {
 		try {
-			MessageFactory mf = agent.getContext().getMessageFactory();
+			MessageFactory mf = agent.getMessageFactory();
 			RandomWalkRequest request;
 			request = (RandomWalkRequest) mf.extractContent(message);
 
@@ -99,7 +99,7 @@ public class RandomWalkResponder extends BaseTemplateBehaviour<TeraAgent> {
 	private void forward(MessageFactory mf, ACLMessage originalMessage,
 			RandomWalkRequest randomWalkRequest) throws MessageException {
 		// find the current set of neighbors and pick a random one
-		NeighborProvider np = agent.getContext().getNeighborProvider();
+		NeighborProvider np = agent.getNeighborProvider();
 
 		AID receiver = null;
 		Iterator<AID> it = np.randomIterator();

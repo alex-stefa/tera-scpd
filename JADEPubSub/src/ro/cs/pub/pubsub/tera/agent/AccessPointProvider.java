@@ -1,4 +1,4 @@
-package ro.cs.pub.pubsub.tera.agent.context;
+package ro.cs.pub.pubsub.tera.agent;
 
 import jade.core.AID;
 

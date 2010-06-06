@@ -27,7 +27,7 @@ public class LogMessageReceiver extends BaseTemplateBehaviour<Facilitator> {
 	@Override
 	protected void onMessage(ACLMessage message) {
 		try {
-			MessageFactory mf = agent.getContext().getMessageFactory();
+			MessageFactory mf = agent.getMessageFactory();
 			MessageContent content = mf.extractContent(message);
 			agent.print(content);
 		} catch (MessageException e) {

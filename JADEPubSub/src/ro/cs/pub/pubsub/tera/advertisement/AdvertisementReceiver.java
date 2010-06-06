@@ -10,8 +10,8 @@ import ro.cs.pub.pubsub.Topic;
 import ro.cs.pub.pubsub.agent.BaseTemplateBehaviour;
 import ro.cs.pub.pubsub.exception.MessageException;
 import ro.cs.pub.pubsub.message.MessageFactory;
+import ro.cs.pub.pubsub.tera.agent.AccessPointProvider;
 import ro.cs.pub.pubsub.tera.agent.TeraAgent;
-import ro.cs.pub.pubsub.tera.agent.context.AccessPointProvider;
 
 public class AdvertisementReceiver extends BaseTemplateBehaviour<TeraAgent> {
 	private static final long serialVersionUID = 1L;
@@ -32,13 +32,13 @@ public class AdvertisementReceiver extends BaseTemplateBehaviour<TeraAgent> {
 	@Override
 	protected void onMessage(ACLMessage message) {
 		try {
-			MessageFactory mf = agent.getContext().getMessageFactory();
+			MessageFactory mf = agent.getMessageFactory();
 			AdvertisementMessage ad = (AdvertisementMessage) mf
 					.extractContent(message);
-			
+
 			// add the topics
 			Set<Topic> adTopics = ad.getTopics();
-			AccessPointProvider app = agent.getContext().getAccessPointProvider();
+			AccessPointProvider app = agent.getAccessPointProvider();
 			for (Topic topic : adTopics) {
 				app.put(topic, message.getSender());
 			}

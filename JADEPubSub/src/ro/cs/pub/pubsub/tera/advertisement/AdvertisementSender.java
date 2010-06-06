@@ -12,8 +12,8 @@ import ro.cs.pub.pubsub.Topic;
 import ro.cs.pub.pubsub.exception.MessageException;
 import ro.cs.pub.pubsub.message.MessageContent;
 import ro.cs.pub.pubsub.message.MessageFactory;
+import ro.cs.pub.pubsub.tera.agent.NeighborProvider;
 import ro.cs.pub.pubsub.tera.agent.TeraAgent;
-import ro.cs.pub.pubsub.tera.agent.context.NeighborProvider;
 
 public class AdvertisementSender extends TickerBehaviour {
 	private static final long serialVersionUID = 1L;
@@ -37,14 +37,14 @@ public class AdvertisementSender extends TickerBehaviour {
 	}
 
 	private void sendAdvertisement() throws MessageException {
-		NeighborProvider np = agent.getContext().getNeighborProvider();
-		Set<Topic> topics = agent.getContext().getSubscribedTopics();
+		NeighborProvider np = agent.getNeighborProvider();
+		Set<Topic> topics = agent.getSubscribedTopics();
 
 		if (np.size() == 0 || topics.size() == 0) {
 			return;
 		}
 
-		MessageFactory mf = agent.getContext().getMessageFactory();
+		MessageFactory mf = agent.getMessageFactory();
 
 		ACLMessage message = mf.buildMessage( //
 				ACLMessage.INFORM, Names.PROTOCOL_TOPIC_ADVERTISEMENT);

@@ -30,7 +30,7 @@ public class InitiationRequester extends TickerBehaviour {
 			return;
 		}
 
-		MessageFactory mf = agent.getContext().getMessageFactory();
+		MessageFactory mf = agent.getMessageFactory();
 		ACLMessage msg = mf.buildMessage(ACLMessage.CFP,
 				Names.PROTOCOL_INITIATION);
 		msg.addReceiver(agents.iterator().next());

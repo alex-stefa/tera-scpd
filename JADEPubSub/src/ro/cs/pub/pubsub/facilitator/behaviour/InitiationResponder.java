@@ -65,7 +65,7 @@ public class InitiationResponder extends BaseTemplateBehaviour<Facilitator> {
 	}
 
 	private void sendReply(ACLMessage message) throws MessageException {
-		MessageFactory mf = agent.getContext().getMessageFactory();
+		MessageFactory mf = agent.getMessageFactory();
 		ACLMessage reply = message.createReply();
 		reply.setPerformative(ACLMessage.PROPOSE);
 

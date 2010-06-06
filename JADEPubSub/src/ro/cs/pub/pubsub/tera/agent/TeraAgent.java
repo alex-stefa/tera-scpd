@@ -16,16 +16,16 @@ import ro.cs.pub.pubsub.Topic;
 import ro.cs.pub.pubsub.agent.BaseAgent;
 import ro.cs.pub.pubsub.message.MessageFactory;
 import ro.cs.pub.pubsub.message.shared.LogMessageContent;
-import ro.cs.pub.pubsub.tera.agent.context.AccessPointProvider;
-import ro.cs.pub.pubsub.tera.agent.context.NeighborProvider;
-import ro.cs.pub.pubsub.tera.agent.context.TeraAgentContext;
 import ro.cs.pub.pubsub.tera.initiation.InitiationReceiver;
 import ro.cs.pub.pubsub.tera.initiation.InitiationRequester;
 
 public class TeraAgent extends BaseAgent {
 	private static final long serialVersionUID = 1L;
 
-	private TeraAgentContext context;
+	private MessageFactory messageFactory;
+	private AccessPointProvider accessPointProvider;
+	private NeighborProvider neighborProvider;
+	private HashSet<Topic> subscribedTopics;
 
 	@Override
 	protected void setup() {
@@ -33,17 +33,13 @@ public class TeraAgent extends BaseAgent {
 
 		TeraAgentArguments args = (TeraAgentArguments) getArguments()[0];
 		Configuration configuration = args.getConfiguration();
-		
-		// setup context elements
-		MessageFactory messageFactory = new MessageFactory();
-		AccessPointProvider accessPointProvider = new AccessPointProvider();
-		NeighborProvider neighborProvider = new NeighborProvider( //
-				this, configuration.getInt("neighbors.max"));
-		HashSet<Topic> subscribedTopics = new HashSet<Topic>();
 
 		// setup context
-		context = new TeraAgentContext(messageFactory, accessPointProvider,
-				neighborProvider, subscribedTopics);
+		messageFactory = new MessageFactory();
+		accessPointProvider = new AccessPointProvider();
+		neighborProvider = new NeighborProvider( //
+				this, configuration.getInt("neighbors.max"));
+		subscribedTopics = new HashSet<Topic>();
 
 		// setup behaviors
 		SequentialBehaviour root = new SequentialBehaviour(this);
@@ -73,11 +69,6 @@ public class TeraAgent extends BaseAgent {
 		return descriptions;
 	}
 
-	@Override
-	public TeraAgentContext getContext() {
-		return context;
-	}
-
 	/**
 	 * Send a message to the logging service.
 	 * 
@@ -85,15 +76,27 @@ public class TeraAgent extends BaseAgent {
 	 */
 	public void sendLoggingMessage(LogMessageContent content) {
 		try {
-			MessageFactory mf = context.getMessageFactory();
 			ACLMessage msg;
-			msg = mf.buildMessage(ACLMessage.INFORM, Names.PROTOCOL_LOGGING);
+			msg = messageFactory.buildMessage(ACLMessage.INFORM,
+					Names.PROTOCOL_LOGGING);
 			AID ls = findAgents(Names.SERVICE_LOGGING).iterator().next();
 			msg.addReceiver(ls);
-			mf.fillContent(msg, content);
+			messageFactory.fillContent(msg, content);
 			send(msg);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+	}
+
+	public AccessPointProvider getAccessPointProvider() {
+		return accessPointProvider;
+	}
+
+	public NeighborProvider getNeighborProvider() {
+		return neighborProvider;
+	}
+
+	public HashSet<Topic> getSubscribedTopics() {
+		return subscribedTopics;
 	}
 }

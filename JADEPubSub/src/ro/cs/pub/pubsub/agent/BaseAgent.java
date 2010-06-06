@@ -12,10 +12,13 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
+import ro.cs.pub.pubsub.message.MessageFactory;
+
 public abstract class BaseAgent extends Agent {
 	private static final long serialVersionUID = 1L;
 
 	private long conversationId;
+	protected MessageFactory messageFactory;
 
 	@Override
 	protected void setup() {
@@ -27,14 +30,14 @@ public abstract class BaseAgent extends Agent {
 		} catch (FIPAException e) {
 			e.printStackTrace();
 		}
+
+		messageFactory = new MessageFactory();
 	}
 
 	/**
 	 * Creates service descriptions to be used in setup().
 	 */
 	protected abstract Collection<ServiceDescription> prepareServiceDescriptions();
-
-	public abstract AgentContext getContext();
 
 	/**
 	 * Registers agent services.
@@ -79,13 +82,21 @@ public abstract class BaseAgent extends Agent {
 		return findAgents(serviceType, null);
 	}
 
-	public void print(Object str) {
-		System.out.println(getAID().getLocalName() + ": " + str);
-	}
-
 	public String generateConversationId() {
 		long cId = conversationId++;
 		return "C" + getAID() + "_" + System.currentTimeMillis() + "_" + cId;
+	}
+
+	// CONTEXT
+
+	public MessageFactory getMessageFactory() {
+		return messageFactory;
+	}
+
+	// OUTPUT
+
+	public void print(Object str) {
+		System.out.println(getAID().getLocalName() + ": " + str);
 	}
 
 	@Override

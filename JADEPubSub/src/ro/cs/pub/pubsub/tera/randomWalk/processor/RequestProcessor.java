@@ -52,7 +52,7 @@ public class RequestProcessor {
 	private ProcessingResult processTopicRequest(RandomWalkRequest request) {
 		RandomWalkQuery query = request.getQuery();
 		// find a peer for given topic
-		AID peer = agent.getContext().getAccessPointProvider(). //
+		AID peer = agent.getAccessPointProvider(). //
 				get(((TopicQuery) query).getTopic());
 
 		if (peer != null) {

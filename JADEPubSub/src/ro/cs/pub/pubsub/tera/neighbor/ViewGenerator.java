@@ -6,8 +6,8 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
+import ro.cs.pub.pubsub.tera.agent.NeighborProvider;
 import ro.cs.pub.pubsub.tera.agent.TeraAgent;
-import ro.cs.pub.pubsub.tera.agent.context.NeighborProvider;
 
 public class ViewGenerator {
 	private final TeraAgent agent;
@@ -25,7 +25,7 @@ public class ViewGenerator {
 	 * @return a random view
 	 */
 	public View generateView(AID receiver, int size) {
-		NeighborProvider np = agent.getContext().getNeighborProvider();
+		NeighborProvider np = agent.getNeighborProvider();
 
 		// assure we obtain a random selection of neighbors
 		Iterator<AID> it = np.randomIterator();

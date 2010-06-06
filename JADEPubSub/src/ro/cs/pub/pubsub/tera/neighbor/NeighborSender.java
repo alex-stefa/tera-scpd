@@ -9,8 +9,8 @@ import java.util.Iterator;
 import ro.cs.pub.pubsub.Names;
 import ro.cs.pub.pubsub.exception.MessageException;
 import ro.cs.pub.pubsub.message.MessageFactory;
+import ro.cs.pub.pubsub.tera.agent.NeighborProvider;
 import ro.cs.pub.pubsub.tera.agent.TeraAgent;
-import ro.cs.pub.pubsub.tera.agent.context.NeighborProvider;
 
 /**
  * Sends a {@link View} that contains a random selection of neighbors.
@@ -43,8 +43,8 @@ public class NeighborSender extends OneShotBehaviour {
 	public void action() {
 		try {
 			TeraAgent agent = controller.getAgent();
-			NeighborProvider np = agent.getContext().getNeighborProvider();
-			MessageFactory mf = agent.getContext().getMessageFactory();
+			NeighborProvider np = agent.getNeighborProvider();
+			MessageFactory mf = agent.getMessageFactory();
 
 			if (initialMessage == null) {
 				sendInitialMessage(agent, np, mf);

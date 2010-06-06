@@ -60,7 +60,7 @@ public class RandomWalkInitiator extends SequentialBehaviour {
 
 		@Override
 		public void action() {
-			MessageFactory mf = agent.getContext().getMessageFactory();
+			MessageFactory mf = agent.getMessageFactory();
 			ACLMessage msg = mf.buildMessage(ACLMessage.REQUEST,
 					Names.PROTOCOL_RANDOM_WALK);
 			msg.addReceiver(peer);
@@ -101,7 +101,7 @@ public class RandomWalkInitiator extends SequentialBehaviour {
 
 		@Override
 		protected void onMessage(ACLMessage message) {
-			MessageFactory mf = agent.getContext().getMessageFactory();
+			MessageFactory mf = agent.getMessageFactory();
 			try {
 				result = ((RandomWalkResponse) mf.extractContent(message))
 						.getResult();

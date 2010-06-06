@@ -7,13 +7,13 @@ import ro.cs.pub.pubsub.message.MessageContent;
  */
 public class RandomWalkResponse implements MessageContent {
 	private static final long serialVersionUID = 1L;
-	
+
 	private final RandomWalkResult result;
 
 	public RandomWalkResponse(RandomWalkResult result) {
 		this.result = result;
 	}
-	
+
 	public RandomWalkResult getResult() {
 		return result;
 	}
