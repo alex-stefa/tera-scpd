@@ -4,7 +4,7 @@ public interface Names {
 	public static final String PROTOCOL_INITIATION = "initiation";
 	public static final String PROTOCOL_LOGGING = "logging";
 	public static final String PROTOCOL_RANDOM_WALK = "random-walk";
-	public static final String PROTOCOL_NEIGHBOR_GOSSIP = "neighbor-gossip";
+	public static final String PROTOCOL_OVERLAY_MANAGEMENT = "overlay-management";
 	public static final String PROTOCOL_TOPIC_ADVERTISEMENT = "topic-advertisement";
 
 	public static final String SERVICE_TERA = "tera-agent";

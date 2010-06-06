@@ -1,6 +1,7 @@
-package ro.cs.pub.pubsub.tera.agent;
+package ro.cs.pub.pubsub.overlay;
 
 import jade.core.AID;
+import jade.core.Agent;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -17,11 +18,11 @@ import ro.cs.pub.pubsub.util.RandomIterator;
  * TODO consider the age of the entries
  */
 public class NeighborProvider implements Iterable<AID> {
-	private final TeraAgent agent;
+	private final Agent agent;
 	private final int maxSize;
 	private final Set<AID> neighbors;
 
-	public NeighborProvider(TeraAgent agent, int maxSize) {
+	public NeighborProvider(Agent agent, int maxSize) {
 		this.agent = agent;
 		this.maxSize = maxSize;
 		this.neighbors = new HashSet<AID>();

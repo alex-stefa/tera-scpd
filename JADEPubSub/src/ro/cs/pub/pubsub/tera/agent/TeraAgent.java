@@ -16,6 +16,7 @@ import ro.cs.pub.pubsub.Topic;
 import ro.cs.pub.pubsub.agent.BaseAgent;
 import ro.cs.pub.pubsub.message.MessageFactory;
 import ro.cs.pub.pubsub.message.shared.LogMessageContent;
+import ro.cs.pub.pubsub.overlay.OverlayManager;
 import ro.cs.pub.pubsub.tera.initiation.InitiationReceiver;
 import ro.cs.pub.pubsub.tera.initiation.InitiationRequester;
 
@@ -24,8 +25,8 @@ public class TeraAgent extends BaseAgent {
 
 	private MessageFactory messageFactory;
 	private AccessPointProvider accessPointProvider;
-	private NeighborProvider neighborProvider;
 	private HashSet<Topic> subscribedTopics;
+	private OverlayManager overlayManager;
 
 	@Override
 	protected void setup() {
@@ -37,8 +38,6 @@ public class TeraAgent extends BaseAgent {
 		// setup context
 		messageFactory = new MessageFactory();
 		accessPointProvider = new AccessPointProvider();
-		neighborProvider = new NeighborProvider( //
-				this, configuration.getInt("neighbors.max"));
 		subscribedTopics = new HashSet<Topic>();
 
 		// setup behaviors
@@ -48,6 +47,15 @@ public class TeraAgent extends BaseAgent {
 		root.addSubBehaviour(new InitiationRequester(this, //
 				configuration.getLong("initiation.detection.period")));
 		root.addSubBehaviour(new InitiationReceiver(this));
+
+		// overlay management
+		overlayManager = new OverlayManager(this);
+		overlayManager.registerOverlay( //
+				OverlayManager.BASE_OVERLAY_ID, //
+				configuration.getInt("neighbors.max"), //
+				configuration.getInt("shuffling.view.size"), //
+				configuration.getLong("shuffling.period"));
+		root.addSubBehaviour(overlayManager);
 
 		// main
 		root.addSubBehaviour(new MainBehaviour(this, configuration));
@@ -92,11 +100,11 @@ public class TeraAgent extends BaseAgent {
 		return accessPointProvider;
 	}
 
-	public NeighborProvider getNeighborProvider() {
-		return neighborProvider;
-	}
-
 	public HashSet<Topic> getSubscribedTopics() {
 		return subscribedTopics;
+	}
+
+	public OverlayManager getOverlayManager() {
+		return overlayManager;
 	}
 }

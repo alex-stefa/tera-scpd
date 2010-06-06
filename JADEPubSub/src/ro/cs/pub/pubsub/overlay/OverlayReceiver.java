@@ -1,0 +1,84 @@
+package ro.cs.pub.pubsub.overlay;
+
+import jade.core.AID;
+import jade.lang.acl.ACLMessage;
+import jade.lang.acl.MessageTemplate;
+
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Set;
+
+import ro.cs.pub.pubsub.Names;
+import ro.cs.pub.pubsub.agent.BaseAgent;
+import ro.cs.pub.pubsub.agent.BaseTemplateBehaviour;
+import ro.cs.pub.pubsub.exception.MessageException;
+import ro.cs.pub.pubsub.message.MessageFactory;
+
+public class OverlayReceiver extends BaseTemplateBehaviour<BaseAgent> {
+	private static final long serialVersionUID = 1L;
+
+	private final OverlayManager manager;
+
+	public OverlayReceiver(OverlayManager manager) {
+		super(manager.getAgent());
+		this.manager = manager;
+	}
+
+	@Override
+	protected MessageTemplate setupTemplate() {
+		return MessageTemplate.and(
+				//
+				MessageTemplate.MatchProtocol(Names.PROTOCOL_OVERLAY_MANAGEMENT),
+				MessageTemplate.MatchPerformative(ACLMessage.INFORM));
+	}
+
+	@Override
+	protected void onMessage(ACLMessage message) {
+		try {
+			MessageFactory mf = agent.getMessageFactory();
+			OverlayMessage content = (OverlayMessage) mf
+					.extractContent(message);
+
+			// update the neighbor set
+			updateNeighbors(content.getOverlayId(), content.getView());
+
+			if (!content.isReply()) {
+				// send the agent's own view
+				manager.addSubBehaviour(new OverlaySender( //
+						manager, content.getOverlayId(), message));
+			}
+		} catch (MessageException e) {
+			e.printStackTrace();
+		}
+	}
+
+	int round = 0;
+
+	private void updateNeighbors(OverlayId overlayId, View view) {
+		NeighborProvider np = manager.getOverlayContext(overlayId)
+				.getNeighborProvider();
+		Set<AID> incoming = new HashSet<AID>(view.getNeighbors());
+
+		// remove the nodes we know about
+		Iterator<AID> it = incoming.iterator();
+		while (it.hasNext()) {
+			if (np.contains(it.next())) {
+				it.remove();
+			}
+		}
+
+		// remove neighbors in a random fashion
+		int viewSize = incoming.size();
+		while (np.size() > np.getMaxSize() - viewSize) {
+			it = np.randomIterator();
+			np.remove(it.next());
+		}
+
+		// add the new neighbors
+		for (AID n : incoming) {
+			np.add(n);
+		}
+
+		agent.print("\t   " + round++ + "    " + np.size());
+	}
+}

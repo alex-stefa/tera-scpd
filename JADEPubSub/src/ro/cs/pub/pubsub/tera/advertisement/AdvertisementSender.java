@@ -12,7 +12,8 @@ import ro.cs.pub.pubsub.Topic;
 import ro.cs.pub.pubsub.exception.MessageException;
 import ro.cs.pub.pubsub.message.MessageContent;
 import ro.cs.pub.pubsub.message.MessageFactory;
-import ro.cs.pub.pubsub.tera.agent.NeighborProvider;
+import ro.cs.pub.pubsub.overlay.NeighborProvider;
+import ro.cs.pub.pubsub.overlay.OverlayManager;
 import ro.cs.pub.pubsub.tera.agent.TeraAgent;
 
 public class AdvertisementSender extends TickerBehaviour {
@@ -37,7 +38,8 @@ public class AdvertisementSender extends TickerBehaviour {
 	}
 
 	private void sendAdvertisement() throws MessageException {
-		NeighborProvider np = agent.getNeighborProvider();
+		NeighborProvider np = agent.getOverlayManager().getOverlayContext(
+				OverlayManager.BASE_OVERLAY_ID).getNeighborProvider();
 		Set<Topic> topics = agent.getSubscribedTopics();
 
 		if (np.size() == 0 || topics.size() == 0) {
