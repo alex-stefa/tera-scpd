@@ -1,8 +1,8 @@
-package ro.cs.pub.pubsub.tera.randomWalk.processor;
+package ro.cs.pub.pubsub.randomWalk;
 
 import ro.cs.pub.pubsub.message.MessageContent;
-import ro.cs.pub.pubsub.tera.randomWalk.message.RandomWalkRequest;
-import ro.cs.pub.pubsub.tera.randomWalk.message.RandomWalkResponse;
+import ro.cs.pub.pubsub.randomWalk.message.RandomWalkRequest;
+import ro.cs.pub.pubsub.randomWalk.message.RandomWalkResponse;
 
 /**
  * Contains the result of a request processing operation.

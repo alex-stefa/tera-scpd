@@ -7,11 +7,10 @@ public abstract class BaseTemplateBehaviour<A extends BaseAgent> extends
 		BaseBehaviour<A> {
 	private static final long serialVersionUID = 1L;
 
-	protected final MessageTemplate template;
+	protected MessageTemplate template;
 
 	public BaseTemplateBehaviour(A agent) {
 		super(agent);
-		this.template = setupTemplate();
 	}
 
 	protected abstract MessageTemplate setupTemplate();
@@ -19,6 +18,10 @@ public abstract class BaseTemplateBehaviour<A extends BaseAgent> extends
 	protected abstract void onMessage(ACLMessage message);
 
 	public final void action() {
+		if (template == null) {
+			template = setupTemplate();
+		}
+
 		ACLMessage msg = agent.receive(template);
 		if (msg == null) {
 			block();

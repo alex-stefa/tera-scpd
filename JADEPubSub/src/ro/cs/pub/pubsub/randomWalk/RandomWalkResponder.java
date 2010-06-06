@@ -1,4 +1,4 @@
-package ro.cs.pub.pubsub.tera.randomWalk;
+package ro.cs.pub.pubsub.randomWalk;
 
 import jade.core.AID;
 import jade.lang.acl.ACLMessage;
@@ -6,17 +6,13 @@ import jade.lang.acl.MessageTemplate;
 
 import java.util.Iterator;
 
-import ro.cs.pub.pubsub.Names;
+import ro.cs.pub.pubsub.agent.BaseAgent;
 import ro.cs.pub.pubsub.agent.BaseTemplateBehaviour;
 import ro.cs.pub.pubsub.exception.MessageException;
 import ro.cs.pub.pubsub.message.MessageFactory;
 import ro.cs.pub.pubsub.overlay.NeighborProvider;
-import ro.cs.pub.pubsub.overlay.OverlayManager;
-import ro.cs.pub.pubsub.tera.agent.TeraAgent;
-import ro.cs.pub.pubsub.tera.randomWalk.message.RandomWalkRequest;
-import ro.cs.pub.pubsub.tera.randomWalk.message.RandomWalkResponse;
-import ro.cs.pub.pubsub.tera.randomWalk.processor.ProcessingResult;
-import ro.cs.pub.pubsub.tera.randomWalk.processor.RequestProcessor;
+import ro.cs.pub.pubsub.randomWalk.message.RandomWalkRequest;
+import ro.cs.pub.pubsub.randomWalk.message.RandomWalkResponse;
 
 /**
  * Detects random walk requests and tries to answer. If it cannot answer
@@ -25,22 +21,27 @@ import ro.cs.pub.pubsub.tera.randomWalk.processor.RequestProcessor;
  * This class contains the propagation algorithms. The response decisions are
  * made by a {@link RequestProcessor}.
  */
-public class RandomWalkResponder extends BaseTemplateBehaviour<TeraAgent> {
+public class RandomWalkResponder extends BaseTemplateBehaviour<BaseAgent> {
 	private static final long serialVersionUID = 1L;
 
 	private final RequestProcessor processor;
+	private final String protocol;
+	private final NeighborProvider neighborProvider;
 
-	public RandomWalkResponder(TeraAgent agent) {
+	public RandomWalkResponder(BaseAgent agent, RequestProcessor processor,
+			String protocol, NeighborProvider neighborProvider) {
 		super(agent);
-		this.processor = new RequestProcessor(agent);
+		this.processor = processor;
+		this.protocol = protocol;
+		this.neighborProvider = neighborProvider;
 	}
 
 	@Override
 	protected MessageTemplate setupTemplate() {
 		return MessageTemplate.and(
-				//
-				MessageTemplate.MatchProtocol(Names.PROTOCOL_RANDOM_WALK),
-				MessageTemplate.MatchPerformative(ACLMessage.REQUEST));
+		//
+				MessageTemplate.MatchProtocol(protocol), MessageTemplate
+						.MatchPerformative(ACLMessage.REQUEST));
 	}
 
 	@Override
@@ -100,11 +101,8 @@ public class RandomWalkResponder extends BaseTemplateBehaviour<TeraAgent> {
 	private void forward(MessageFactory mf, ACLMessage originalMessage,
 			RandomWalkRequest randomWalkRequest) throws MessageException {
 		// find the current set of neighbors and pick a random one
-		NeighborProvider np = agent.getOverlayManager().getOverlayContext(
-				OverlayManager.BASE_OVERLAY_ID).getNeighborProvider();
-
 		AID receiver = null;
-		Iterator<AID> it = np.randomIterator();
+		Iterator<AID> it = neighborProvider.randomIterator();
 		while (it.hasNext()) {
 			AID r = it.next();
 			if (!r.equals(originalMessage.getSender())) {

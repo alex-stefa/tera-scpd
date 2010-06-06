@@ -39,6 +39,8 @@ public class SubscriptionManager extends ParallelBehaviour {
 
 		// set up the overlay
 		agent.getOverlayManager().registerOverlay(topic, overlayContextFactory);
+		
+		// find an agent subscribed to the topic
 	}
 
 	public void unsubscribe(Topic topic) {

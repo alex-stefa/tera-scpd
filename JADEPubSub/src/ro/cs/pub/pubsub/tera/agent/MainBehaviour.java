@@ -6,7 +6,6 @@ import org.apache.commons.configuration.Configuration;
 
 import ro.cs.pub.pubsub.overlay.OverlayManager;
 import ro.cs.pub.pubsub.overlay.context.OverlayContextFactory;
-import ro.cs.pub.pubsub.tera.randomWalk.RandomWalkResponder;
 
 public class MainBehaviour extends ParallelBehaviour {
 	private static final long serialVersionUID = 1L;
@@ -24,9 +23,6 @@ public class MainBehaviour extends ParallelBehaviour {
 				configuration.getLong("shuffling.period"));
 		overlayManager.registerOverlay(OverlayManager.BASE_OVERLAY_ID, ocf);
 		addSubBehaviour(overlayManager);
-
-		// random walk
-		addSubBehaviour(new RandomWalkResponder(agent));
 	}
 
 	public OverlayManager getOverlayManager() {

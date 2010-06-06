@@ -1,4 +1,4 @@
-package ro.cs.pub.pubsub.tera.randomWalk.message;
+package ro.cs.pub.pubsub.randomWalk.message;
 
 import jade.util.leap.Serializable;
 

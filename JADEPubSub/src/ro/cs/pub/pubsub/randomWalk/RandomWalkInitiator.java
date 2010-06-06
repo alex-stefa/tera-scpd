@@ -1,19 +1,18 @@
-package ro.cs.pub.pubsub.tera.randomWalk;
+package ro.cs.pub.pubsub.randomWalk;
 
 import jade.core.AID;
 import jade.core.behaviours.OneShotBehaviour;
 import jade.core.behaviours.SequentialBehaviour;
 import jade.lang.acl.ACLMessage;
 import jade.lang.acl.MessageTemplate;
-import ro.cs.pub.pubsub.Names;
+import ro.cs.pub.pubsub.agent.BaseAgent;
 import ro.cs.pub.pubsub.agent.BaseTemplateBehaviour;
 import ro.cs.pub.pubsub.exception.MessageException;
 import ro.cs.pub.pubsub.message.MessageFactory;
-import ro.cs.pub.pubsub.tera.agent.TeraAgent;
-import ro.cs.pub.pubsub.tera.randomWalk.message.RandomWalkQuery;
-import ro.cs.pub.pubsub.tera.randomWalk.message.RandomWalkRequest;
-import ro.cs.pub.pubsub.tera.randomWalk.message.RandomWalkResponse;
-import ro.cs.pub.pubsub.tera.randomWalk.message.RandomWalkResult;
+import ro.cs.pub.pubsub.randomWalk.message.RandomWalkQuery;
+import ro.cs.pub.pubsub.randomWalk.message.RandomWalkRequest;
+import ro.cs.pub.pubsub.randomWalk.message.RandomWalkResponse;
+import ro.cs.pub.pubsub.randomWalk.message.RandomWalkResult;
 
 /**
  * Initiates a random walk. The behavior has two states: Message Sending and
@@ -23,7 +22,8 @@ import ro.cs.pub.pubsub.tera.randomWalk.message.RandomWalkResult;
 public class RandomWalkInitiator extends SequentialBehaviour {
 	private static final long serialVersionUID = 1L;
 
-	private final TeraAgent agent;
+	private final BaseAgent agent;
+	public final String protocol;
 	private final AID peer;
 	private final int ttl;
 	private final RandomWalkQuery query;
@@ -38,10 +38,11 @@ public class RandomWalkInitiator extends SequentialBehaviour {
 	 */
 	private RandomWalkResult result;
 
-	public RandomWalkInitiator(TeraAgent agent, AID peer, int ttl,
-			RandomWalkQuery query) {
+	public RandomWalkInitiator(BaseAgent agent, String protocol, AID peer,
+			int ttl, RandomWalkQuery query) {
 		super(agent);
 		this.agent = agent;
+		this.protocol = protocol;
 		this.peer = peer;
 		this.ttl = ttl;
 		this.query = query;
@@ -49,7 +50,7 @@ public class RandomWalkInitiator extends SequentialBehaviour {
 		conversationId = agent.generateConversationId();
 
 		addSubBehaviour(new MessageSender());
-		addSubBehaviour(new MessageReceiver(agent));
+		addSubBehaviour(new MessageReceiver());
 	}
 
 	/**
@@ -61,8 +62,7 @@ public class RandomWalkInitiator extends SequentialBehaviour {
 		@Override
 		public void action() {
 			MessageFactory mf = agent.getMessageFactory();
-			ACLMessage msg = mf.buildMessage(ACLMessage.REQUEST,
-					Names.PROTOCOL_RANDOM_WALK);
+			ACLMessage msg = mf.buildMessage(ACLMessage.REQUEST, protocol);
 			msg.addReceiver(peer);
 			msg.setConversationId(conversationId);
 			RandomWalkRequest content = new RandomWalkRequest( //
@@ -79,11 +79,11 @@ public class RandomWalkInitiator extends SequentialBehaviour {
 	/**
 	 * Receives the response from the random walk and saves it.
 	 */
-	class MessageReceiver extends BaseTemplateBehaviour<TeraAgent> {
+	class MessageReceiver extends BaseTemplateBehaviour<BaseAgent> {
 		private static final long serialVersionUID = 1L;
 
-		public MessageReceiver(TeraAgent agent) {
-			super(agent);
+		public MessageReceiver() {
+			super(RandomWalkInitiator.this.agent);
 		}
 
 		@Override
@@ -92,7 +92,7 @@ public class RandomWalkInitiator extends SequentialBehaviour {
 					MessageTemplate.and(
 							//
 							MessageTemplate
-									.MatchProtocol(Names.PROTOCOL_RANDOM_WALK),
+									.MatchProtocol(protocol),
 							MessageTemplate
 									.MatchPerformative(ACLMessage.INFORM)),
 					//
