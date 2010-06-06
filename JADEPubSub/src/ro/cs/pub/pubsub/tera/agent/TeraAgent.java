@@ -1,6 +1,7 @@
 package ro.cs.pub.pubsub.tera.agent;
 
 import jade.core.AID;
+import jade.core.behaviours.ParallelBehaviour;
 import jade.core.behaviours.SequentialBehaviour;
 import jade.domain.FIPAAgentManagement.ServiceDescription;
 import jade.lang.acl.ACLMessage;
@@ -15,16 +16,17 @@ import ro.cs.pub.pubsub.agent.BaseAgent;
 import ro.cs.pub.pubsub.message.MessageFactory;
 import ro.cs.pub.pubsub.message.shared.LogMessageContent;
 import ro.cs.pub.pubsub.overlay.OverlayManager;
+import ro.cs.pub.pubsub.overlay.context.OverlayContextFactory;
 import ro.cs.pub.pubsub.tera.initiation.InitiationReceiver;
 import ro.cs.pub.pubsub.tera.initiation.InitiationRequester;
-import ro.cs.pub.pubsub.tera.subscription.AccessPointProvider;
+import ro.cs.pub.pubsub.tera.lookup.AccessPointManager;
 
 public class TeraAgent extends BaseAgent {
 	private static final long serialVersionUID = 1L;
 
 	private MessageFactory messageFactory;
-	private AccessPointProvider accessPointProvider;
-	private MainBehaviour mainBehaviour;
+	private OverlayManager overlayManager;
+	private AccessPointManager accessPointManager;
 
 	@Override
 	protected void setup() {
@@ -35,7 +37,6 @@ public class TeraAgent extends BaseAgent {
 
 		// set up context
 		messageFactory = new MessageFactory();
-		accessPointProvider = new AccessPointProvider();
 
 		// set up behaviors
 		SequentialBehaviour root = new SequentialBehaviour(this);
@@ -46,8 +47,26 @@ public class TeraAgent extends BaseAgent {
 		root.addSubBehaviour(new InitiationReceiver(this));
 
 		// main
-		mainBehaviour = new MainBehaviour(this, configuration);
-		root.addSubBehaviour(mainBehaviour);
+		ParallelBehaviour main = new ParallelBehaviour(ParallelBehaviour.WHEN_ALL);
+		
+		// overlay management
+		overlayManager = new OverlayManager(this);
+		OverlayContextFactory ocf = new OverlayContextFactory( //
+				configuration.getInt("neighbors.max"), //
+				configuration.getInt("shuffling.view.size"), //
+				configuration.getLong("shuffling.period"));
+		overlayManager.registerOverlay(Names.OVERLAY_BASE, ocf);
+		main.addSubBehaviour(overlayManager);
+		
+		// access point manager
+		accessPointManager = new AccessPointManager( //
+				this, //
+				configuration.getInt("accessPoint.lookup.peerCount"), //
+				configuration.getInt("accessPoint.lookup.ttl"));
+		main.addSubBehaviour(accessPointManager);
+		
+		// add the main behavior
+		root.addSubBehaviour(main);
 
 		// add root behavior
 		addBehaviour(root);
@@ -85,11 +104,11 @@ public class TeraAgent extends BaseAgent {
 		}
 	}
 
-	public AccessPointProvider getAccessPointProvider() {
-		return accessPointProvider;
-	}
-
 	public OverlayManager getOverlayManager() {
-		return mainBehaviour.getOverlayManager();
+		return overlayManager;
+	}
+	
+	public AccessPointManager getAccessPointManager() {
+		return accessPointManager;
 	}
 }

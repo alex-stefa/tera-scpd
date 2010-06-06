@@ -11,7 +11,7 @@ import ro.cs.pub.pubsub.agent.BaseTemplateBehaviour;
 import ro.cs.pub.pubsub.exception.MessageException;
 import ro.cs.pub.pubsub.message.MessageFactory;
 import ro.cs.pub.pubsub.tera.agent.TeraAgent;
-import ro.cs.pub.pubsub.tera.subscription.AccessPointProvider;
+import ro.cs.pub.pubsub.tera.lookup.AccessPointManager;
 import ro.cs.pub.pubsub.tera.subscription.SubscriptionManager;
 
 /**
@@ -43,9 +43,9 @@ public class AdvertisementReceiver extends BaseTemplateBehaviour<TeraAgent> {
 
 			// add the topics
 			Set<Topic> adTopics = ad.getTopics();
-			AccessPointProvider app = agent.getAccessPointProvider();
+			AccessPointManager apm = agent.getAccessPointManager();
 			for (Topic topic : adTopics) {
-				app.put(topic, message.getSender());
+				apm.put(topic, message.getSender());
 			}
 		} catch (MessageException e) {
 			e.printStackTrace();

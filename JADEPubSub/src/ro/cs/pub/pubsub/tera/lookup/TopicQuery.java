@@ -1,6 +1,7 @@
-package ro.cs.pub.pubsub.randomWalk.message;
+package ro.cs.pub.pubsub.tera.lookup;
 
 import ro.cs.pub.pubsub.Topic;
+import ro.cs.pub.pubsub.randomWalk.message.RandomWalkQuery;
 
 public class TopicQuery implements RandomWalkQuery {
 	private static final long serialVersionUID = 1L;

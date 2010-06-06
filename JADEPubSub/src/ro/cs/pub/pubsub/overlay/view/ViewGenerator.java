@@ -35,7 +35,7 @@ public class ViewGenerator {
 
 		// build the neighbor view
 		Set<AID> viewSet = new HashSet<AID>();
-		while (it.hasNext() && viewSet.size() <= viewSize) {
+		while (it.hasNext() && viewSet.size() < viewSize) {
 			AID n = it.next();
 			if (!n.equals(receiver)) {
 				viewSet.add(n);

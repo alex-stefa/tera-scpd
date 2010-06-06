@@ -4,7 +4,6 @@ import jade.core.AID;
 import jade.core.behaviours.TickerBehaviour;
 import jade.lang.acl.ACLMessage;
 
-import java.util.Iterator;
 import java.util.Set;
 
 import ro.cs.pub.pubsub.Names;
@@ -13,7 +12,6 @@ import ro.cs.pub.pubsub.exception.MessageException;
 import ro.cs.pub.pubsub.message.MessageContent;
 import ro.cs.pub.pubsub.message.MessageFactory;
 import ro.cs.pub.pubsub.overlay.NeighborProvider;
-import ro.cs.pub.pubsub.overlay.OverlayManager;
 import ro.cs.pub.pubsub.tera.subscription.SubscriptionManager;
 
 /**
@@ -44,7 +42,7 @@ public class AdvertisementSender extends TickerBehaviour {
 	private void sendAdvertisement() throws MessageException {
 		// peers are selected from the base overlay
 		NeighborProvider np = manager.getAgent().getOverlayManager().getOverlayContext(
-				OverlayManager.BASE_OVERLAY_ID).getNeighborProvider();
+				Names.OVERLAY_BASE).getNeighborProvider();
 		
 		Set<Topic> topics = manager.getSubscribedTopics();
 
@@ -58,12 +56,8 @@ public class AdvertisementSender extends TickerBehaviour {
 				ACLMessage.INFORM, Names.PROTOCOL_TOPIC_ADVERTISEMENT);
 
 		// select receivers randomly
-		Iterator<AID> it = np.randomIterator();
-		int size = 0;
-		while (it.hasNext() && size < peersPerRound) {
-			AID n = it.next();
-			message.addReceiver(n);
-			size++;
+		for (AID peer : np.getRandomSet(peersPerRound)) {
+			message.addReceiver(peer);
 		}
 
 		MessageContent content = new AdvertisementMessage(topics);

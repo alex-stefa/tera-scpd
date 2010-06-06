@@ -19,16 +19,16 @@ import ro.cs.pub.pubsub.randomWalk.message.RandomWalkResponse;
  * properly, the responder propagates the requests.
  * 
  * This class contains the propagation algorithms. The response decisions are
- * made by a {@link RequestProcessor}.
+ * made by a {@link RandomWalkProcessor}.
  */
 public class RandomWalkResponder extends BaseTemplateBehaviour<BaseAgent> {
 	private static final long serialVersionUID = 1L;
 
-	private final RequestProcessor processor;
+	private final RandomWalkProcessor processor;
 	private final String protocol;
 	private final NeighborProvider neighborProvider;
 
-	public RandomWalkResponder(BaseAgent agent, RequestProcessor processor,
+	public RandomWalkResponder(BaseAgent agent, RandomWalkProcessor processor,
 			String protocol, NeighborProvider neighborProvider) {
 		super(agent);
 		this.processor = processor;
@@ -52,16 +52,16 @@ public class RandomWalkResponder extends BaseTemplateBehaviour<BaseAgent> {
 			request = (RandomWalkRequest) mf.extractContent(message);
 
 			// process the request
-			ProcessingResult processingResult = processor.process(request);
+			RandomWalkProcessingResult randomWalkProcessingResult = processor.process(request);
 
-			switch (processingResult.getType()) {
+			switch (randomWalkProcessingResult.getType()) {
 			case SEND_TO_ORIGIN:
 				sendToOrigin(mf, message, request.getOrigin(), //
-						(RandomWalkResponse) processingResult.getContent());
+						(RandomWalkResponse) randomWalkProcessingResult.getContent());
 				break;
 			case FORWARD:
 				forward(mf, message, //
-						(RandomWalkRequest) processingResult.getContent());
+						(RandomWalkRequest) randomWalkProcessingResult.getContent());
 				break;
 			}
 		} catch (MessageException e) {

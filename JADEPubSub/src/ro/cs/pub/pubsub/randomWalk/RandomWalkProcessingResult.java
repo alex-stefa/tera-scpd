@@ -7,28 +7,28 @@ import ro.cs.pub.pubsub.randomWalk.message.RandomWalkResponse;
 /**
  * Contains the result of a request processing operation.
  */
-public class ProcessingResult {
+public class RandomWalkProcessingResult {
 	public enum Type {
 		FORWARD, SEND_TO_ORIGIN, FORGET
 	};
 
-	public static ProcessingResult createForward(RandomWalkRequest request) {
-		return new ProcessingResult(request, Type.FORWARD);
+	public static RandomWalkProcessingResult createForward(RandomWalkRequest request) {
+		return new RandomWalkProcessingResult(request, Type.FORWARD);
 	}
 
-	public static ProcessingResult createSendToOrigin(
+	public static RandomWalkProcessingResult createSendToOrigin(
 			RandomWalkResponse response) {
-		return new ProcessingResult(response, Type.FORWARD);
+		return new RandomWalkProcessingResult(response, Type.FORWARD);
 	}
 
-	public static ProcessingResult createForget() {
-		return new ProcessingResult(null, Type.FORWARD);
+	public static RandomWalkProcessingResult createForget() {
+		return new RandomWalkProcessingResult(null, Type.FORWARD);
 	}
 
 	private final MessageContent content;
 	private final Type type;
 
-	private ProcessingResult(MessageContent content, Type type) {
+	private RandomWalkProcessingResult(MessageContent content, Type type) {
 		this.content = content;
 		this.type = type;
 	}

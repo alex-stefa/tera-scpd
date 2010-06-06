@@ -3,9 +3,9 @@ package ro.cs.pub.pubsub.randomWalk;
 import ro.cs.pub.pubsub.randomWalk.message.RandomWalkRequest;
 
 /**
- * Processes a random walk request and creates a {@link ProcessingResult}.
+ * Processes a random walk request and creates a {@link RandomWalkProcessingResult}.
  */
-public interface RequestProcessor {
+public interface RandomWalkProcessor {
 
 	/**
 	 * Processes a request from a peer.
@@ -13,5 +13,5 @@ public interface RequestProcessor {
 	 * @param request
 	 * @return the processing result
 	 */
-	ProcessingResult process(RandomWalkRequest request);
+	RandomWalkProcessingResult process(RandomWalkRequest request);
 }

@@ -23,10 +23,11 @@ public class RandomWalkInitiator extends SequentialBehaviour {
 	private static final long serialVersionUID = 1L;
 
 	private final BaseAgent agent;
-	public final String protocol;
+	private final String protocol;
 	private final AID peer;
 	private final int ttl;
 	private final RandomWalkQuery query;
+	private final RandomWalkCallback callback;
 
 	/**
 	 * Kept throughout the random walk.
@@ -39,18 +40,24 @@ public class RandomWalkInitiator extends SequentialBehaviour {
 	private RandomWalkResult result;
 
 	public RandomWalkInitiator(BaseAgent agent, String protocol, AID peer,
-			int ttl, RandomWalkQuery query) {
+			int ttl, RandomWalkQuery query, RandomWalkCallback callback) {
 		super(agent);
 		this.agent = agent;
 		this.protocol = protocol;
 		this.peer = peer;
 		this.ttl = ttl;
 		this.query = query;
+		this.callback = callback;
 
 		conversationId = agent.generateConversationId();
 
 		addSubBehaviour(new MessageSender());
 		addSubBehaviour(new MessageReceiver());
+	}
+
+	public RandomWalkInitiator(BaseAgent agent, String protocol, AID peer,
+			int ttl, RandomWalkQuery query) {
+		this(agent, protocol, peer, ttl, query, null);
 	}
 
 	/**
@@ -91,8 +98,7 @@ public class RandomWalkInitiator extends SequentialBehaviour {
 			return MessageTemplate.and( //
 					MessageTemplate.and(
 							//
-							MessageTemplate
-									.MatchProtocol(protocol),
+							MessageTemplate.MatchProtocol(protocol),
 							MessageTemplate
 									.MatchPerformative(ACLMessage.INFORM)),
 					//
@@ -105,6 +111,9 @@ public class RandomWalkInitiator extends SequentialBehaviour {
 			try {
 				result = ((RandomWalkResponse) mf.extractContent(message))
 						.getResult();
+				if (callback != null) {
+					callback.onSuccess(result);
+				}
 			} catch (MessageException e) {
 				e.printStackTrace();
 			}

@@ -1,11 +1,10 @@
 package ro.cs.pub.pubsub.overlay;
 
-import jade.core.behaviours.ParallelBehaviour;
-
 import java.util.HashMap;
 import java.util.Map;
 
 import ro.cs.pub.pubsub.agent.BaseAgent;
+import ro.cs.pub.pubsub.agent.Component;
 import ro.cs.pub.pubsub.exception.OverlayAlreadyRegistered;
 import ro.cs.pub.pubsub.overlay.context.OverlayContext;
 import ro.cs.pub.pubsub.overlay.context.OverlayContextFactory;
@@ -17,24 +16,16 @@ import ro.cs.pub.pubsub.overlay.context.OverlayContextFactory;
  * {@link OverlayContext}. Communication between agents is done separately for
  * each overlay and is started by an {@link OverlayCommunicationInitiator}.
  */
-public class OverlayManager extends ParallelBehaviour {
+public class OverlayManager extends Component<BaseAgent> {
 	private static final long serialVersionUID = 1L;
-
-	public static final OverlayId BASE_OVERLAY_ID = new OverlayId("base");
-
-	private final BaseAgent agent;
+	
 	private final Map<OverlayId, OverlayContext> contexts;
 
 	public OverlayManager(BaseAgent agent) {
-		super(agent, ParallelBehaviour.WHEN_ALL);
-		this.agent = agent;
+		super(agent);
 		this.contexts = new HashMap<OverlayId, OverlayContext>();
 
 		addSubBehaviour(new OverlayReceiver(this));
-	}
-
-	public BaseAgent getAgent() {
-		return agent;
 	}
 
 	/**
