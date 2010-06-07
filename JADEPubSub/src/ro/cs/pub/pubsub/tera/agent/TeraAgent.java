@@ -20,6 +20,8 @@ import ro.cs.pub.pubsub.overlay.context.OverlayContextFactory;
 import ro.cs.pub.pubsub.tera.initiation.InitiationReceiver;
 import ro.cs.pub.pubsub.tera.initiation.InitiationRequester;
 import ro.cs.pub.pubsub.tera.lookup.AccessPointManager;
+import ro.cs.pub.pubsub.tera.simulation.Simulator;
+import ro.cs.pub.pubsub.tera.subscription.SubscriptionManager;
 
 public class TeraAgent extends BaseAgent {
 	private static final long serialVersionUID = 1L;
@@ -27,13 +29,15 @@ public class TeraAgent extends BaseAgent {
 	private MessageFactory messageFactory;
 	private OverlayManager overlayManager;
 	private AccessPointManager accessPointManager;
+	private SubscriptionManager subscriptionManager;
+	private Simulator simulator;
 
 	@Override
 	protected void setup() {
 		super.setup();
 
 		TeraAgentArguments args = (TeraAgentArguments) getArguments()[0];
-		Configuration configuration = args.getConfiguration();
+		Configuration c = args.getConfiguration();
 
 		// set up context
 		messageFactory = new MessageFactory();
@@ -43,7 +47,7 @@ public class TeraAgent extends BaseAgent {
 
 		// initiation
 		root.addSubBehaviour(new InitiationRequester(this, //
-				configuration.getLong("initiation.detection.period")));
+				c.getLong("initiation.detection.period")));
 		root.addSubBehaviour(new InitiationReceiver(this));
 
 		// main
@@ -53,20 +57,36 @@ public class TeraAgent extends BaseAgent {
 		// overlay management
 		overlayManager = new OverlayManager(this);
 		OverlayContextFactory ocf = new OverlayContextFactory( //
-				configuration.getInt("neighbors.max"), //
-				configuration.getInt("shuffling.view.size"), //
-				configuration.getLong("shuffling.period"));
+				c.getInt("overlay.base.neighbors.max"), //
+				c.getInt("overlay.base.view.size"), //
+				c.getLong("overlay.base.initiation.period"));
 		overlayManager.registerOverlay(Names.OVERLAY_BASE, ocf);
 		main.addSubBehaviour(overlayManager);
 
 		// access point manager
 		accessPointManager = new AccessPointManager( //
 				this, //
-				configuration.getInt("accessPoint.lookup.peerCount"), //
-				configuration.getInt("accessPoint.lookup.ttl"), //
-				configuration.getLong("accessPoint.lookup.waitFor"));
+				c.getInt("accessPoint.lookup.peerCount"), //
+				c.getInt("accessPoint.lookup.ttl"), //
+				c.getLong("accessPoint.lookup.waitFor"));
 		main.addSubBehaviour(accessPointManager);
 
+		// subscription manager
+		OverlayContextFactory ocfs = new OverlayContextFactory( //
+				c.getInt("overlay.topic.neighbors.max"), //
+				c.getInt("overlay.topic.view.size"), //
+				c.getLong("overlay.topic.initiation.period"));
+		subscriptionManager = new SubscriptionManager( //
+				this, //
+				ocfs, 
+				c.getInt("subscriptionManager.advertisements.round.interval"),
+				c.getInt("subscriptionManager.advertisements.round.peerCount"));
+		main.addSubBehaviour(subscriptionManager);
+
+		// simulator
+		simulator = new Simulator(this);
+		main.addSubBehaviour(simulator);
+		
 		// add the main behavior
 		root.addSubBehaviour(main);
 
@@ -112,5 +132,9 @@ public class TeraAgent extends BaseAgent {
 
 	public AccessPointManager getAccessPointManager() {
 		return accessPointManager;
+	}
+	
+	public SubscriptionManager getSubscriptionManager() {
+		return subscriptionManager;
 	}
 }

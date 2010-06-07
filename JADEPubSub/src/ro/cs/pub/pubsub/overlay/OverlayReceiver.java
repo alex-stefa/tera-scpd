@@ -50,8 +50,6 @@ public class OverlayReceiver extends BaseTemplateBehaviour<BaseAgent> {
 		}
 	}
 
-	int round = 0;
-
 	private void updateNeighbors(OverlayId overlayId, View view) {
 		NeighborProvider np = manager.getOverlayContext(overlayId)
 				.getNeighborProvider();
@@ -76,7 +74,5 @@ public class OverlayReceiver extends BaseTemplateBehaviour<BaseAgent> {
 		for (AID n : incoming) {
 			np.add(n);
 		}
-
-		agent.print("\t   " + round++ + "    " + np.size());
 	}
 }

@@ -10,8 +10,8 @@ import ro.cs.pub.pubsub.Names;
 import ro.cs.pub.pubsub.Topic;
 import ro.cs.pub.pubsub.agent.Component;
 import ro.cs.pub.pubsub.overlay.NeighborProvider;
-import ro.cs.pub.pubsub.randomWalk.RandomWalkCallback;
-import ro.cs.pub.pubsub.randomWalk.RandomWalkMultipleInitiator;
+import ro.cs.pub.pubsub.randomWalk.RandomWalkGroupCallback;
+import ro.cs.pub.pubsub.randomWalk.RandomWalkGroupInitiator;
 import ro.cs.pub.pubsub.randomWalk.RandomWalkProcessor;
 import ro.cs.pub.pubsub.randomWalk.RandomWalkResponder;
 import ro.cs.pub.pubsub.randomWalk.message.RandomWalkQuery;
@@ -51,7 +51,7 @@ public class AccessPointManager extends Component<TeraAgent> {
 		return accessPoints.get(topic);
 	}
 
-	public void lookup(Topic topic, RandomWalkCallback callback) {
+	public void lookup(Topic topic, RandomWalkGroupCallback callback) {
 		// select peers
 		NeighborProvider np = agent.getOverlayManager(). //
 				getOverlayContext(Names.OVERLAY_BASE).getNeighborProvider();
@@ -61,7 +61,7 @@ public class AccessPointManager extends Component<TeraAgent> {
 		RandomWalkQuery query = new TopicQuery(topic);
 
 		// add the behavior
-		addSubBehaviour(new RandomWalkMultipleInitiator( //
+		addSubBehaviour(new RandomWalkGroupInitiator( //
 				agent, callback, peers, ttl, query, //
 				System.currentTimeMillis() + waitFor));
 	}

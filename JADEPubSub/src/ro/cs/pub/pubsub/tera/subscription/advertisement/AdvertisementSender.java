@@ -1,24 +1,25 @@
 package ro.cs.pub.pubsub.tera.subscription.advertisement;
 
 import jade.core.AID;
-import jade.core.behaviours.TickerBehaviour;
 import jade.lang.acl.ACLMessage;
 
 import java.util.Set;
 
 import ro.cs.pub.pubsub.Names;
 import ro.cs.pub.pubsub.Topic;
+import ro.cs.pub.pubsub.agent.BaseTickerBehaviour;
 import ro.cs.pub.pubsub.exception.MessageException;
 import ro.cs.pub.pubsub.message.MessageContent;
 import ro.cs.pub.pubsub.message.MessageFactory;
 import ro.cs.pub.pubsub.overlay.NeighborProvider;
+import ro.cs.pub.pubsub.tera.agent.TeraAgent;
 import ro.cs.pub.pubsub.tera.subscription.SubscriptionManager;
 
 /**
  * Sends advertisements with the agent's own subscribed topics. Ads are at a
  * specified time period to a randomly selected set of peers.
  */
-public class AdvertisementSender extends TickerBehaviour {
+public class AdvertisementSender extends BaseTickerBehaviour<TeraAgent> {
 	private static final long serialVersionUID = 1L;
 
 	private final SubscriptionManager manager;
@@ -42,8 +43,8 @@ public class AdvertisementSender extends TickerBehaviour {
 
 	private void sendAdvertisement() throws MessageException {
 		// peers are selected from the base overlay
-		NeighborProvider np = manager.getAgent().getOverlayManager()
-				.getOverlayContext(Names.OVERLAY_BASE).getNeighborProvider();
+		NeighborProvider np = agent.getOverlayManager(). //
+				getOverlayContext(Names.OVERLAY_BASE).getNeighborProvider();
 
 		Set<Topic> topics = manager.getSubscribedTopics();
 
@@ -51,7 +52,7 @@ public class AdvertisementSender extends TickerBehaviour {
 			return;
 		}
 
-		MessageFactory mf = manager.getAgent().getMessageFactory();
+		MessageFactory mf = agent.getMessageFactory();
 
 		ACLMessage message = mf.buildMessage( //
 				ACLMessage.INFORM, Names.PROTOCOL_TOPIC_ADVERTISEMENT);
@@ -63,6 +64,6 @@ public class AdvertisementSender extends TickerBehaviour {
 
 		MessageContent content = new AdvertisementMessage(topics);
 		mf.fillContent(message, content);
-		manager.getAgent().send(message);
+		agent.send(message);
 	}
 }

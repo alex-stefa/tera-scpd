@@ -6,6 +6,8 @@ import jade.core.behaviours.ParallelBehaviour;
 import jade.core.behaviours.SequentialBehaviour;
 import jade.util.leap.Iterator;
 
+import java.util.Collection;
+import java.util.LinkedList;
 import java.util.Set;
 
 import ro.cs.pub.pubsub.Names;
@@ -13,20 +15,19 @@ import ro.cs.pub.pubsub.agent.BaseAgent;
 import ro.cs.pub.pubsub.randomWalk.message.RandomWalkQuery;
 import ro.cs.pub.pubsub.randomWalk.message.RandomWalkResult;
 
-public class RandomWalkMultipleInitiator extends SequentialBehaviour {
+public class RandomWalkGroupInitiator extends SequentialBehaviour {
 	private static final long serialVersionUID = 1L;
 
-	private final RandomWalkCallback callback;
+	private final RandomWalkGroupCallback callback;
 	private final ParallelBehaviour main;
+	public final Collection<RandomWalkResult> results;
 
-	private RandomWalkResult result;
-
-	public RandomWalkMultipleInitiator(BaseAgent agent,
-			RandomWalkCallback callback, Set<AID> peers, int ttl,
+	public RandomWalkGroupInitiator(BaseAgent agent,
+			RandomWalkGroupCallback callback, Set<AID> peers, int ttl,
 			RandomWalkQuery query, Long deadline) {
 		this.callback = callback;
-
 		this.main = new ParallelBehaviour(ParallelBehaviour.WHEN_ALL);
+		this.results = new LinkedList<RandomWalkResult>();
 
 		for (AID peer : peers) {
 			main.addSubBehaviour(new RandomWalkInitiator(agent,
@@ -38,8 +39,8 @@ public class RandomWalkMultipleInitiator extends SequentialBehaviour {
 		addSubBehaviour(new OnEndBehaviour());
 	}
 
-	public RandomWalkResult getResult() {
-		return result;
+	public Collection<RandomWalkResult> getResults() {
+		return results;
 	}
 
 	public class OnEndBehaviour extends OneShotBehaviour {
@@ -48,12 +49,14 @@ public class RandomWalkMultipleInitiator extends SequentialBehaviour {
 		@Override
 		public void action() {
 			Iterator it = main.getChildren().iterator();
-			while (it.hasNext() && result == null) {
+			while (it.hasNext()) {
 				RandomWalkInitiator b = (RandomWalkInitiator) it.next();
-				result = b.getResult();
+				if (b.getResult() != null) {
+					results.add(b.getResult());
+				}
 			}
 
-			callback.onSuccess(result);
+			callback.onEnd(results);
 		}
 	}
 }

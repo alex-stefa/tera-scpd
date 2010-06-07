@@ -44,6 +44,7 @@ public class NeighborProvider implements Iterable<AID> {
 		int count = 0;
 		while (it.hasNext() && count < maxSize) {
 			peers.add(it.next());
+			count++;
 		}
 		return peers;
 	}

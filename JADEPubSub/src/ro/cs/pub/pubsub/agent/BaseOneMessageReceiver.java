@@ -23,16 +23,10 @@ public abstract class BaseOneMessageReceiver<A extends BaseAgent> extends
 	 */
 	public static final int INTERRUPTED = -1002;
 
-	/**
-	 * A numeric constant to mean that the deadline for the receive operation
-	 * will never expire.
-	 */
-	public static final int INFINITE = -1;
-
 	protected final A agent;
 
 	protected MessageTemplate template;
-	protected Long deadline;
+	protected Long timeout;
 
 	private boolean received;
 	private boolean expired;
@@ -40,11 +34,11 @@ public abstract class BaseOneMessageReceiver<A extends BaseAgent> extends
 	private int ret;
 
 	public BaseOneMessageReceiver(A agent, MessageTemplate template,
-			Long deadline) {
+			Long timeout) {
 		super(agent);
 		this.agent = agent;
 		this.template = template;
-		this.deadline = deadline;
+		this.timeout = timeout;
 		this.received = false;
 		this.expired = false;
 		this.interrupted = false;
@@ -66,14 +60,14 @@ public abstract class BaseOneMessageReceiver<A extends BaseAgent> extends
 			ret = msg.getPerformative();
 			onMessage(msg);
 		} else {
-			if (deadline != null) {
+			if (timeout != null) {
 				// if a timeout was set, then check if it is expired
-				long blockTime = deadline - System.currentTimeMillis();
+				long blockTime = timeout - System.currentTimeMillis();
 				if (blockTime <= 0) {
 					// timeout expired
 					expired = true;
 					ret = TIMEOUT_EXPIRED;
-					onMessage(null);
+					onTimeout();
 				} else {
 					block(blockTime);
 				}
@@ -100,12 +94,9 @@ public abstract class BaseOneMessageReceiver<A extends BaseAgent> extends
 		return ret;
 	}
 
-	/**
-	 * This is invoked when a message matching the specified template is
-	 * received or the timeout has expired (the <code>message</code> parameter
-	 * is null in this case).
-	 */
 	protected abstract void onMessage(ACLMessage message);
+
+	protected abstract void onTimeout();
 
 	/**
 	 * Signal an interruption to this receiver, and cause the ongoing receive

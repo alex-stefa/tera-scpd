@@ -27,7 +27,7 @@ public class RandomWalkInitiator extends SequentialBehaviour {
 	private final AID peer;
 	private final int ttl;
 	private final RandomWalkQuery query;
-	private final Long deadline;
+	private final Long timeout;
 	private final RandomWalkCallback callback;
 
 	/**
@@ -41,7 +41,7 @@ public class RandomWalkInitiator extends SequentialBehaviour {
 	private RandomWalkResult result;
 
 	public RandomWalkInitiator(BaseAgent agent, String protocol, AID peer,
-			int ttl, RandomWalkQuery query, Long deadline,
+			int ttl, RandomWalkQuery query, Long timeout,
 			RandomWalkCallback callback) {
 		super(agent);
 		this.agent = agent;
@@ -49,7 +49,7 @@ public class RandomWalkInitiator extends SequentialBehaviour {
 		this.peer = peer;
 		this.ttl = ttl;
 		this.query = query;
-		this.deadline = deadline;
+		this.timeout = timeout;
 		this.callback = callback;
 
 		conversationId = agent.generateConversationId();
@@ -89,13 +89,13 @@ public class RandomWalkInitiator extends SequentialBehaviour {
 	/**
 	 * Receives the response from the random walk and saves it.
 	 */
-	class MessageReceiver extends BaseOneMessageReceiver<BaseAgent> {
+	private class MessageReceiver extends BaseOneMessageReceiver<BaseAgent> {
 		private static final long serialVersionUID = 1L;
 
 		public MessageReceiver() {
 			super(RandomWalkInitiator.this.agent);
 			this.template = setupTemplate();
-			this.deadline = RandomWalkInitiator.this.deadline;
+			this.timeout = RandomWalkInitiator.this.timeout;
 		}
 
 		protected MessageTemplate setupTemplate() {
@@ -116,10 +116,17 @@ public class RandomWalkInitiator extends SequentialBehaviour {
 				result = ((RandomWalkResponse) mf.extractContent(message))
 						.getResult();
 				if (callback != null) {
-					callback.onSuccess(result);
+					callback.onResult(result);
 				}
 			} catch (MessageException e) {
 				e.printStackTrace();
+			}
+		}
+
+		@Override
+		protected void onTimeout() {
+			if (callback != null) {
+				callback.onTimeout();
 			}
 		}
 	}
