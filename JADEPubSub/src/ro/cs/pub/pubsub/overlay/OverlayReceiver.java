@@ -18,20 +18,16 @@ import ro.cs.pub.pubsub.overlay.view.View;
 public class OverlayReceiver extends BaseTemplateBehaviour<BaseAgent> {
 	private static final long serialVersionUID = 1L;
 
+	private static final MessageTemplate template = MessageTemplate.and(
+			//
+			MessageTemplate.MatchProtocol(Names.PROTOCOL_OVERLAY_MANAGEMENT),
+			MessageTemplate.MatchPerformative(ACLMessage.INFORM));
+
 	private final OverlayManager manager;
 
 	public OverlayReceiver(OverlayManager manager) {
-		super(manager.getAgent());
+		super(manager.getAgent(), template);
 		this.manager = manager;
-	}
-
-	@Override
-	protected MessageTemplate setupTemplate() {
-		return MessageTemplate.and(
-				//
-				MessageTemplate
-						.MatchProtocol(Names.PROTOCOL_OVERLAY_MANAGEMENT),
-				MessageTemplate.MatchPerformative(ACLMessage.INFORM));
 	}
 
 	@Override

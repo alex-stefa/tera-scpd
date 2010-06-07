@@ -20,16 +20,13 @@ import ro.cs.pub.pubsub.tera.agent.TeraAgent;
 public class InitiationReceiver extends BaseTemplateBehaviour<TeraAgent> {
 	private static final long serialVersionUID = 1L;
 
-	public InitiationReceiver(TeraAgent agent) {
-		super(agent);
-	}
+	private static final MessageTemplate template = MessageTemplate.and(
+			//
+			MessageTemplate.MatchProtocol(Names.PROTOCOL_INITIATION),
+			MessageTemplate.MatchPerformative(ACLMessage.PROPOSE));
 
-	@Override
-	protected MessageTemplate setupTemplate() {
-		return MessageTemplate.and(
-				//
-				MessageTemplate.MatchProtocol(Names.PROTOCOL_INITIATION),
-				MessageTemplate.MatchPerformative(ACLMessage.PROPOSE));
+	public InitiationReceiver(TeraAgent agent) {
+		super(agent, template);
 	}
 
 	@Override

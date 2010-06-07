@@ -20,15 +20,20 @@ import ro.cs.pub.pubsub.tera.agent.TeraAgent;
 public class AccessPointManager extends Component<TeraAgent> {
 	private static final long serialVersionUID = 1L;
 
-	private Map<Topic, AID> accessPoints;
 	private final int peersPerLookup;
 	private final int ttl;
+	private final long waitFor;
 
-	public AccessPointManager(TeraAgent agent, int peersPerLookup, int ttl) {
+	private final Map<Topic, AID> accessPoints;
+
+	public AccessPointManager(TeraAgent agent, int lookupPeerCount,
+			int lookupTTL, long lookupWaitFor) {
 		super(agent);
+		this.peersPerLookup = lookupPeerCount;
+		this.ttl = lookupTTL;
+		this.waitFor = lookupWaitFor;
+
 		this.accessPoints = new HashMap<Topic, AID>();
-		this.peersPerLookup = peersPerLookup;
-		this.ttl = ttl;
 
 		// add access point lookup responder
 		NeighborProvider np = agent.getOverlayManager(). //
@@ -57,6 +62,7 @@ public class AccessPointManager extends Component<TeraAgent> {
 
 		// add the behavior
 		addSubBehaviour(new RandomWalkMultipleInitiator( //
-				agent, callback, peers, ttl, query));
+				agent, callback, peers, ttl, query, //
+				System.currentTimeMillis() + waitFor));
 	}
 }

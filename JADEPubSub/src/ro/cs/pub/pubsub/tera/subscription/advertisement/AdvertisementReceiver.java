@@ -21,17 +21,13 @@ import ro.cs.pub.pubsub.tera.subscription.SubscriptionManager;
 public class AdvertisementReceiver extends BaseTemplateBehaviour<TeraAgent> {
 	private static final long serialVersionUID = 1L;
 
-	public AdvertisementReceiver(SubscriptionManager manager) {
-		super(manager.getAgent());
-	}
+	private static final MessageTemplate template = MessageTemplate.and(
+			//
+			MessageTemplate.MatchProtocol(Names.PROTOCOL_TOPIC_ADVERTISEMENT),
+			MessageTemplate.MatchPerformative(ACLMessage.INFORM));;
 
-	@Override
-	protected MessageTemplate setupTemplate() {
-		return MessageTemplate.and(
-				//
-				MessageTemplate
-						.MatchProtocol(Names.PROTOCOL_TOPIC_ADVERTISEMENT),
-				MessageTemplate.MatchPerformative(ACLMessage.INFORM));
+	public AdvertisementReceiver(SubscriptionManager manager) {
+		super(manager.getAgent(), template);
 	}
 
 	@Override

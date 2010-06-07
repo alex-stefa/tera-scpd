@@ -10,7 +10,8 @@ import ro.cs.pub.pubsub.randomWalk.message.RandomWalkResponse;
 import ro.cs.pub.pubsub.tera.agent.TeraAgent;
 
 /**
- * Processes a random walk request and creates a {@link RandomWalkProcessingResult}.
+ * Processes a random walk request and creates a
+ * {@link RandomWalkProcessingResult}.
  */
 public class APRequestProcessor implements RandomWalkProcessor {
 	private final TeraAgent agent;
@@ -22,7 +23,7 @@ public class APRequestProcessor implements RandomWalkProcessor {
 	@Override
 	public RandomWalkProcessingResult process(RandomWalkRequest request) {
 		RandomWalkQuery query = request.getQuery();
-		
+
 		// find a peer for given topic
 		AID peer = agent.getAccessPointManager(). //
 				get(((TopicQuery) query).getTopic());

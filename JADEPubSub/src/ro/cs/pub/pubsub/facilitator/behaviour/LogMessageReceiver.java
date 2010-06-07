@@ -12,16 +12,13 @@ import ro.cs.pub.pubsub.message.MessageFactory;
 public class LogMessageReceiver extends BaseTemplateBehaviour<Facilitator> {
 	private static final long serialVersionUID = 1L;
 
-	public LogMessageReceiver(Facilitator agent) {
-		super(agent);
-	}
+	private final static MessageTemplate template = MessageTemplate.and(
+			//
+			MessageTemplate.MatchProtocol(Names.PROTOCOL_LOGGING),
+			MessageTemplate.MatchPerformative(ACLMessage.INFORM));
 
-	@Override
-	protected MessageTemplate setupTemplate() {
-		return MessageTemplate.and(
-				//
-				MessageTemplate.MatchProtocol(Names.PROTOCOL_LOGGING),
-				MessageTemplate.MatchPerformative(ACLMessage.INFORM));
+	public LogMessageReceiver(Facilitator agent) {
+		super(agent, template);
 	}
 
 	@Override

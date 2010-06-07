@@ -37,12 +37,12 @@ public class NeighborProvider implements Iterable<AID> {
 		List<AID> list = new ArrayList<AID>(neighbors);
 		return new RandomIterator<AID>(list, new Random());
 	}
-	
+
 	public Set<AID> getRandomSet(int maxSize) {
 		Set<AID> peers = new HashSet<AID>();
 		Iterator<AID> it = randomIterator();
 		int count = 0;
-		while(it.hasNext() && count < maxSize) {
+		while (it.hasNext() && count < maxSize) {
 			peers.add(it.next());
 		}
 		return peers;

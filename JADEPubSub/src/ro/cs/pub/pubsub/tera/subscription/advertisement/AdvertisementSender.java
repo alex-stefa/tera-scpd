@@ -24,7 +24,8 @@ public class AdvertisementSender extends TickerBehaviour {
 	private final SubscriptionManager manager;
 	private final int peersPerRound;
 
-	public AdvertisementSender(SubscriptionManager manager, long period, int peersPerRound) {
+	public AdvertisementSender(SubscriptionManager manager, long period,
+			int peersPerRound) {
 		super(manager.getAgent(), period);
 		this.manager = manager;
 		this.peersPerRound = peersPerRound;
@@ -41,9 +42,9 @@ public class AdvertisementSender extends TickerBehaviour {
 
 	private void sendAdvertisement() throws MessageException {
 		// peers are selected from the base overlay
-		NeighborProvider np = manager.getAgent().getOverlayManager().getOverlayContext(
-				Names.OVERLAY_BASE).getNeighborProvider();
-		
+		NeighborProvider np = manager.getAgent().getOverlayManager()
+				.getOverlayContext(Names.OVERLAY_BASE).getNeighborProvider();
+
 		Set<Topic> topics = manager.getSubscribedTopics();
 
 		if (np.size() == 0 || topics.size() == 0) {

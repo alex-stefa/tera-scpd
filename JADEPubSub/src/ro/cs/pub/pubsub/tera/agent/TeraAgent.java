@@ -47,8 +47,9 @@ public class TeraAgent extends BaseAgent {
 		root.addSubBehaviour(new InitiationReceiver(this));
 
 		// main
-		ParallelBehaviour main = new ParallelBehaviour(ParallelBehaviour.WHEN_ALL);
-		
+		ParallelBehaviour main = new ParallelBehaviour(
+				ParallelBehaviour.WHEN_ALL);
+
 		// overlay management
 		overlayManager = new OverlayManager(this);
 		OverlayContextFactory ocf = new OverlayContextFactory( //
@@ -57,14 +58,15 @@ public class TeraAgent extends BaseAgent {
 				configuration.getLong("shuffling.period"));
 		overlayManager.registerOverlay(Names.OVERLAY_BASE, ocf);
 		main.addSubBehaviour(overlayManager);
-		
+
 		// access point manager
 		accessPointManager = new AccessPointManager( //
 				this, //
 				configuration.getInt("accessPoint.lookup.peerCount"), //
-				configuration.getInt("accessPoint.lookup.ttl"));
+				configuration.getInt("accessPoint.lookup.ttl"), //
+				configuration.getLong("accessPoint.lookup.waitFor"));
 		main.addSubBehaviour(accessPointManager);
-		
+
 		// add the main behavior
 		root.addSubBehaviour(main);
 
@@ -107,7 +109,7 @@ public class TeraAgent extends BaseAgent {
 	public OverlayManager getOverlayManager() {
 		return overlayManager;
 	}
-	
+
 	public AccessPointManager getAccessPointManager() {
 		return accessPointManager;
 	}

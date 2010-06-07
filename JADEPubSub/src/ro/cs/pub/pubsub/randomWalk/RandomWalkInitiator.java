@@ -6,7 +6,7 @@ import jade.core.behaviours.SequentialBehaviour;
 import jade.lang.acl.ACLMessage;
 import jade.lang.acl.MessageTemplate;
 import ro.cs.pub.pubsub.agent.BaseAgent;
-import ro.cs.pub.pubsub.agent.BaseTemplateBehaviour;
+import ro.cs.pub.pubsub.agent.BaseOneMessageReceiver;
 import ro.cs.pub.pubsub.exception.MessageException;
 import ro.cs.pub.pubsub.message.MessageFactory;
 import ro.cs.pub.pubsub.randomWalk.message.RandomWalkQuery;
@@ -27,6 +27,7 @@ public class RandomWalkInitiator extends SequentialBehaviour {
 	private final AID peer;
 	private final int ttl;
 	private final RandomWalkQuery query;
+	private final Long deadline;
 	private final RandomWalkCallback callback;
 
 	/**
@@ -40,13 +41,15 @@ public class RandomWalkInitiator extends SequentialBehaviour {
 	private RandomWalkResult result;
 
 	public RandomWalkInitiator(BaseAgent agent, String protocol, AID peer,
-			int ttl, RandomWalkQuery query, RandomWalkCallback callback) {
+			int ttl, RandomWalkQuery query, Long deadline,
+			RandomWalkCallback callback) {
 		super(agent);
 		this.agent = agent;
 		this.protocol = protocol;
 		this.peer = peer;
 		this.ttl = ttl;
 		this.query = query;
+		this.deadline = deadline;
 		this.callback = callback;
 
 		conversationId = agent.generateConversationId();
@@ -56,8 +59,8 @@ public class RandomWalkInitiator extends SequentialBehaviour {
 	}
 
 	public RandomWalkInitiator(BaseAgent agent, String protocol, AID peer,
-			int ttl, RandomWalkQuery query) {
-		this(agent, protocol, peer, ttl, query, null);
+			int ttl, RandomWalkQuery query, Long deadline) {
+		this(agent, protocol, peer, ttl, query, deadline, null);
 	}
 
 	/**
@@ -86,14 +89,15 @@ public class RandomWalkInitiator extends SequentialBehaviour {
 	/**
 	 * Receives the response from the random walk and saves it.
 	 */
-	class MessageReceiver extends BaseTemplateBehaviour<BaseAgent> {
+	class MessageReceiver extends BaseOneMessageReceiver<BaseAgent> {
 		private static final long serialVersionUID = 1L;
 
 		public MessageReceiver() {
 			super(RandomWalkInitiator.this.agent);
+			this.template = setupTemplate();
+			this.deadline = RandomWalkInitiator.this.deadline;
 		}
 
-		@Override
 		protected MessageTemplate setupTemplate() {
 			return MessageTemplate.and( //
 					MessageTemplate.and(

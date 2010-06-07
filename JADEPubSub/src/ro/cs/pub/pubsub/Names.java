@@ -12,6 +12,6 @@ public interface Names {
 	public static final String SERVICE_TERA = "tera-agent";
 	public static final String SERVICE_LOGGING = "logging-agent";
 	public static final String SERVICE_INITIATION = "initiator";
-	
+
 	public static final OverlayId OVERLAY_BASE = new OverlayId("base");
 }

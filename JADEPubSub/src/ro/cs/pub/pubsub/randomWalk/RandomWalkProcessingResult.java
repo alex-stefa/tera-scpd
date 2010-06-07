@@ -12,7 +12,8 @@ public class RandomWalkProcessingResult {
 		FORWARD, SEND_TO_ORIGIN, FORGET
 	};
 
-	public static RandomWalkProcessingResult createForward(RandomWalkRequest request) {
+	public static RandomWalkProcessingResult createForward(
+			RandomWalkRequest request) {
 		return new RandomWalkProcessingResult(request, Type.FORWARD);
 	}
 

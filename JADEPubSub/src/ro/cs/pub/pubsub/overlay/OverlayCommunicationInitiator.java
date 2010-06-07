@@ -19,7 +19,7 @@ public class OverlayCommunicationInitiator extends TickerBehaviour {
 	protected void onTick() {
 		initiateCommunication();
 	}
-	
+
 	public void initiateCommunication() {
 		manager.addSubBehaviour(new OverlaySender(manager, id));
 	}

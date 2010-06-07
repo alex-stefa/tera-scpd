@@ -18,7 +18,7 @@ import ro.cs.pub.pubsub.overlay.context.OverlayContextFactory;
  */
 public class OverlayManager extends Component<BaseAgent> {
 	private static final long serialVersionUID = 1L;
-	
+
 	private final Map<OverlayId, OverlayContext> contexts;
 
 	public OverlayManager(BaseAgent agent) {
@@ -36,7 +36,8 @@ public class OverlayManager extends Component<BaseAgent> {
 	 * @param factory
 	 * @throws OverlayAlreadyRegistered
 	 */
-	public void registerOverlay(OverlayId id, OverlayContextFactory factory) throws OverlayAlreadyRegistered {
+	public void registerOverlay(OverlayId id, OverlayContextFactory factory)
+			throws OverlayAlreadyRegistered {
 		if (contexts.containsKey(id)) {
 			throw new OverlayAlreadyRegistered();
 		}
@@ -50,7 +51,7 @@ public class OverlayManager extends Component<BaseAgent> {
 		// add the initiation behavior
 		addSubBehaviour(context.getInitiator());
 	}
-	
+
 	/**
 	 * Unregisters an overlay.
 	 * 

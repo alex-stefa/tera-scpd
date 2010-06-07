@@ -3,7 +3,8 @@ package ro.cs.pub.pubsub.randomWalk;
 import ro.cs.pub.pubsub.randomWalk.message.RandomWalkRequest;
 
 /**
- * Processes a random walk request and creates a {@link RandomWalkProcessingResult}.
+ * Processes a random walk request and creates a
+ * {@link RandomWalkProcessingResult}.
  */
 public interface RandomWalkProcessor {
 
