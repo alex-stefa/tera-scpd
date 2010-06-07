@@ -23,7 +23,6 @@ public class AccessPointManager extends Component<TeraAgent> {
 	private final int peersPerLookup;
 	private final int ttl;
 	private final long waitFor;
-
 	private final Map<Topic, AID> accessPoints;
 
 	public AccessPointManager(TeraAgent agent, int lookupPeerCount,
@@ -32,7 +31,6 @@ public class AccessPointManager extends Component<TeraAgent> {
 		this.peersPerLookup = lookupPeerCount;
 		this.ttl = lookupTTL;
 		this.waitFor = lookupWaitFor;
-
 		this.accessPoints = new HashMap<Topic, AID>();
 
 		// add access point lookup responder
@@ -51,11 +49,26 @@ public class AccessPointManager extends Component<TeraAgent> {
 		return accessPoints.get(topic);
 	}
 
-	public void lookup(Topic topic, RandomWalkGroupCallback callback) {
+	/**
+	 * Searches for an access point to the given topic. The search is done as a
+	 * random walk on a random set of peers. In addition, the random walk can
+	 * also be started from the agent itself.
+	 * 
+	 * @param topic
+	 * @param callback
+	 * @param includeSelf
+	 * @param waitForAll
+	 */
+	public void lookup(Topic topic, RandomWalkGroupCallback callback,
+			boolean includeSelf, boolean waitForAll) {
 		// select peers
 		NeighborProvider np = agent.getOverlayManager(). //
 				getOverlayContext(Names.OVERLAY_BASE).getNeighborProvider();
 		Set<AID> peers = np.getRandomSet(peersPerLookup);
+
+		if (includeSelf) {
+			peers.add(agent.getAID());
+		}
 
 		// set up query
 		RandomWalkQuery query = new TopicQuery(topic);
@@ -63,6 +76,7 @@ public class AccessPointManager extends Component<TeraAgent> {
 		// add the behavior
 		addSubBehaviour(new RandomWalkGroupInitiator( //
 				agent, callback, peers, ttl, query, //
-				System.currentTimeMillis() + waitFor));
+				System.currentTimeMillis() + waitFor, //
+				waitForAll));
 	}
 }

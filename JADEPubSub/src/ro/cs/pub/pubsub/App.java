@@ -43,9 +43,9 @@ public class App {
 				configuration.getInt("jade.port"), null);
 
 		// set up the main container
-		AgentContainer container = rt.createMainContainer(pMain);
+		AgentContainer mainContainer = rt.createMainContainer(pMain);
 		if (configuration.getBoolean("jade.gui")) {
-			AgentController rma = container.createNewAgent("rma", //
+			AgentController rma = mainContainer.createNewAgent("rma", //
 					rma.class.getCanonicalName(), new Object[0]);
 			rma.start();
 		}
@@ -53,14 +53,22 @@ public class App {
 		// facilitator
 		Object[] fArgs = { new FacilitatorArguments( //
 				configuration.subset("pubsub.facilitator")) };
-		container.createNewAgent(FACILITATOR_AGENT, //
+		mainContainer.createNewAgent(FACILITATOR_AGENT, //
 				Facilitator.class.getCanonicalName(), fArgs).start();
 
 		// TERA agents
 		Set<AgentController> agents = new HashSet<AgentController>();
 
+		AgentContainer container = null;
 		int agentCount = configuration.getInt("pubsub.tera.agent.count");
 		for (int id = 0; id < agentCount; id++) {
+			if (id % 1000 == 0) {
+				Profile p = new ProfileImpl(null, configuration
+						.getInt("jade.port")
+						+ id, null);
+				container = rt.createAgentContainer(p);
+			}
+
 			Object[] args = { new TeraAgentArguments( //
 					configuration.subset("pubsub.tera")) };
 			agents.add(container.createNewAgent(TERA_AGENT_PREFIX + id,

@@ -57,7 +57,8 @@ public class SubscriptionManager extends Component<TeraAgent> {
 		agent.getOverlayManager().registerOverlay(topic, overlayContextFactory);
 
 		// find an agent subscribed to the topic and join the overlay
-		agent.getAccessPointManager().lookup(topic, new Callback(topic));
+		agent.getAccessPointManager().lookup( //
+				topic, new Callback(topic), true, true);
 	}
 
 	/**
@@ -101,6 +102,8 @@ public class SubscriptionManager extends Component<TeraAgent> {
 			// force initiation
 			OverlayCommunicationInitiator initiator = context.getInitiator();
 			initiator.initiateCommunication();
+
+			agent.print("subscribed to " + topic + " " + np.size());
 		}
 	}
 }

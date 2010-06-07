@@ -74,5 +74,8 @@ public class OverlayReceiver extends BaseTemplateBehaviour<BaseAgent> {
 		for (AID n : incoming) {
 			np.add(n);
 		}
+
+		agent.print(overlayId + ": " + np.size() + "        "
+				+ agent.getCurQueueSize());
 	}
 }

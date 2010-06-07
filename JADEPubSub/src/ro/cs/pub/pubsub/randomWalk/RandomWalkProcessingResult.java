@@ -19,11 +19,11 @@ public class RandomWalkProcessingResult {
 
 	public static RandomWalkProcessingResult createSendToOrigin(
 			RandomWalkResponse response) {
-		return new RandomWalkProcessingResult(response, Type.FORWARD);
+		return new RandomWalkProcessingResult(response, Type.SEND_TO_ORIGIN);
 	}
 
 	public static RandomWalkProcessingResult createForget() {
-		return new RandomWalkProcessingResult(null, Type.FORWARD);
+		return new RandomWalkProcessingResult(null, Type.FORGET);
 	}
 
 	private final MessageContent content;

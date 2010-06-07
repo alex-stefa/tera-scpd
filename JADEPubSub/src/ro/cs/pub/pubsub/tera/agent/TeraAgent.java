@@ -1,6 +1,7 @@
 package ro.cs.pub.pubsub.tera.agent;
 
 import jade.core.AID;
+import jade.core.behaviours.OneShotBehaviour;
 import jade.core.behaviours.ParallelBehaviour;
 import jade.core.behaviours.SequentialBehaviour;
 import jade.domain.FIPAAgentManagement.ServiceDescription;
@@ -76,9 +77,10 @@ public class TeraAgent extends BaseAgent {
 				c.getInt("overlay.topic.neighbors.max"), //
 				c.getInt("overlay.topic.view.size"), //
 				c.getLong("overlay.topic.initiation.period"));
-		subscriptionManager = new SubscriptionManager( //
+		subscriptionManager = new SubscriptionManager(
+				//
 				this, //
-				ocfs, 
+				ocfs,
 				c.getInt("subscriptionManager.advertisements.round.interval"),
 				c.getInt("subscriptionManager.advertisements.round.peerCount"));
 		main.addSubBehaviour(subscriptionManager);
@@ -86,9 +88,19 @@ public class TeraAgent extends BaseAgent {
 		// simulator
 		simulator = new Simulator(this);
 		main.addSubBehaviour(simulator);
-		
+
 		// add the main behavior
 		root.addSubBehaviour(main);
+
+		// add end behavior
+		root.addSubBehaviour(new OneShotBehaviour() {
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			public void action() {
+				TeraAgent.this.print("agent finished");
+			}
+		});
 
 		// add root behavior
 		addBehaviour(root);
@@ -133,7 +145,7 @@ public class TeraAgent extends BaseAgent {
 	public AccessPointManager getAccessPointManager() {
 		return accessPointManager;
 	}
-	
+
 	public SubscriptionManager getSubscriptionManager() {
 		return subscriptionManager;
 	}

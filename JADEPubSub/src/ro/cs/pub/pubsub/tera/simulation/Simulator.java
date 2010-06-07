@@ -1,6 +1,5 @@
 package ro.cs.pub.pubsub.tera.simulation;
 
-import jade.core.AID;
 import ro.cs.pub.pubsub.Topic;
 import ro.cs.pub.pubsub.agent.BaseTickerBehaviour;
 import ro.cs.pub.pubsub.agent.Component;
@@ -12,8 +11,15 @@ public class Simulator extends Component<TeraAgent> {
 	public Simulator(TeraAgent agent) {
 		super(agent);
 
-		if (agent.getAID().equals(new AID("a_1", false))) {
-			TopicSubscriptionTest t = new TopicSubscriptionTest(agent, 3000);
+		double p = Math.random();
+		if (p < 1) {
+			TopicSubscriptionTest t = new TopicSubscriptionTest(agent, 3000,
+					new Topic("A"));
+			addSubBehaviour(t);
+		}
+		if (p < 0.2) {
+			TopicSubscriptionTest t = new TopicSubscriptionTest(agent, 6000,
+					new Topic("B"));
 			addSubBehaviour(t);
 		}
 	}
@@ -23,17 +29,16 @@ public class Simulator extends Component<TeraAgent> {
 
 		private final Topic topic;
 
-		public TopicSubscriptionTest(TeraAgent agent, long period) {
+		public TopicSubscriptionTest(TeraAgent agent, long period, Topic topic) {
 			super(agent, period);
-			topic = new Topic("topic");
+			this.topic = topic;
 		}
 
 		@Override
 		protected void onTick() {
-			if (!agent.getSubscriptionManager().isSubscribed(topic)) {
-				agent.print("started");
-				agent.getSubscriptionManager().subscribe(topic);
-			}
+			agent.print("started " + topic);
+			agent.getSubscriptionManager().subscribe(topic);
+			stop();
 		}
 	}
 }

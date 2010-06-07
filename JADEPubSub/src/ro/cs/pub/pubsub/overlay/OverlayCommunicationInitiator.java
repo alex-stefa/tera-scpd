@@ -3,7 +3,8 @@ package ro.cs.pub.pubsub.overlay;
 import ro.cs.pub.pubsub.agent.BaseAgent;
 import ro.cs.pub.pubsub.agent.BaseTickerBehaviour;
 
-public class OverlayCommunicationInitiator extends BaseTickerBehaviour<BaseAgent> {
+public class OverlayCommunicationInitiator extends
+		BaseTickerBehaviour<BaseAgent> {
 	private static final long serialVersionUID = 1L;
 
 	private final OverlayManager manager;

@@ -19,14 +19,20 @@ public class RandomWalkGroupInitiator extends SequentialBehaviour {
 	private static final long serialVersionUID = 1L;
 
 	private final RandomWalkGroupCallback callback;
+	private final boolean waitForAll;
 	private final ParallelBehaviour main;
-	public final Collection<RandomWalkResult> results;
+	private final Collection<RandomWalkResult> results;
 
 	public RandomWalkGroupInitiator(BaseAgent agent,
 			RandomWalkGroupCallback callback, Set<AID> peers, int ttl,
-			RandomWalkQuery query, Long deadline) {
+			RandomWalkQuery query, Long deadline, boolean waitForAll) {
 		this.callback = callback;
-		this.main = new ParallelBehaviour(ParallelBehaviour.WHEN_ALL);
+		this.waitForAll = waitForAll;
+		if (waitForAll) {
+			this.main = new ParallelBehaviour(ParallelBehaviour.WHEN_ALL);
+		} else {
+			this.main = new ParallelBehaviour(ParallelBehaviour.WHEN_ANY);
+		}
 		this.results = new LinkedList<RandomWalkResult>();
 
 		for (AID peer : peers) {
@@ -53,6 +59,9 @@ public class RandomWalkGroupInitiator extends SequentialBehaviour {
 				RandomWalkInitiator b = (RandomWalkInitiator) it.next();
 				if (b.getResult() != null) {
 					results.add(b.getResult());
+					if (!waitForAll) {
+						break;
+					}
 				}
 			}
 

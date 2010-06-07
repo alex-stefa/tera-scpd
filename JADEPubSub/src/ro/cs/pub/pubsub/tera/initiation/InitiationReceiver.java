@@ -12,6 +12,7 @@ import ro.cs.pub.pubsub.exception.MessageException;
 import ro.cs.pub.pubsub.message.MessageFactory;
 import ro.cs.pub.pubsub.message.shared.InitiationReply;
 import ro.cs.pub.pubsub.overlay.NeighborProvider;
+import ro.cs.pub.pubsub.overlay.context.OverlayContext;
 import ro.cs.pub.pubsub.tera.agent.TeraAgent;
 
 /**
@@ -37,12 +38,14 @@ public class InitiationReceiver extends BaseTemplateBehaviour<TeraAgent> {
 			content = (InitiationReply) mf.extractContent(message);
 
 			// add the discovered peers
-			NeighborProvider np = agent.getOverlayManager().getOverlayContext(
-					Names.OVERLAY_BASE).getNeighborProvider();
+			OverlayContext context = agent.getOverlayManager()
+					.getOverlayContext(Names.OVERLAY_BASE);
+			NeighborProvider np = context.getNeighborProvider();
 			Iterator<AID> it = content.getNeighbors().iterator();
 			while (it.hasNext() && !np.isFull()) {
 				np.add(it.next());
 			}
+			context.getInitiator().initiateCommunication();
 			setDone();
 		} catch (MessageException e) {
 			e.printStackTrace();

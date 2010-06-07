@@ -31,10 +31,10 @@ public class RandomWalkResponder extends BaseTemplateBehaviour<BaseAgent> {
 	public RandomWalkResponder(BaseAgent agent, RandomWalkProcessor processor,
 			String protocol, NeighborProvider neighborProvider) {
 		super(agent, null);
-		this.messageTemplate = setupTemplate();
 		this.processor = processor;
 		this.protocol = protocol;
 		this.neighborProvider = neighborProvider;
+		this.messageTemplate = setupTemplate();
 	}
 
 	protected MessageTemplate setupTemplate() {
@@ -52,19 +52,16 @@ public class RandomWalkResponder extends BaseTemplateBehaviour<BaseAgent> {
 			request = (RandomWalkRequest) mf.extractContent(message);
 
 			// process the request
-			RandomWalkProcessingResult randomWalkProcessingResult = processor
-					.process(request);
+			RandomWalkProcessingResult result = processor.process(request);
 
-			switch (randomWalkProcessingResult.getType()) {
+			switch (result.getType()) {
 			case SEND_TO_ORIGIN:
 				sendToOrigin(mf, message, request.getOrigin(), //
-						(RandomWalkResponse) randomWalkProcessingResult
-								.getContent());
+						(RandomWalkResponse) result.getContent());
 				break;
 			case FORWARD:
 				forward(mf, message, //
-						(RandomWalkRequest) randomWalkProcessingResult
-								.getContent());
+						(RandomWalkRequest) result.getContent());
 				break;
 			}
 		} catch (MessageException e) {

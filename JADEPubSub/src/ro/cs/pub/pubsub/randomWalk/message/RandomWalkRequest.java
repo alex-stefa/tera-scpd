@@ -34,4 +34,10 @@ public class RandomWalkRequest implements MessageContent {
 	public RandomWalkRequest decreaseTTL() {
 		return new RandomWalkRequest(origin, ttl - 1, query);
 	}
+
+	@Override
+	public String toString() {
+		return "RandomWalkRequest [origin=" + origin + ", query=" + query
+				+ ", ttl=" + ttl + "]";
+	}
 }
