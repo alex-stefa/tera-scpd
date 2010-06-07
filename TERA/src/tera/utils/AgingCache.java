@@ -104,12 +104,20 @@ public class AgingCache<T> implements Serializable
 		incAge(1);
 	}
 	
-	public List<CacheEntry<T>> getEntries()
+	public List<CacheEntry<T>> getCacheEntries()
 	{
 		List<CacheEntry<T>> entries = new ArrayList<CacheEntry<T>>(cache.size());
 		for (Entry<T, Integer> entry : cache.entrySet())
 			entries.add(new CacheEntry<T>(entry.getKey(), entry.getValue()));
 		return entries;
+	}
+	
+	public List<T> getEntryList()
+	{
+		List<T> keys = new ArrayList<T>(cache.size());
+		for (Entry<T, Integer> entry : cache.entrySet())
+			keys.add(entry.getKey());
+		return keys;
 	}
 	
 	@SuppressWarnings("hiding")
