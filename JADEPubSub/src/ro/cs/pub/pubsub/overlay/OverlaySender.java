@@ -10,6 +10,7 @@ import ro.cs.pub.pubsub.Names;
 import ro.cs.pub.pubsub.agent.BaseAgent;
 import ro.cs.pub.pubsub.exception.MessageException;
 import ro.cs.pub.pubsub.message.MessageFactory;
+import ro.cs.pub.pubsub.overlay.context.OverlayContext;
 import ro.cs.pub.pubsub.overlay.view.View;
 import ro.cs.pub.pubsub.overlay.view.ViewGenerator;
 
@@ -46,8 +47,8 @@ public class OverlaySender extends OneShotBehaviour {
 	public void action() {
 		try {
 			BaseAgent agent = manager.getAgent();
-			NeighborProvider np = manager.getOverlayContext(id)
-					.getNeighborProvider();
+			OverlayContext context = manager.getOverlayContext(id);
+			NeighborProvider np = context.getNeighborProvider();
 			ViewGenerator vg = manager.getOverlayContext(id).getViewGenerator();
 			MessageFactory mf = agent.getMessageFactory();
 

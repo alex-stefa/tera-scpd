@@ -16,6 +16,10 @@ public class Simulator extends Component<TeraAgent> {
 			TopicSubscriptionTest t = new TopicSubscriptionTest(agent, 3000,
 					new Topic("A"));
 			addSubBehaviour(t);
+		} else {
+			TopicSubscriptionTest t = new TopicSubscriptionTest(agent, 6000,
+					new Topic("A"));
+			addSubBehaviour(t);
 		}
 		if (p < 0.2) {
 			TopicSubscriptionTest t = new TopicSubscriptionTest(agent, 6000,

@@ -55,8 +55,9 @@ public class NeighborProvider implements Iterable<AID> {
 			return;
 		}
 
-		if (isFull())
+		if (isFull()) {
 			throw new IllegalArgumentException();
+		}
 
 		neighbors.add(e);
 	}

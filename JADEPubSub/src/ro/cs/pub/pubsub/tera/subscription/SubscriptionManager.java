@@ -25,14 +25,12 @@ public class SubscriptionManager extends Component<TeraAgent> {
 	private static final long serialVersionUID = 1L;
 
 	private final OverlayContextFactory overlayContextFactory;
-	private final Set<Topic> subscribedTopics;
 
 	public SubscriptionManager(TeraAgent agent,
 			OverlayContextFactory overlayContextFactory, long adRoundInterval,
 			int adPeersPerRound) {
 		super(agent);
 		this.overlayContextFactory = overlayContextFactory;
-		this.subscribedTopics = new HashSet<Topic>();
 
 		addSubBehaviour(new AdvertisementSender( //
 				this, adRoundInterval, adPeersPerRound));
@@ -51,8 +49,6 @@ public class SubscriptionManager extends Component<TeraAgent> {
 			throw new TopicAlreadySubscribed();
 		}
 
-		subscribedTopics.add(topic);
-
 		// set up the overlay
 		agent.getOverlayManager().registerOverlay(topic, overlayContextFactory);
 
@@ -66,24 +62,30 @@ public class SubscriptionManager extends Component<TeraAgent> {
 	 * topic overlay.
 	 */
 	public void unsubscribe(Topic topic) {
-		subscribedTopics.remove(topic);
-
 		// remove the overlay
 		agent.getOverlayManager().unregisterOverlay(topic);
 	}
 
 	public boolean isSubscribed(Topic topic) {
-		return subscribedTopics.contains(topic);
+		return agent.getOverlayManager().isRegistered(topic);
 	}
 
 	public Set<Topic> getSubscribedTopics() {
-		return new HashSet<Topic>(subscribedTopics);
+		Set<Topic> topics = new HashSet<Topic>();
+
+		for (OverlayId id : agent.getOverlayManager().getOverlays()) {
+			if (id instanceof Topic) {
+				topics.add((Topic) id);
+			}
+		}
+
+		return topics;
 	}
 
 	private class Callback implements RandomWalkGroupCallback {
-		private final OverlayId topic;
+		private final Topic topic;
 
-		public Callback(OverlayId topic) {
+		public Callback(Topic topic) {
 			this.topic = topic;
 		}
 
@@ -95,15 +97,20 @@ public class SubscriptionManager extends Component<TeraAgent> {
 
 			// add the peers to the overlay network
 			for (RandomWalkResult r : results) {
+				if (np.size() == np.getMaxSize()) {
+					break;
+				}
 				AID peer = ((AgentResult) r).getAgent();
 				np.add(peer);
+			}
+
+			if (np.size() == 0) {
+				agent.getAccessPointManager().put(topic, agent.getAID());
 			}
 
 			// force initiation
 			OverlayCommunicationInitiator initiator = context.getInitiator();
 			initiator.initiateCommunication();
-
-			agent.print("subscribed to " + topic + " " + np.size());
 		}
 	}
 }

@@ -30,7 +30,7 @@ public class APRequestProcessor implements RandomWalkProcessor {
 
 		if (peer != null) {
 			return RandomWalkProcessingResult.createSendToOrigin( //
-					new RandomWalkResponse(new AgentResult(agent.getAID())));
+					new RandomWalkResponse(new AgentResult(peer)));
 		}
 
 		if (request.getTTL() > 0) {

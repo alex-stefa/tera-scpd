@@ -13,6 +13,7 @@ import ro.cs.pub.pubsub.agent.BaseAgent;
 import ro.cs.pub.pubsub.agent.BaseTemplateBehaviour;
 import ro.cs.pub.pubsub.exception.MessageException;
 import ro.cs.pub.pubsub.message.MessageFactory;
+import ro.cs.pub.pubsub.overlay.context.OverlayContext;
 import ro.cs.pub.pubsub.overlay.view.View;
 
 public class OverlayReceiver extends BaseTemplateBehaviour<BaseAgent> {
@@ -51,8 +52,13 @@ public class OverlayReceiver extends BaseTemplateBehaviour<BaseAgent> {
 	}
 
 	private void updateNeighbors(OverlayId overlayId, View view) {
-		NeighborProvider np = manager.getOverlayContext(overlayId)
-				.getNeighborProvider();
+		OverlayContext context = manager.getOverlayContext(overlayId);
+
+		if (context == null) {
+			return;
+		}
+
+		NeighborProvider np = context.getNeighborProvider();
 		Set<AID> incoming = new HashSet<AID>(view.getNeighbors());
 
 		// remove the nodes we know about
@@ -74,8 +80,5 @@ public class OverlayReceiver extends BaseTemplateBehaviour<BaseAgent> {
 		for (AID n : incoming) {
 			np.add(n);
 		}
-
-		agent.print(overlayId + ": " + np.size() + "        "
-				+ agent.getCurQueueSize());
 	}
 }

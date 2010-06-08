@@ -7,7 +7,7 @@ public abstract class BaseTickerBehaviour<A extends BaseAgent> extends
 	private static final long serialVersionUID = 1L;
 
 	protected final A agent;
-	
+
 	public BaseTickerBehaviour(A agent, long period) {
 		super(agent, period);
 		this.agent = agent;

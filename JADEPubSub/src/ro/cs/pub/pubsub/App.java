@@ -41,8 +41,11 @@ public class App {
 		rt.setCloseVM(true);
 		Profile pMain = new ProfileImpl(null,
 				configuration.getInt("jade.port"), null);
-		pMain.setParameter("jade_core_messaging_MessageManager_poolsize", "100");
-		pMain.setParameter("jade_core_messaging_MessageManager_maxqueuesize", "10000");
+		pMain
+				.setParameter("jade_core_messaging_MessageManager_poolsize",
+						"100");
+		pMain.setParameter("jade_core_messaging_MessageManager_maxqueuesize",
+				"10000");
 
 		// set up the main container
 		AgentContainer mainContainer = rt.createMainContainer(pMain);
@@ -51,6 +54,9 @@ public class App {
 					rma.class.getCanonicalName(), new Object[0]);
 			rma.start();
 		}
+
+		// timer dispatcher
+		TimerDispatcherPool.buildInstance(50);
 
 		// facilitator
 		Object[] fArgs = { new FacilitatorArguments( //

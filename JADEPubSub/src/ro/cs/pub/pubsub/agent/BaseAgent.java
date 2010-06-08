@@ -14,6 +14,7 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
+import ro.cs.pub.pubsub.TimerDispatcherPool;
 import ro.cs.pub.pubsub.message.MessageFactory;
 
 public abstract class BaseAgent extends Agent {
@@ -25,7 +26,7 @@ public abstract class BaseAgent extends Agent {
 	@Override
 	protected void setup() {
 		super.setup();
-		
+
 		setupTimer();
 
 		// register services
@@ -39,12 +40,18 @@ public abstract class BaseAgent extends Agent {
 	}
 
 	private void setupTimer() {
-		Class<?> cls = this.getClass().getSuperclass().getSuperclass();
+		Class<?> cls = this.getClass();
+		while (!cls.equals(Agent.class)) {
+			cls = cls.getSuperclass();
+		}
+
 		Field field;
 		try {
 			field = cls.getDeclaredField("theDispatcher");
 			field.setAccessible(true);
-			field.set(this, new TimerDispatcher());
+			TimerDispatcher dispatcher = TimerDispatcherPool.getInstance()
+					.select();
+			field.set(this, dispatcher);
 		} catch (Exception e) {
 			throw new RuntimeException(e);
 		}

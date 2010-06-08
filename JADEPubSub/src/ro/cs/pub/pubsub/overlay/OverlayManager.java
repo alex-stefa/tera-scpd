@@ -1,7 +1,9 @@
 package ro.cs.pub.pubsub.overlay;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 import ro.cs.pub.pubsub.agent.BaseAgent;
 import ro.cs.pub.pubsub.agent.Component;
@@ -69,7 +71,15 @@ public class OverlayManager extends Component<BaseAgent> {
 		contexts.remove(id);
 	}
 
+	public boolean isRegistered(OverlayId id) {
+		return contexts.containsKey(id);
+	}
+
 	public OverlayContext getOverlayContext(OverlayId id) {
 		return contexts.get(id);
+	}
+
+	public Set<OverlayId> getOverlays() {
+		return new HashSet<OverlayId>(contexts.keySet());
 	}
 }
