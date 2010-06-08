@@ -12,7 +12,7 @@ public class Simulator extends Component<TeraAgent> {
 		super(agent);
 
 		double p = Math.random();
-		if (p < 1) {
+		if (p < 0.5) {
 			TopicSubscriptionTest t = new TopicSubscriptionTest(agent, 3000,
 					new Topic("A"));
 			addSubBehaviour(t);

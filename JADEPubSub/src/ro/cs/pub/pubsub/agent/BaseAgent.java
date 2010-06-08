@@ -2,16 +2,17 @@ package ro.cs.pub.pubsub.agent;
 
 import jade.core.AID;
 import jade.core.Agent;
+import jade.core.TimerDispatcher;
 import jade.domain.DFService;
 import jade.domain.FIPAException;
 import jade.domain.FIPAAgentManagement.DFAgentDescription;
 import jade.domain.FIPAAgentManagement.SearchConstraints;
 import jade.domain.FIPAAgentManagement.ServiceDescription;
 
+import java.lang.reflect.Field;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.Timer;
 
 import ro.cs.pub.pubsub.message.MessageFactory;
 
@@ -21,18 +22,11 @@ public abstract class BaseAgent extends Agent {
 	private long conversationId;
 	protected MessageFactory messageFactory;
 
-	/**
-	 * @see BaseTickerBehaviour for why we need this {@link Timer}.
-	 */
-	private final Timer timer = new Timer();
-
-	public Timer getTimer() {
-		return timer;
-	}
-
 	@Override
 	protected void setup() {
 		super.setup();
+		
+		setupTimer();
 
 		// register services
 		try {
@@ -42,6 +36,18 @@ public abstract class BaseAgent extends Agent {
 		}
 
 		messageFactory = new MessageFactory();
+	}
+
+	private void setupTimer() {
+		Class<?> cls = this.getClass().getSuperclass().getSuperclass();
+		Field field;
+		try {
+			field = cls.getDeclaredField("theDispatcher");
+			field.setAccessible(true);
+			field.set(this, new TimerDispatcher());
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
 	}
 
 	/**
