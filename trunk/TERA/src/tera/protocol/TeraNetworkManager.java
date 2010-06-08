@@ -20,13 +20,13 @@ public class TeraNetworkManager implements MessageHandler
 	private Logger logger;
 	private Hashtable<Long, ReplyRequester> requests;
 	
-	public TeraNetworkManager(int listenPort, int cyclonePeriod, int maxActiveConns)
+	public TeraNetworkManager(int listenPort, int cyclonePeriod, int maxActiveConns, int maxNeighborCount)
 	{
 		TeraLoggingService.initLogger(listenPort);
 		logger = TeraLoggingService.getLogger(listenPort);
 		topics = new Hashtable<Long, TopicOverlay>(50);
 		requests = new Hashtable<Long, ReplyRequester>(100);
-		baseOverlay = new CycloneOverlay(this, cyclonePeriod);
+		baseOverlay = new CycloneOverlay(this, cyclonePeriod, maxNeighborCount);
 		network = new ConnectionManager(this, listenPort, maxActiveConns);
 		network.start();
 		localNode = new Node(network.getLocalIP(), listenPort);

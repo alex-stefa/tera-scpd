@@ -84,6 +84,11 @@ public class AgingCache<T> implements Serializable
 		for (CacheEntry<T> entry : entries) put(entry);
 	}
 	
+	public void put(T entry)
+	{
+		put(new CacheEntry<T>(entry));
+	}
+	
 	@SuppressWarnings("unchecked")
 	public CacheEntry<T> removeRandom()
 	{
@@ -118,6 +123,11 @@ public class AgingCache<T> implements Serializable
 		for (Entry<T, Integer> entry : cache.entrySet())
 			keys.add(entry.getKey());
 		return keys;
+	}
+	
+	public void clear()
+	{
+		cache.clear();
 	}
 	
 	@SuppressWarnings("hiding")

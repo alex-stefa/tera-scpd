@@ -1,16 +1,19 @@
 package tera.protocol;
 
-import java.util.HashSet;
 import java.util.Timer;
 import java.util.TimerTask;
+
+import tera.utils.AgingCache;
 
 
 public class CycloneOverlay
 {
 	public static int DEFAULT_CYCLE_DURATION = 10;
+	public static int DEAFULT_MAX_NEIGHBOR_COUNT = 10;
 	
-	private HashSet<Node> neighbors;
+	private AgingCache<Node> neighbors;
 	private int cyclonePeriod;
+	private int maxNeighborCount;
 	private TeraNetworkManager tera;
 	private Timer cycleTimer; 
 		
@@ -22,23 +25,29 @@ public class CycloneOverlay
 		}
 	};
 	
-	public CycloneOverlay(TeraNetworkManager tera, int cyclonePeriod)
+	public CycloneOverlay(TeraNetworkManager tera, int cyclonePeriod, int maxNeighborCount)
 	{
 		this.tera = tera;
 		this.cyclonePeriod = cyclonePeriod;
-		neighbors = new HashSet<Node>(50);
+		this.maxNeighborCount = maxNeighborCount;
+		neighbors = new AgingCache<Node>(maxNeighborCount);
 		cycleTimer = new Timer();
 		cycleTimer.schedule(viewExchangeTask, cyclonePeriod * 1000, cyclonePeriod * 1000);
 	}
 		
 	public CycloneOverlay(TeraNetworkManager tera)
 	{
-		this(tera, DEFAULT_CYCLE_DURATION);
+		this(tera, DEFAULT_CYCLE_DURATION, DEAFULT_MAX_NEIGHBOR_COUNT);
 	}
 	
 	public int getCyclonePeriod()
 	{
 		return cyclonePeriod;
+	}
+	
+	public int getMaxNeighborCount()
+	{
+		return maxNeighborCount;
 	}
 	
 	public void basicShuffle()
@@ -49,13 +58,9 @@ public class CycloneOverlay
 	
 	public void addNode(Node node)
 	{
-		neighbors.add(node);
+		neighbors.put(node);
 	}
 	
-	public void removeNode(Node node)
-	{
-		neighbors.remove(node);
-	}
 	
 	public void stop()
 	{

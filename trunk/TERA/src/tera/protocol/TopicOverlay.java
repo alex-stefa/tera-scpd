@@ -2,23 +2,23 @@ package tera.protocol;
 
 public class TopicOverlay extends CycloneOverlay
 {
-	private long id;
+	private long topicId;
 	
-	public TopicOverlay(TeraNetworkManager tera, long id, int cyclonePeriod)
+	public TopicOverlay(TeraNetworkManager tera, long topicId, int cyclonePeriod, int maxNeighborCount)
 	{
-		super(tera, cyclonePeriod);
-		this.id = id;	
+		super(tera, cyclonePeriod, maxNeighborCount);
+		this.topicId = topicId;	
 	}
 	
 	public TopicOverlay(TeraNetworkManager tera, long id)
 	{
 		super(tera);
-		this.id = id;	
+		this.topicId = id;	
 	}
 	
 	public long getId()
 	{
-		return id;
+		return topicId;
 	}
 	
 
