@@ -17,6 +17,7 @@ public class TimerDispatcherPool {
 		return instance;
 	}
 
+	@SuppressWarnings("unused")
 	private final List<TimerDispatcher> list;
 
 	private TimerDispatcherPool(int size) {

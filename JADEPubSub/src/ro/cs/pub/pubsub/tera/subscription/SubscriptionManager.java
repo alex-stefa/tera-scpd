@@ -97,7 +97,7 @@ public class SubscriptionManager extends Component<TeraAgent> {
 
 			// add the peers to the overlay network
 			for (RandomWalkResult r : results) {
-				if (np.size() == np.getMaxSize()) {
+				if (np.isFull()) {
 					break;
 				}
 				AID peer = ((AgentResult) r).getAgent();
