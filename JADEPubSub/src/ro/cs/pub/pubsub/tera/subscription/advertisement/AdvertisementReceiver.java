@@ -6,10 +6,10 @@ import jade.lang.acl.MessageTemplate;
 import java.util.Set;
 
 import ro.cs.pub.pubsub.Names;
-import ro.cs.pub.pubsub.Topic;
 import ro.cs.pub.pubsub.agent.BaseTemplateBehaviour;
 import ro.cs.pub.pubsub.exception.MessageException;
 import ro.cs.pub.pubsub.message.MessageFactory;
+import ro.cs.pub.pubsub.model.Topic;
 import ro.cs.pub.pubsub.overlay.NeighborProvider;
 import ro.cs.pub.pubsub.tera.agent.TeraAgent;
 import ro.cs.pub.pubsub.tera.lookup.AccessPointManager;

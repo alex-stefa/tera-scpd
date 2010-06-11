@@ -1,8 +1,8 @@
 package ro.cs.pub.pubsub.tera.simulation;
 
-import ro.cs.pub.pubsub.Topic;
 import ro.cs.pub.pubsub.agent.BaseTickerBehaviour;
 import ro.cs.pub.pubsub.agent.Component;
+import ro.cs.pub.pubsub.model.Topic;
 import ro.cs.pub.pubsub.tera.agent.TeraAgent;
 
 public class Simulator extends Component<TeraAgent> {

@@ -6,9 +6,9 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
-import ro.cs.pub.pubsub.Topic;
 import ro.cs.pub.pubsub.agent.Component;
 import ro.cs.pub.pubsub.exception.TopicAlreadySubscribed;
+import ro.cs.pub.pubsub.model.Topic;
 import ro.cs.pub.pubsub.overlay.NeighborProvider;
 import ro.cs.pub.pubsub.overlay.OverlayCommunicationInitiator;
 import ro.cs.pub.pubsub.overlay.OverlayId;

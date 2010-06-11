@@ -2,8 +2,8 @@ package ro.cs.pub.pubsub.tera.subscription.advertisement;
 
 import java.util.Set;
 
-import ro.cs.pub.pubsub.Topic;
 import ro.cs.pub.pubsub.message.MessageContent;
+import ro.cs.pub.pubsub.model.Topic;
 
 public class AdvertisementMessage implements MessageContent {
 	private static final long serialVersionUID = 1L;
