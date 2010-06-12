@@ -6,6 +6,7 @@ import jade.core.Runtime;
 import jade.util.leap.Properties;
 import jade.wrapper.AgentContainer;
 import jade.wrapper.AgentController;
+import jade.wrapper.ControllerException;
 import jade.wrapper.StaleProxyException;
 
 import java.util.HashSet;
@@ -32,7 +33,7 @@ public class SecondaryApp {
 		this.configuration = configuration;
 	}
 
-	public void start() throws StaleProxyException {
+	public void start() throws ControllerException {
 		// set up the platform
 		Runtime rt = Runtime.instance();
 		rt.setCloseVM(true);
@@ -58,19 +59,27 @@ public class SecondaryApp {
 		// TERA agents
 		Set<AgentController> agents = new HashSet<AgentController>();
 
-		int agentCount = configuration.getInt("pubsub.tera.agent.count");
 		String prefix = configuration
 				.getString("pubsub.tera.agent.name.prefix");
+		String containerName = container.getContainerName();
+
+		int agentCount = configuration.getInt("pubsub.tera.agent.count");
 		for (int id = 0; id < agentCount; id++) {
 			Object[] args = { new TeraAgentArguments( //
 					configuration.subset("pubsub.tera")) };
-			agents.add(container.createNewAgent(prefix + id, TeraAgent.class
-					.getCanonicalName(), args));
+			agents.add(container.createNewAgent( //
+					generateAgentName(prefix, containerName, id), //
+					TeraAgent.class.getCanonicalName(), //
+					args));
 		}
 
 		System.out.println("Launching agents...");
 		for (AgentController ac : agents) {
 			ac.start();
 		}
+	}
+
+	private String generateAgentName(String prefix, String containerName, int id) {
+		return containerName + "_" + prefix + id;
 	}
 }
