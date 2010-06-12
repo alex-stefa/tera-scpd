@@ -109,12 +109,12 @@ public class TeraAgent extends BaseAgent {
 	@Override
 	protected Collection<ServiceDescription> prepareServiceDescriptions() {
 		Collection<ServiceDescription> descriptions = new LinkedList<ServiceDescription>();
-		ServiceDescription sd;
 
-		sd = new ServiceDescription();
-		sd.setType(Names.SERVICE_TERA);
-		sd.setName(getLocalName());
-		descriptions.add(sd);
+		/*
+		 * ServiceDescription sd; sd = new ServiceDescription();
+		 * sd.setType(Names.SERVICE_TERA); sd.setName(getLocalName());
+		 * descriptions.add(sd);
+		 */
 
 		return descriptions;
 	}
