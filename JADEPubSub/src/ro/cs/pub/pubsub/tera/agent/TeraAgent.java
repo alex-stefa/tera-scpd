@@ -14,6 +14,7 @@ import org.apache.commons.configuration.Configuration;
 
 import ro.cs.pub.pubsub.Names;
 import ro.cs.pub.pubsub.agent.BaseAgent;
+import ro.cs.pub.pubsub.events.EventManager;
 import ro.cs.pub.pubsub.message.MessageFactory;
 import ro.cs.pub.pubsub.message.shared.LogMessageContent;
 import ro.cs.pub.pubsub.overlay.OverlayManager;
@@ -31,6 +32,7 @@ public class TeraAgent extends BaseAgent {
 	private OverlayManager overlayManager;
 	private AccessPointManager accessPointManager;
 	private SubscriptionManager subscriptionManager;
+	private EventManager eventManager;
 	private Simulator simulator;
 
 	@Override
@@ -84,6 +86,9 @@ public class TeraAgent extends BaseAgent {
 				c.getInt("subscriptionManager.advertisements.round.interval"),
 				c.getInt("subscriptionManager.advertisements.round.peerCount"));
 		main.addSubBehaviour(subscriptionManager);
+		
+		eventManager = new EventManager(this, c.getInt("event.cacheSize"));
+		main.addSubBehaviour(eventManager);
 
 		// simulator
 		simulator = new Simulator(this);
@@ -148,5 +153,9 @@ public class TeraAgent extends BaseAgent {
 
 	public SubscriptionManager getSubscriptionManager() {
 		return subscriptionManager;
+	}
+
+	public EventManager getEventManager()	{
+		return eventManager;
 	}
 }

@@ -1,10 +1,13 @@
 package ro.cs.pub.pubsub.util;
 
+import java.io.Serializable;
 import java.util.LinkedList;
 import java.util.Queue;
 
-public class LRUCache<T>
+public class LRUCache<T> implements Serializable
 {
+	private static final long serialVersionUID = 1L;
+
 	private Queue<T> queue;
 	private int maxSize;
 	

@@ -2,6 +2,7 @@ package ro.cs.pub.pubsub.tera.simulation;
 
 import ro.cs.pub.pubsub.agent.BaseTickerBehaviour;
 import ro.cs.pub.pubsub.agent.Component;
+import ro.cs.pub.pubsub.model.EventContent;
 import ro.cs.pub.pubsub.model.Topic;
 import ro.cs.pub.pubsub.tera.agent.TeraAgent;
 
@@ -45,4 +46,27 @@ public class Simulator extends Component<TeraAgent> {
 			stop();
 		}
 	}
+
+	private class EventPublishingTest extends BaseTickerBehaviour<TeraAgent> {
+		private static final long serialVersionUID = 1L;
+
+		private final Topic topic;
+		private final EventContent content;
+
+		public EventPublishingTest(TeraAgent agent, long period, Topic topic, EventContent content) {
+			super(agent, period);
+			this.topic = topic;
+			this.content = content;
+		}
+
+		@Override
+		protected void onTick() {
+			agent.print("publishing " + content + " on topic " + topic);
+			agent.getEventManager().publish(topic, content);
+			stop();
+		}
+	}
+
+
+
 }
