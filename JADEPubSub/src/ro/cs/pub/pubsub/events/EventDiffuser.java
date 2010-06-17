@@ -68,8 +68,8 @@ public class EventDiffuser extends BaseTemplateBehaviour<TeraAgent>
 
 			agent.send(forward);
 
-			agent.print(" received " + event + " forwarding to other "
-					+ neighbors.size() + " [" + receivers + "]");
+			agent.print(" received " + event + " from " + message.getSender().getLocalName() + 
+					" forwarding to other " + neighbors.size() + " [" + receivers + "]");
 
 		}
 		catch (MessageException e)
