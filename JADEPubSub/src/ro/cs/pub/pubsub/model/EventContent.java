@@ -1,8 +1,8 @@
 package ro.cs.pub.pubsub.model;
 
-import ro.cs.pub.pubsub.message.MessageContent;
+import java.io.Serializable;
 
-public class EventContent implements MessageContent {
+public class EventContent implements Serializable{
 	private static final long serialVersionUID = 1L;
 
 	private String message;
