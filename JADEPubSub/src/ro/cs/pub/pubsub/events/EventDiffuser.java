@@ -14,52 +14,66 @@ import ro.cs.pub.pubsub.tera.agent.TeraAgent;
 import ro.cs.pub.pubsub.util.LRUCache;
 
 
-public class EventDiffuser extends BaseTemplateBehaviour<TeraAgent> {
+public class EventDiffuser extends BaseTemplateBehaviour<TeraAgent>
+{
 	private static final long serialVersionUID = 1L;
-	
-	private LRUCache<Event> prevMessages; 
+
+	private LRUCache<Event> prevMessages;
 
 	private static final MessageTemplate template = MessageTemplate.and(
 			//
 			MessageTemplate.MatchProtocol(Names.PROTOCOL_EVENT_PROPAGATION),
 			MessageTemplate.MatchPerformative(ACLMessage.INFORM));
 
-	public EventDiffuser(TeraAgent agent, int cacheSize) {
+	public EventDiffuser(TeraAgent agent, int cacheSize)
+	{
 		super(agent, template);
 		prevMessages = new LRUCache<Event>(cacheSize);
 	}
 
 	@Override
-	protected void onMessage(ACLMessage message) {
-		try {
+	protected void onMessage(ACLMessage message)
+	{
+		try
+		{
 			MessageFactory mf = agent.getMessageFactory();
 			Event event = (Event) mf.extractContent(message);
-			
+
 			if (prevMessages.contains(event)) return;
-			
-			if (!this.agent.getSubscriptionManager().isSubscribed(event.getTopic()))
+			prevMessages.put(event);
+
+			if (!this.agent.getSubscriptionManager().isSubscribed(
+					event.getTopic()))
 				throw new TopicNotSubscribed(event.getTopic());
-			
+
 			NeighborProvider neighbors = this.agent.getOverlayManager()
-											.getOverlayContext(event.getTopic()).getNeighborProvider();
+					.getOverlayContext(event.getTopic()).getNeighborProvider();
+
+			if (neighbors.size() == 0) return;
 			
 			ACLMessage forward = mf.buildMessage( //
 					ACLMessage.INFORM, Names.PROTOCOL_EVENT_PROPAGATION);
 
-			for (AID peer : neighbors) {
-				if (!message.getSender().equals(peer)) forward.addReceiver(peer);
+			String receivers = "";
+			for (AID peer : neighbors)
+			{
+				if (!message.getSender().equals(peer))
+				{
+					forward.addReceiver(peer);
+					receivers += peer.getLocalName() + " ";
+				}
 			}
 
 			mf.fillContent(forward, event);
-			
-			agent.send(message);	
-	
-			prevMessages.put(event);
-			
-			agent.print(" received event on topic " + event.getTopic() + 
-					" containing " + event.getContent().getMessage());
 
-		} catch (MessageException e) {
+			agent.send(forward);
+
+			agent.print(" received " + event + " forwarding to other "
+					+ neighbors.size() + " [" + receivers + "]");
+
+		}
+		catch (MessageException e)
+		{
 			e.printStackTrace();
 		}
 	}

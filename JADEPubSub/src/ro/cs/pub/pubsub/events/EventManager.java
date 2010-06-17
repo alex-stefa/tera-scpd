@@ -51,6 +51,12 @@ public class EventManager extends Component<TeraAgent>
 		@Override
 		public void onEnd(Collection<RandomWalkResult> results)
 		{
+			if (results == null || results.size() == 0)
+			{
+				agent.print("[ERROR] Could not find access point for sending event on topic " + topic);
+				return;
+			}
+
 			MessageFactory mf = agent.getMessageFactory();
 
 			ACLMessage message = mf.buildMessage( //
@@ -59,10 +65,10 @@ public class EventManager extends Component<TeraAgent>
 			for (RandomWalkResult result : results) {
 				message.addReceiver(((AgentResult) result).getAgent());
 			}
-
+			
 			publishedCount++;
 			MessageContent messageContent = new Event(agent.getAID(), 
-					agent.getAID().toString() + publishedCount, topic, content);
+					publishedCount + "", topic, content);
 
 			try {
 				mf.fillContent(message, messageContent);

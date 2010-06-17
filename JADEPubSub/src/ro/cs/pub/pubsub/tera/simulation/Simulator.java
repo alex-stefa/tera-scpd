@@ -8,6 +8,8 @@ import ro.cs.pub.pubsub.tera.agent.TeraAgent;
 
 public class Simulator extends Component<TeraAgent> {
 	private static final long serialVersionUID = 1L;
+	
+	private static int pubCount = 0;
 
 	public Simulator(TeraAgent agent) {
 		super(agent);
@@ -29,17 +31,10 @@ public class Simulator extends Component<TeraAgent> {
 			addSubBehaviour(t);
 		}
 		
-
-		if (p < 0.5) {
-			EventPublishingTest t = new EventPublishingTest(agent, 10000, a, new EventContent("Hello!"));
+		if (pubCount++ < 1) {
+			EventPublishingTest t = new EventPublishingTest(agent, 20000, a, new EventContent("Hello!"));
 			addSubBehaviour(t);
 		} 
-		if (p < 0.1) {
-			EventPublishingTest t = new EventPublishingTest(agent, 15000, b, new EventContent("Hello!"));
-			addSubBehaviour(t);
-		} 
-		
-		
 	}
 
 	private class TopicSubscriptionTest extends BaseTickerBehaviour<TeraAgent> {
@@ -79,7 +74,4 @@ public class Simulator extends Component<TeraAgent> {
 			stop();
 		}
 	}
-
-
-
 }

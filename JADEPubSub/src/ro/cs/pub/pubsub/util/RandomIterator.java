@@ -21,7 +21,7 @@ public class RandomIterator<E> implements Iterator<E> {
 		this.list = list;
 		this.rnd = rnd;
 		available = new ArrayList<Integer>(list.size());
-		for (int i = 0; i < list.size(); i++) available.set(i, i);
+		for (int i = 0; i < list.size(); i++) available.add(i);
 	}
 
 	@Override
