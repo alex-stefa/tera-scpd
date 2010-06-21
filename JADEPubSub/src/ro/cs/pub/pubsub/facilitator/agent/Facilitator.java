@@ -19,7 +19,7 @@ import ro.cs.pub.pubsub.facilitator.behaviour.InitiationResponder;
 import ro.cs.pub.pubsub.facilitator.behaviour.LogMessageReceiver;
 import ro.cs.pub.pubsub.facilitator.behaviour.MessageCountPrinter;
 import ro.cs.pub.pubsub.facilitator.behaviour.MessageCountReceiver;
-import ro.cs.pub.pubsub.tera.simulation.messageCounter.MessageCount;
+import ro.cs.pub.pubsub.tera.simulation.MessageCount;
 
 
 public class Facilitator extends BaseAgent

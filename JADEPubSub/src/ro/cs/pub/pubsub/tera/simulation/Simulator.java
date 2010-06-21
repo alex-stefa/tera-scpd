@@ -14,7 +14,6 @@ import ro.cs.pub.pubsub.message.MessageFactory;
 import ro.cs.pub.pubsub.model.EventContent;
 import ro.cs.pub.pubsub.model.Topic;
 import ro.cs.pub.pubsub.tera.agent.TeraAgent;
-import ro.cs.pub.pubsub.tera.simulation.messageCounter.MessageCount;
 
 
 public class Simulator extends Component<TeraAgent>

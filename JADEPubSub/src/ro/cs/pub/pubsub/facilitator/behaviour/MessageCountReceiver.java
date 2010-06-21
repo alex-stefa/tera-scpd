@@ -7,7 +7,7 @@ import ro.cs.pub.pubsub.agent.BaseTemplateBehaviour;
 import ro.cs.pub.pubsub.exception.MessageException;
 import ro.cs.pub.pubsub.facilitator.agent.Facilitator;
 import ro.cs.pub.pubsub.message.MessageFactory;
-import ro.cs.pub.pubsub.tera.simulation.messageCounter.MessageCount;
+import ro.cs.pub.pubsub.tera.simulation.MessageCount;
 
 
 public class MessageCountReceiver extends BaseTemplateBehaviour<Facilitator>

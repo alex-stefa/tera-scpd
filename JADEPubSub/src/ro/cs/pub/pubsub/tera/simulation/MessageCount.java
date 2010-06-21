@@ -1,4 +1,4 @@
-package ro.cs.pub.pubsub.tera.simulation.messageCounter;
+package ro.cs.pub.pubsub.tera.simulation;
 
 import ro.cs.pub.pubsub.message.MessageContent;
 import ro.cs.pub.pubsub.message.shared.LogMessageContent;
