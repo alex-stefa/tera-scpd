@@ -1,77 +1,152 @@
 package ro.cs.pub.pubsub.tera.simulation;
 
+import jade.core.AID;
+import jade.lang.acl.ACLMessage;
+
+import org.apache.commons.configuration.Configuration;
+
+import ro.cs.pub.pubsub.Names;
 import ro.cs.pub.pubsub.agent.BaseTickerBehaviour;
 import ro.cs.pub.pubsub.agent.Component;
+import ro.cs.pub.pubsub.exception.MessageException;
+import ro.cs.pub.pubsub.message.MessageContent;
+import ro.cs.pub.pubsub.message.MessageFactory;
 import ro.cs.pub.pubsub.model.EventContent;
 import ro.cs.pub.pubsub.model.Topic;
 import ro.cs.pub.pubsub.tera.agent.TeraAgent;
+import ro.cs.pub.pubsub.tera.simulation.messageCounter.MessageCount;
 
-public class Simulator extends Component<TeraAgent> {
+
+public class Simulator extends Component<TeraAgent>
+{
 	private static final long serialVersionUID = 1L;
-	
+
 	private static int pubCount = 0;
 
-	public Simulator(TeraAgent agent) {
+	private MessageCount messageCount;
+	private AID lastKnownSimulator;
+
+	public Simulator(TeraAgent agent, Configuration config)
+	{
 		super(agent);
 		
+		messageCount = new MessageCount();
+		lastKnownSimulator = null;
+		
+		addSubBehaviour(new MessageCountSender(agent, config.getInt("messageCount.reportInterval")));
+
 		Topic a = new Topic("A");
 		Topic b = new Topic("B");
 		Topic c = new Topic("C");
 
 		double p = Math.random();
-		if (p < 0.5) {
+		if (p < 0.5)
+		{
 			TopicSubscriptionTest t = new TopicSubscriptionTest(agent, 3000, a);
 			addSubBehaviour(t);
-		} else {
+		}
+		else
+		{
 			TopicSubscriptionTest t = new TopicSubscriptionTest(agent, 6000, b);
 			addSubBehaviour(t);
 		}
-		if (p < 0.2) {
+		if (p < 0.2)
+		{
 			TopicSubscriptionTest t = new TopicSubscriptionTest(agent, 6000, c);
 			addSubBehaviour(t);
 		}
-		
-		if (pubCount++ < 1) {
-			EventPublishingTest t = new EventPublishingTest(agent, 20000, a, new EventContent("Hello!"));
+
+		if (pubCount++ < 1)
+		{
+			EventPublishingTest t = new EventPublishingTest(agent, 20000, a,
+					new EventContent("Hello!"));
 			addSubBehaviour(t);
-		} 
+		}
 	}
 
-	private class TopicSubscriptionTest extends BaseTickerBehaviour<TeraAgent> {
+	private class TopicSubscriptionTest extends BaseTickerBehaviour<TeraAgent>
+	{
 		private static final long serialVersionUID = 1L;
 
 		private final Topic topic;
 
-		public TopicSubscriptionTest(TeraAgent agent, long period, Topic topic) {
+		public TopicSubscriptionTest(TeraAgent agent, long period, Topic topic)
+		{
 			super(agent, period);
 			this.topic = topic;
 		}
 
 		@Override
-		protected void onTick() {
+		protected void onTick()
+		{
 			agent.print("started " + topic);
 			agent.getSubscriptionManager().subscribe(topic);
 			stop();
 		}
 	}
 
-	private class EventPublishingTest extends BaseTickerBehaviour<TeraAgent> {
+	private class EventPublishingTest extends BaseTickerBehaviour<TeraAgent>
+	{
 		private static final long serialVersionUID = 1L;
 
 		private final Topic topic;
 		private final EventContent content;
 
-		public EventPublishingTest(TeraAgent agent, long period, Topic topic, EventContent content) {
+		public EventPublishingTest(TeraAgent agent, long period, Topic topic, EventContent content)
+		{
 			super(agent, period);
 			this.topic = topic;
 			this.content = content;
 		}
 
 		@Override
-		protected void onTick() {
+		protected void onTick()
+		{
 			agent.print("publishing " + content + " on topic " + topic);
 			agent.getEventManager().publish(topic, content);
 			stop();
 		}
+	}
+
+	private class MessageCountSender extends BaseTickerBehaviour<TeraAgent>
+	{
+		private static final long serialVersionUID = 1L;
+
+		public MessageCountSender(TeraAgent agent, long period)
+		{
+			super(agent, period);
+		}
+
+		@Override
+		protected void onTick()
+		{
+			MessageFactory mf = agent.getMessageFactory();
+
+			ACLMessage message = mf.buildMessage(ACLMessage.INFORM, Names.SIMULATION_MESSAGE_COUNTER);
+			
+			if (lastKnownSimulator == null)
+				lastKnownSimulator = agent.findAgents(Names.SERVICE_SIMULATION).iterator().next();
+			
+			if (lastKnownSimulator == null)
+				throw new RuntimeException("No Simulation Service found!");
+			
+			message.addReceiver(lastKnownSimulator);
+
+			try {
+				mf.fillContent(message, messageCount);
+			}
+			catch (MessageException e) {
+				e.printStackTrace();
+			}
+			
+			agent.send(message);
+			
+			messageCount.clear();
+		}
+	}
+
+	public void countMessage(MessageContent content)
+	{
+		messageCount.count(content);
 	}
 }

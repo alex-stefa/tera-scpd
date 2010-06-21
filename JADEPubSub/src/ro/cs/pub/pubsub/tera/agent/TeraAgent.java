@@ -15,6 +15,7 @@ import org.apache.commons.configuration.Configuration;
 import ro.cs.pub.pubsub.Names;
 import ro.cs.pub.pubsub.agent.BaseAgent;
 import ro.cs.pub.pubsub.events.EventManager;
+import ro.cs.pub.pubsub.exception.MessageException;
 import ro.cs.pub.pubsub.message.MessageFactory;
 import ro.cs.pub.pubsub.message.shared.LogMessageContent;
 import ro.cs.pub.pubsub.overlay.OverlayManager;
@@ -25,7 +26,9 @@ import ro.cs.pub.pubsub.tera.lookup.AccessPointManager;
 import ro.cs.pub.pubsub.tera.simulation.Simulator;
 import ro.cs.pub.pubsub.tera.subscription.SubscriptionManager;
 
-public class TeraAgent extends BaseAgent {
+
+public class TeraAgent extends BaseAgent
+{
 	private static final long serialVersionUID = 1L;
 
 	private MessageFactory messageFactory;
@@ -36,7 +39,8 @@ public class TeraAgent extends BaseAgent {
 	private Simulator simulator;
 
 	@Override
-	protected void setup() {
+	protected void setup()
+	{
 		super.setup();
 
 		TeraAgentArguments args = (TeraAgentArguments) getArguments()[0];
@@ -80,18 +84,17 @@ public class TeraAgent extends BaseAgent {
 				c.getInt("overlay.topic.view.size"), //
 				c.getLong("overlay.topic.initiation.period"));
 		subscriptionManager = new SubscriptionManager(
-				//
 				this, //
 				ocfs,
 				c.getInt("subscriptionManager.advertisements.round.interval"),
 				c.getInt("subscriptionManager.advertisements.round.peerCount"));
 		main.addSubBehaviour(subscriptionManager);
-		
+
 		eventManager = new EventManager(this, c.getInt("event.cacheSize"));
 		main.addSubBehaviour(eventManager);
 
 		// simulator
-		simulator = new Simulator(this);
+		simulator = new Simulator(this, c);
 		main.addSubBehaviour(simulator);
 
 		// add the main behavior
@@ -102,7 +105,8 @@ public class TeraAgent extends BaseAgent {
 			private static final long serialVersionUID = 1L;
 
 			@Override
-			public void action() {
+			public void action()
+			{
 				TeraAgent.this.print("agent finished");
 			}
 		});
@@ -112,7 +116,8 @@ public class TeraAgent extends BaseAgent {
 	}
 
 	@Override
-	protected Collection<ServiceDescription> prepareServiceDescriptions() {
+	protected Collection<ServiceDescription> prepareServiceDescriptions()
+	{
 		Collection<ServiceDescription> descriptions = new LinkedList<ServiceDescription>();
 
 		/*
@@ -129,8 +134,10 @@ public class TeraAgent extends BaseAgent {
 	 * 
 	 * @param content
 	 */
-	public void sendLoggingMessage(LogMessageContent content) {
-		try {
+	public void sendLoggingMessage(LogMessageContent content)
+	{
+		try
+		{
 			ACLMessage msg;
 			msg = messageFactory.buildMessage(ACLMessage.INFORM,
 					Names.PROTOCOL_LOGGING);
@@ -138,24 +145,44 @@ public class TeraAgent extends BaseAgent {
 			msg.addReceiver(ls);
 			messageFactory.fillContent(msg, content);
 			send(msg);
-		} catch (Exception e) {
+		}
+		catch (Exception e)
+		{
 			e.printStackTrace();
 		}
 	}
 
-	public OverlayManager getOverlayManager() {
+	public OverlayManager getOverlayManager()
+	{
 		return overlayManager;
 	}
 
-	public AccessPointManager getAccessPointManager() {
+	public AccessPointManager getAccessPointManager()
+	{
 		return accessPointManager;
 	}
 
-	public SubscriptionManager getSubscriptionManager() {
+	public SubscriptionManager getSubscriptionManager()
+	{
 		return subscriptionManager;
 	}
 
-	public EventManager getEventManager()	{
+	public EventManager getEventManager()
+	{
 		return eventManager;
+	}
+
+	public void sendMessage(ACLMessage message)
+	{
+		try
+		{
+			simulator.countMessage(messageFactory.extractContent(message));
+		}
+		catch (MessageException e)
+		{
+			e.printStackTrace();
+		}
+
+		send(message);
 	}
 }

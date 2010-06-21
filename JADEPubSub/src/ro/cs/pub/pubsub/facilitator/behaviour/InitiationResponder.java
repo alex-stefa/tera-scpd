@@ -30,10 +30,11 @@ public class InitiationResponder extends BaseTemplateBehaviour<Facilitator> {
 	private static final MessageTemplate template = MessageTemplate.and(
 			//
 			MessageTemplate.MatchProtocol(Names.PROTOCOL_INITIATION),
-			MessageTemplate.MatchPerformative(ACLMessage.CFP));;
+			MessageTemplate.MatchPerformative(ACLMessage.CFP));
 
 	private final int waitFor;
 	private final List<ACLMessage> seedMessages;
+
 
 	public InitiationResponder(Facilitator agent, int waitFor) {
 		super(agent, template);
@@ -47,6 +48,7 @@ public class InitiationResponder extends BaseTemplateBehaviour<Facilitator> {
 			if (seedMessages.size() < waitFor) {
 				// add to the seed message list
 				seedMessages.add(message);
+				this.agent.addAgent(message.getSender());
 
 				if (seedMessages.size() == waitFor) {
 					// reply to seeders first
