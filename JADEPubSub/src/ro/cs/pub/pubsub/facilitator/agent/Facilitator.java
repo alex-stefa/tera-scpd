@@ -1,4 +1,4 @@
-package ro.cs.pub.pubsub.facilitator;
+package ro.cs.pub.pubsub.facilitator.agent;
 
 import jade.core.AID;
 import jade.domain.FIPAAgentManagement.ServiceDescription;

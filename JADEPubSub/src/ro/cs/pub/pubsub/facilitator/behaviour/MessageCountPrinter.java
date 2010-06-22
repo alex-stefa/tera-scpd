@@ -1,7 +1,7 @@
 package ro.cs.pub.pubsub.facilitator.behaviour;
 
 import ro.cs.pub.pubsub.agent.BaseTickerBehaviour;
-import ro.cs.pub.pubsub.facilitator.Facilitator;
+import ro.cs.pub.pubsub.facilitator.agent.Facilitator;
 
 public class MessageCountPrinter extends BaseTickerBehaviour<Facilitator>
 {

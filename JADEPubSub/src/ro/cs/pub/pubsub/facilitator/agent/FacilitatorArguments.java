@@ -1,4 +1,4 @@
-package ro.cs.pub.pubsub.facilitator;
+package ro.cs.pub.pubsub.facilitator.agent;
 
 import org.apache.commons.configuration.Configuration;
 
