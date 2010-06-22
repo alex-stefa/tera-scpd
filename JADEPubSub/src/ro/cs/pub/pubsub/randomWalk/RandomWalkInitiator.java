@@ -79,7 +79,7 @@ public class RandomWalkInitiator extends SequentialBehaviour {
 					agent.getAID(), ttl, query);
 			try {
 				mf.fillContent(msg, content);
-				agent.send(msg);
+				agent.sendMessage(msg);
 			} catch (MessageException e) {
 				e.printStackTrace();
 			}

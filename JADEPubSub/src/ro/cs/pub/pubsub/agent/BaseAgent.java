@@ -8,6 +8,7 @@ import jade.domain.FIPAException;
 import jade.domain.FIPAAgentManagement.DFAgentDescription;
 import jade.domain.FIPAAgentManagement.SearchConstraints;
 import jade.domain.FIPAAgentManagement.ServiceDescription;
+import jade.lang.acl.ACLMessage;
 
 import java.lang.reflect.Field;
 import java.util.Collection;
@@ -125,5 +126,10 @@ public abstract class BaseAgent extends Agent {
 	@Override
 	public String toString() {
 		return getAID().getLocalName();
+	}
+	
+	public void sendMessage(ACLMessage message)
+	{
+		send(message);
 	}
 }

@@ -120,7 +120,7 @@ public class RandomWalkResponder extends BaseTemplateBehaviour<BaseAgent> {
 
 		originalMessage.addReceiver(receiver);
 		mf.fillContent(originalMessage, randomWalkRequest.decreaseTTL());
-		agent.send(originalMessage);
+		agent.sendMessage(originalMessage);
 	}
 
 	/**

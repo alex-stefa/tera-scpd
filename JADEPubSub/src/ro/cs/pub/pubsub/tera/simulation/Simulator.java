@@ -188,7 +188,7 @@ public class Simulator extends Component<TeraAgent> {
 
 			if (droppedAgents != null && droppedAgents.contains(agent.getAID())) {
 				agent.print("Received order to drop!");
-				agent.doSuspend();
+				agent.doWait();
 			} else
 				agent.print("Received " + droppedAgents.size()
 						+ " dropped list!");

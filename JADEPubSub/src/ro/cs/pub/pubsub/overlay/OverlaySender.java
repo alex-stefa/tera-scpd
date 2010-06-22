@@ -92,7 +92,7 @@ public class OverlaySender extends OneShotBehaviour {
 		mf.fillContent(msg, content);
 
 		// send the message
-		agent.send(msg);
+		agent.sendMessage(msg);
 	}
 
 	private void sendReplyMessage(BaseAgent agent, NeighborProvider np,
@@ -112,6 +112,6 @@ public class OverlaySender extends OneShotBehaviour {
 		mf.fillContent(reply, content);
 
 		// send the message
-		agent.send(reply);
+		agent.sendMessage(reply);
 	}
 }
