@@ -45,9 +45,9 @@ public class Simulator extends Component<TeraAgent>
 		lastRemaining = -1;
 
 		addSubBehaviour(new MessageCountSender(agent, config
-				.getInt("messageCount.reportInterval")));
+				.getInt("simulation.messageCount.reportInterval")));
 		addSubBehaviour(new DroppedAgentsNotifier(agent, config
-				.getInt("cyclonResiliance.checkInterval")));
+				.getInt("simulation.cyclonResiliance.checkInterval")));
 		addSubBehaviour(new DroppedAgentsReceiver(agent));
 
 		Topic a = new Topic("A");
@@ -147,16 +147,29 @@ public class Simulator extends Component<TeraAgent>
 
 			if (remaining != lastRemaining)
 			{
+				if (remaining == 0)
+					agent.print("Flushed all dropped nodes!");
+				else
+				{
+					if (lastRemaining == 0)
+						agent.print(remaining + " dropped nodes came back!");
+					else
+						agent.print(remaining + " dropped nodes remain in cache!");
+				}
+
 				lastRemaining = remaining;
-				MessageFactory mf = agent.getMessageFactory();
-				ACLMessage message = mf.buildMessage(ACLMessage.INFORM,
-						Names.SIMULATION_CYCLON_RESILIANCE);
+
 				if (lastKnownSimulator == null)
 					lastKnownSimulator = agent.findAgents(Names.SERVICE_SIMULATION)
 							.iterator().next();
 				if (lastKnownSimulator == null)
 					throw new RuntimeException("No Simulation Service found!");
+
+				MessageFactory mf = agent.getMessageFactory();
+				ACLMessage message = mf.buildMessage(ACLMessage.INFORM,
+						Names.SIMULATION_CYCLON_RESILIANCE);
 				message.addReceiver(lastKnownSimulator);
+				
 				try
 				{
 					mf.fillContent(message, new AgentRemovalStatus(remaining));
@@ -165,6 +178,7 @@ public class Simulator extends Component<TeraAgent>
 				{
 					e.printStackTrace();
 				}
+				
 				agent.send(message);
 			}
 		}
@@ -196,7 +210,12 @@ public class Simulator extends Component<TeraAgent>
 			}
 			
 			if (droppedAgents != null && droppedAgents.contains(agent.getAID()))
+			{
+				agent.print("Received order to drop!");
 				agent.doSuspend();
+			}
+			else
+				agent.print("Received " + droppedAgents.size() + " dropped list!");
 		}
 	}
 	
