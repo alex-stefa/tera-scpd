@@ -8,11 +8,11 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
+import ro.cs.pub.pubsub.Names;
 import ro.cs.pub.pubsub.agent.BaseAgent;
 import ro.cs.pub.pubsub.agent.BaseTemplateBehaviour;
 import ro.cs.pub.pubsub.exception.MessageException;
 import ro.cs.pub.pubsub.message.MessageFactory;
-import ro.cs.pub.pubsub.model.Names;
 import ro.cs.pub.pubsub.overlay.context.OverlayContext;
 import ro.cs.pub.pubsub.overlay.view.View;
 

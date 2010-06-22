@@ -2,12 +2,12 @@ package ro.cs.pub.pubsub.facilitator.behaviour;
 
 import jade.lang.acl.ACLMessage;
 import jade.lang.acl.MessageTemplate;
+import ro.cs.pub.pubsub.Names;
 import ro.cs.pub.pubsub.agent.BaseTemplateBehaviour;
 import ro.cs.pub.pubsub.exception.MessageException;
 import ro.cs.pub.pubsub.facilitator.agent.Facilitator;
 import ro.cs.pub.pubsub.message.MessageContent;
 import ro.cs.pub.pubsub.message.MessageFactory;
-import ro.cs.pub.pubsub.model.Names;
 
 public class LogMessageReceiver extends BaseTemplateBehaviour<Facilitator> {
 	private static final long serialVersionUID = 1L;

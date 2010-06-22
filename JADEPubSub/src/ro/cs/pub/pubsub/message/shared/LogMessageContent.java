@@ -8,7 +8,6 @@ public class LogMessageContent implements MessageContent {
 	private String message;
 
 	public LogMessageContent(String message) {
-		super();
 		this.message = message;
 	}
 

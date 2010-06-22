@@ -17,11 +17,11 @@ public class Event implements MessageContent {
 		this.topic = topic;
 		this.content = content;
 	}
-	
+
 	@Override
-	public String toString()
-	{
-		return "[Event] topic:" + topic + " id:" + id + " content:" + content + " from:" + source;
+	public String toString() {
+		return "[Event] topic:" + topic + " id:" + id + " content:" + content
+				+ " from:" + source;
 	}
 
 	public AID getSource() {
