@@ -80,6 +80,18 @@ public class SubscriptionManager extends Component<TeraAgent> {
 		return topics;
 	}
 
+	/**
+	 * Called after the group random walk finishes.
+	 * 
+	 * The topic peers that have been found through the random walk are added to
+	 * the neighbor provider.
+	 * 
+	 * If the access point for the current topic is empty, the agent itself is
+	 * set as the access point.
+	 * 
+	 * Communication on the topic overlay is started in order for the peers to
+	 * be aware of the new node.
+	 */
 	private class Callback implements RandomWalkGroupCallback {
 		private final Topic topic;
 
@@ -103,6 +115,7 @@ public class SubscriptionManager extends Component<TeraAgent> {
 			}
 
 			if (np.size() == 0) {
+				// set an access point
 				agent.getAccessPointManager().put(topic, agent.getAID());
 			}
 
