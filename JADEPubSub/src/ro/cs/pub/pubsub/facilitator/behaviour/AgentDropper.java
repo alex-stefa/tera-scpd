@@ -9,9 +9,9 @@ import java.util.List;
 import ro.cs.pub.pubsub.Names;
 import ro.cs.pub.pubsub.agent.BaseTickerBehaviour;
 import ro.cs.pub.pubsub.exception.MessageException;
-import ro.cs.pub.pubsub.facilitator.agent.Facilitator;
+import ro.cs.pub.pubsub.facilitator.Facilitator;
 import ro.cs.pub.pubsub.message.MessageFactory;
-import ro.cs.pub.pubsub.tera.simulation.DroppedAgentsList;
+import ro.cs.pub.pubsub.tera.simulation.message.DroppedAgentsList;
 import ro.cs.pub.pubsub.util.RandomIterator;
 
 

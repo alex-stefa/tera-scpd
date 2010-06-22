@@ -1,4 +1,4 @@
-package ro.cs.pub.pubsub.events;
+package ro.cs.pub.pubsub.tera.events;
 
 import jade.lang.acl.ACLMessage;
 

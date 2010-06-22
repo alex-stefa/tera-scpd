@@ -5,9 +5,9 @@ import jade.lang.acl.MessageTemplate;
 import ro.cs.pub.pubsub.Names;
 import ro.cs.pub.pubsub.agent.BaseTemplateBehaviour;
 import ro.cs.pub.pubsub.exception.MessageException;
-import ro.cs.pub.pubsub.facilitator.agent.Facilitator;
+import ro.cs.pub.pubsub.facilitator.Facilitator;
 import ro.cs.pub.pubsub.message.MessageFactory;
-import ro.cs.pub.pubsub.tera.simulation.MessageCount;
+import ro.cs.pub.pubsub.tera.simulation.message.MessageCount;
 
 
 public class MessageCountReceiver extends BaseTemplateBehaviour<Facilitator>

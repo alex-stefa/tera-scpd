@@ -1,4 +1,4 @@
-package ro.cs.pub.pubsub.tera.simulation;
+package ro.cs.pub.pubsub.tera.simulation.message;
 
 import jade.core.AID;
 

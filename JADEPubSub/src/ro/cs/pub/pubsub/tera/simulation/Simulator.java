@@ -19,6 +19,9 @@ import ro.cs.pub.pubsub.model.EventContent;
 import ro.cs.pub.pubsub.model.Topic;
 import ro.cs.pub.pubsub.overlay.NeighborProvider;
 import ro.cs.pub.pubsub.tera.agent.TeraAgent;
+import ro.cs.pub.pubsub.tera.simulation.message.AgentRemovalStatus;
+import ro.cs.pub.pubsub.tera.simulation.message.DroppedAgentsList;
+import ro.cs.pub.pubsub.tera.simulation.message.MessageCount;
 
 
 public class Simulator extends Component<TeraAgent>
