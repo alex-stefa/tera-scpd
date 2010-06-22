@@ -12,11 +12,11 @@ import java.util.LinkedList;
 
 import org.apache.commons.configuration.Configuration;
 
-import ro.cs.pub.pubsub.Names;
 import ro.cs.pub.pubsub.agent.BaseAgent;
 import ro.cs.pub.pubsub.exception.MessageException;
 import ro.cs.pub.pubsub.message.MessageFactory;
 import ro.cs.pub.pubsub.message.shared.LogMessageContent;
+import ro.cs.pub.pubsub.model.Names;
 import ro.cs.pub.pubsub.overlay.OverlayManager;
 import ro.cs.pub.pubsub.overlay.context.OverlayContextFactory;
 import ro.cs.pub.pubsub.tera.events.EventManager;

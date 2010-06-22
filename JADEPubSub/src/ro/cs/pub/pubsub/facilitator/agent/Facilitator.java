@@ -13,7 +13,6 @@ import java.util.Set;
 
 import org.apache.commons.configuration.Configuration;
 
-import ro.cs.pub.pubsub.Names;
 import ro.cs.pub.pubsub.agent.BaseAgent;
 import ro.cs.pub.pubsub.facilitator.behaviour.AgentDropper;
 import ro.cs.pub.pubsub.facilitator.behaviour.AgentRemovalStatusReceiver;
@@ -21,6 +20,7 @@ import ro.cs.pub.pubsub.facilitator.behaviour.InitiationResponder;
 import ro.cs.pub.pubsub.facilitator.behaviour.LogMessageReceiver;
 import ro.cs.pub.pubsub.facilitator.behaviour.MessageCountPrinter;
 import ro.cs.pub.pubsub.facilitator.behaviour.MessageCountReceiver;
+import ro.cs.pub.pubsub.model.Names;
 import ro.cs.pub.pubsub.tera.simulation.message.MessageCount;
 
 

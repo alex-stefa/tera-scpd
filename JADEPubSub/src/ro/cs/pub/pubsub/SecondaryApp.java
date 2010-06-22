@@ -18,6 +18,7 @@ import org.apache.commons.configuration.PropertiesConfiguration;
 
 import ro.cs.pub.pubsub.tera.agent.TeraAgent;
 import ro.cs.pub.pubsub.tera.agent.TeraAgentArguments;
+import ro.cs.pub.pubsub.util.TimerDispatcherPool;
 
 public class SecondaryApp {
 	public static void main(String args[]) throws Exception {

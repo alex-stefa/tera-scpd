@@ -8,7 +8,6 @@ import java.util.List;
 
 import org.apache.commons.configuration.Configuration;
 
-import ro.cs.pub.pubsub.Names;
 import ro.cs.pub.pubsub.agent.BaseTemplateBehaviour;
 import ro.cs.pub.pubsub.agent.BaseTickerBehaviour;
 import ro.cs.pub.pubsub.agent.Component;
@@ -16,6 +15,7 @@ import ro.cs.pub.pubsub.exception.MessageException;
 import ro.cs.pub.pubsub.message.MessageContent;
 import ro.cs.pub.pubsub.message.MessageFactory;
 import ro.cs.pub.pubsub.model.EventContent;
+import ro.cs.pub.pubsub.model.Names;
 import ro.cs.pub.pubsub.model.Topic;
 import ro.cs.pub.pubsub.overlay.NeighborProvider;
 import ro.cs.pub.pubsub.tera.agent.TeraAgent;

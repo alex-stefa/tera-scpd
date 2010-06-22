@@ -14,6 +14,7 @@ import org.apache.commons.configuration.PropertiesConfiguration;
 
 import ro.cs.pub.pubsub.facilitator.agent.Facilitator;
 import ro.cs.pub.pubsub.facilitator.agent.FacilitatorArguments;
+import ro.cs.pub.pubsub.util.TimerDispatcherPool;
 
 public class MainApp {
 	public static void main(String args[]) throws Exception {

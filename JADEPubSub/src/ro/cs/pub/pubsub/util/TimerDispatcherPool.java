@@ -1,4 +1,4 @@
-package ro.cs.pub.pubsub;
+package ro.cs.pub.pubsub.util;
 
 import jade.core.TimerDispatcher;
 

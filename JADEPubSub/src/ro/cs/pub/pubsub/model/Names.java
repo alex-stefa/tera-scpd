@@ -1,4 +1,4 @@
-package ro.cs.pub.pubsub;
+package ro.cs.pub.pubsub.model;
 
 import ro.cs.pub.pubsub.overlay.OverlayId;
 

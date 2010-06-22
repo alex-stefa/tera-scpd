@@ -14,8 +14,8 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
-import ro.cs.pub.pubsub.TimerDispatcherPool;
 import ro.cs.pub.pubsub.message.MessageFactory;
+import ro.cs.pub.pubsub.util.TimerDispatcherPool;
 
 public abstract class BaseAgent extends Agent {
 	private static final long serialVersionUID = 1L;

@@ -4,13 +4,13 @@ import jade.lang.acl.ACLMessage;
 
 import java.util.Collection;
 
-import ro.cs.pub.pubsub.Names;
 import ro.cs.pub.pubsub.agent.Component;
 import ro.cs.pub.pubsub.exception.MessageException;
 import ro.cs.pub.pubsub.message.MessageContent;
 import ro.cs.pub.pubsub.message.MessageFactory;
 import ro.cs.pub.pubsub.model.Event;
 import ro.cs.pub.pubsub.model.EventContent;
+import ro.cs.pub.pubsub.model.Names;
 import ro.cs.pub.pubsub.model.Topic;
 import ro.cs.pub.pubsub.randomWalk.RandomWalkGroupCallback;
 import ro.cs.pub.pubsub.randomWalk.message.AgentResult;

@@ -9,8 +9,8 @@ import java.util.Collection;
 import java.util.LinkedList;
 import java.util.Set;
 
-import ro.cs.pub.pubsub.Names;
 import ro.cs.pub.pubsub.agent.BaseAgent;
+import ro.cs.pub.pubsub.model.Names;
 import ro.cs.pub.pubsub.randomWalk.message.RandomWalkQuery;
 import ro.cs.pub.pubsub.randomWalk.message.RandomWalkResult;
 
