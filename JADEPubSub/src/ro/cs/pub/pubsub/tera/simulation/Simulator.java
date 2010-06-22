@@ -2,10 +2,14 @@ package ro.cs.pub.pubsub.tera.simulation;
 
 import jade.core.AID;
 import jade.lang.acl.ACLMessage;
+import jade.lang.acl.MessageTemplate;
+
+import java.util.List;
 
 import org.apache.commons.configuration.Configuration;
 
 import ro.cs.pub.pubsub.Names;
+import ro.cs.pub.pubsub.agent.BaseTemplateBehaviour;
 import ro.cs.pub.pubsub.agent.BaseTickerBehaviour;
 import ro.cs.pub.pubsub.agent.Component;
 import ro.cs.pub.pubsub.exception.MessageException;
@@ -13,6 +17,7 @@ import ro.cs.pub.pubsub.message.MessageContent;
 import ro.cs.pub.pubsub.message.MessageFactory;
 import ro.cs.pub.pubsub.model.EventContent;
 import ro.cs.pub.pubsub.model.Topic;
+import ro.cs.pub.pubsub.overlay.NeighborProvider;
 import ro.cs.pub.pubsub.tera.agent.TeraAgent;
 
 
@@ -24,15 +29,23 @@ public class Simulator extends Component<TeraAgent>
 
 	private MessageCount messageCount;
 	private AID lastKnownSimulator;
+	private List<AID> droppedAgents;
+	private int lastRemaining;
 
 	public Simulator(TeraAgent agent, Configuration config)
 	{
 		super(agent);
-		
+
 		messageCount = new MessageCount();
 		lastKnownSimulator = null;
-		
-		addSubBehaviour(new MessageCountSender(agent, config.getInt("messageCount.reportInterval")));
+		droppedAgents = null;
+		lastRemaining = -1;
+
+		addSubBehaviour(new MessageCountSender(agent, config
+				.getInt("messageCount.reportInterval")));
+		addSubBehaviour(new DroppedAgentsNotifier(agent, config
+				.getInt("cyclonResiliance.checkInterval")));
+		addSubBehaviour(new DroppedAgentsReceiver(agent));
 
 		Topic a = new Topic("A");
 		Topic b = new Topic("B");
@@ -91,7 +104,8 @@ public class Simulator extends Component<TeraAgent>
 		private final Topic topic;
 		private final EventContent content;
 
-		public EventPublishingTest(TeraAgent agent, long period, Topic topic, EventContent content)
+		public EventPublishingTest(TeraAgent agent, long period, Topic topic,
+				EventContent content)
 		{
 			super(agent, period);
 			this.topic = topic;
@@ -107,6 +121,82 @@ public class Simulator extends Component<TeraAgent>
 		}
 	}
 
+	private class DroppedAgentsNotifier extends BaseTickerBehaviour<TeraAgent>
+	{
+		private static final long serialVersionUID = 1L;
+
+		public DroppedAgentsNotifier(TeraAgent agent, long period)
+		{
+			super(agent, period);
+		}
+
+		@Override
+		protected void onTick()
+		{
+			if (droppedAgents == null) return;
+
+			int remaining = 0;
+			NeighborProvider neighbors = agent.getOverlayManager()
+					.getOverlayContext(Names.OVERLAY_BASE)
+					.getNeighborProvider();
+			for (AID agentId : droppedAgents)
+				if (neighbors.contains(agentId)) remaining++;
+
+			if (remaining != lastRemaining)
+			{
+				lastRemaining = remaining;
+				MessageFactory mf = agent.getMessageFactory();
+				ACLMessage message = mf.buildMessage(ACLMessage.INFORM,
+						Names.SIMULATION_CYCLON_RESILIANCE);
+				if (lastKnownSimulator == null)
+					lastKnownSimulator = agent.findAgents(Names.SERVICE_SIMULATION)
+							.iterator().next();
+				if (lastKnownSimulator == null)
+					throw new RuntimeException("No Simulation Service found!");
+				message.addReceiver(lastKnownSimulator);
+				try
+				{
+					mf.fillContent(message, new AgentRemovalStatus(remaining));
+				}
+				catch (MessageException e)
+				{
+					e.printStackTrace();
+				}
+				agent.send(message);
+			}
+		}
+	}
+	
+	private class DroppedAgentsReceiver extends BaseTemplateBehaviour<TeraAgent>
+	{
+		private static final long serialVersionUID = 1L;
+
+		public DroppedAgentsReceiver(TeraAgent agent)
+		{
+			super(agent, MessageTemplate.and(
+					MessageTemplate.MatchProtocol(Names.SIMULATION_CYCLON_RESILIANCE),
+					MessageTemplate.MatchPerformative(ACLMessage.INFORM)));
+		}
+
+		@Override
+		protected void onMessage(ACLMessage message)
+		{
+			try
+			{
+				DroppedAgentsList dropped = (DroppedAgentsList) agent.getMessageFactory().extractContent(message);
+				droppedAgents = dropped.getDroppedAgents();
+				setDone();
+			}
+			catch (MessageException e)
+			{
+				e.printStackTrace();
+			}
+			
+			if (droppedAgents != null && droppedAgents.contains(agent.getAID()))
+				agent.doSuspend();
+		}
+	}
+	
 	private class MessageCountSender extends BaseTickerBehaviour<TeraAgent>
 	{
 		private static final long serialVersionUID = 1L;
@@ -121,25 +211,29 @@ public class Simulator extends Component<TeraAgent>
 		{
 			MessageFactory mf = agent.getMessageFactory();
 
-			ACLMessage message = mf.buildMessage(ACLMessage.INFORM, Names.SIMULATION_MESSAGE_COUNTER);
-			
+			ACLMessage message = mf.buildMessage(ACLMessage.INFORM,
+					Names.SIMULATION_MESSAGE_COUNTER);
+
 			if (lastKnownSimulator == null)
-				lastKnownSimulator = agent.findAgents(Names.SERVICE_SIMULATION).iterator().next();
-			
+				lastKnownSimulator = agent.findAgents(Names.SERVICE_SIMULATION)
+						.iterator().next();
+
 			if (lastKnownSimulator == null)
 				throw new RuntimeException("No Simulation Service found!");
-			
+
 			message.addReceiver(lastKnownSimulator);
 
-			try {
+			try
+			{
 				mf.fillContent(message, messageCount);
 			}
-			catch (MessageException e) {
+			catch (MessageException e)
+			{
 				e.printStackTrace();
 			}
-			
+
 			agent.send(message);
-			
+
 			messageCount.clear();
 		}
 	}

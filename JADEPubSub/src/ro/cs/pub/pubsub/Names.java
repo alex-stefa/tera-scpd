@@ -10,7 +10,7 @@ public interface Names {
 	public static final String PROTOCOL_TOPIC_ADVERTISEMENT = "topic-advertisement";
 	public static final String PROTOCOL_EVENT_PROPAGATION = "event-propagation";
 	
-	public static final String SIMULATION_CYCLONE_RESILIANCE = "cyclon-resiliance";
+	public static final String SIMULATION_CYCLON_RESILIANCE = "cyclon-resiliance";
 	public static final String SIMULATION_MESSAGE_COUNTER = "message-counter";
 	
 	public static final String SERVICE_TERA = "tera-agent";

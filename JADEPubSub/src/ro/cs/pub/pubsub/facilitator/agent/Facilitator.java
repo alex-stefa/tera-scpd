@@ -15,6 +15,8 @@ import org.apache.commons.configuration.Configuration;
 
 import ro.cs.pub.pubsub.Names;
 import ro.cs.pub.pubsub.agent.BaseAgent;
+import ro.cs.pub.pubsub.facilitator.behaviour.AgentDropper;
+import ro.cs.pub.pubsub.facilitator.behaviour.AgentRemovalStatusReceiver;
 import ro.cs.pub.pubsub.facilitator.behaviour.InitiationResponder;
 import ro.cs.pub.pubsub.facilitator.behaviour.LogMessageReceiver;
 import ro.cs.pub.pubsub.facilitator.behaviour.MessageCountPrinter;
@@ -28,6 +30,10 @@ public class Facilitator extends BaseAgent
 
 	private final Set<AID> allAgents = new HashSet<AID>();
 	private final Hashtable<AID, MessageCount> messageCounts = new Hashtable<AID, MessageCount>();
+	
+	public final Set<AID> finishedAgents = new HashSet<AID>();
+	public long agentDroppingStarted = -1;
+	public long agentDroppingCompleted = -1;
 
 	@Override
 	protected void setup()
@@ -38,9 +44,15 @@ public class Facilitator extends BaseAgent
 		Configuration configuration = args.getConfiguration();
 
 		addBehaviour(new LogMessageReceiver(this));
-		addBehaviour(new InitiationResponder(this, configuration.getInt("initiation.waitFor")));
+		addBehaviour(new InitiationResponder(this, 
+				configuration.getInt("initiation.waitFor")));
 		addBehaviour(new MessageCountReceiver(this));
-		addBehaviour(new MessageCountPrinter(this, configuration.getInt("simulation.messageCount.printInterval")));
+		addBehaviour(new MessageCountPrinter(this, 
+				configuration.getInt("simulation.messageCount.printInterval")));
+		addBehaviour(new AgentDropper(this, 
+				configuration.getInt("simulation.cyclonResiliance.waitFor"),
+				configuration.getInt("simulation.cyclonResiliance.dropCount")));
+		addBehaviour(new AgentRemovalStatusReceiver(this));
 	}
 
 	@Override
@@ -78,6 +90,11 @@ public class Facilitator extends BaseAgent
 	public List<AID> getAllAgents()
 	{
 		return new ArrayList<AID>(allAgents);
+	}
+	
+	public int getAgentCount()
+	{
+		return allAgents.size();
 	}
 
 	public void addMessageCount(AID sender, MessageCount count)
