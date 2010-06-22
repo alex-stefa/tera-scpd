@@ -11,7 +11,7 @@ import ro.cs.pub.pubsub.tera.subscription.AdvertisementMessage;
 public class MessageCount implements MessageContent {
 	private static final long serialVersionUID = 1L;
 
-	private static final int typeCount = 9;
+	private static final int typeCount = 8;
 
 	public static final int TYPE_LOGGING = 0;
 	public static final int TYPE_EVENT = 1;
@@ -21,7 +21,6 @@ public class MessageCount implements MessageContent {
 	public static final int TYPE_LOOKUP_REQUEST = 5;
 	public static final int TYPE_LOOKUP_RESPONSE = 6;
 	public static final int TYPE_LOOKUP_FORWARD = 7;
-	public static final int TYPE_MESSAGE_COUNT = 8;
 
 	private int[] counter;
 
@@ -82,9 +81,6 @@ public class MessageCount implements MessageContent {
 
 		if (message instanceof RandomWalkResponse)
 			counter[TYPE_LOOKUP_RESPONSE] += times;
-
-		if (message instanceof MessageCount)
-			counter[TYPE_MESSAGE_COUNT] += times;
 	}
 
 	@Override
