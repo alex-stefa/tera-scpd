@@ -6,7 +6,7 @@ import ro.cs.pub.pubsub.model.Event;
 import ro.cs.pub.pubsub.overlay.OverlayMessage;
 import ro.cs.pub.pubsub.randomWalk.message.RandomWalkRequest;
 import ro.cs.pub.pubsub.randomWalk.message.RandomWalkResponse;
-import ro.cs.pub.pubsub.tera.subscription.advertisement.AdvertisementMessage;
+import ro.cs.pub.pubsub.tera.subscription.AdvertisementMessage;
 
 public class MessageCount implements MessageContent
 {

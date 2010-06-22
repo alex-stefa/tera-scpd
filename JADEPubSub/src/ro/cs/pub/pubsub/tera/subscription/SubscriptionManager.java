@@ -18,8 +18,6 @@ import ro.cs.pub.pubsub.randomWalk.RandomWalkGroupCallback;
 import ro.cs.pub.pubsub.randomWalk.message.AgentResult;
 import ro.cs.pub.pubsub.randomWalk.message.RandomWalkResult;
 import ro.cs.pub.pubsub.tera.agent.TeraAgent;
-import ro.cs.pub.pubsub.tera.subscription.advertisement.AdvertisementReceiver;
-import ro.cs.pub.pubsub.tera.subscription.advertisement.AdvertisementSender;
 
 public class SubscriptionManager extends Component<TeraAgent> {
 	private static final long serialVersionUID = 1L;
