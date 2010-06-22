@@ -1,4 +1,4 @@
-package ro.cs.pub.pubsub.message.shared;
+package ro.cs.pub.pubsub.tera.initiation;
 
 import jade.core.AID;
 

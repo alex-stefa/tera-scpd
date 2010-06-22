@@ -14,8 +14,8 @@ import ro.cs.pub.pubsub.exception.MessageException;
 import ro.cs.pub.pubsub.facilitator.agent.Facilitator;
 import ro.cs.pub.pubsub.message.MessageContent;
 import ro.cs.pub.pubsub.message.MessageFactory;
-import ro.cs.pub.pubsub.message.shared.InitiationReply;
 import ro.cs.pub.pubsub.model.Names;
+import ro.cs.pub.pubsub.tera.initiation.InitiationReply;
 
 /**
  * Replies to an initiation request.

@@ -9,7 +9,6 @@ import java.util.Iterator;
 import ro.cs.pub.pubsub.agent.BaseTemplateBehaviour;
 import ro.cs.pub.pubsub.exception.MessageException;
 import ro.cs.pub.pubsub.message.MessageFactory;
-import ro.cs.pub.pubsub.message.shared.InitiationReply;
 import ro.cs.pub.pubsub.model.Names;
 import ro.cs.pub.pubsub.overlay.NeighborProvider;
 import ro.cs.pub.pubsub.overlay.context.OverlayContext;
