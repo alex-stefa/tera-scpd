@@ -224,13 +224,13 @@ public class Simulator extends Component<TeraAgent> {
 				e.printStackTrace();
 			}
 
-			agent.send(message);
+			agent.sendMessage(message);
 
 			messageCount.clear();
 		}
 	}
 
-	public void countMessage(MessageContent content) {
-		messageCount.count(content);
+	public void countMessage(MessageContent content, int times) {
+		messageCount.count(content, times);
 	}
 }

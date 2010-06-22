@@ -6,9 +6,12 @@ import jade.core.behaviours.ParallelBehaviour;
 import jade.core.behaviours.SequentialBehaviour;
 import jade.domain.FIPAAgentManagement.ServiceDescription;
 import jade.lang.acl.ACLMessage;
+import jade.util.leap.Iterator;
 
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.LinkedList;
+import java.util.Set;
 
 import org.apache.commons.configuration.Configuration;
 
@@ -137,7 +140,7 @@ public class TeraAgent extends BaseAgent {
 			AID ls = findAgents(Names.SERVICE_LOGGING).iterator().next();
 			msg.addReceiver(ls);
 			messageFactory.fillContent(msg, content);
-			send(msg);
+			sendMessage(msg);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -159,9 +162,15 @@ public class TeraAgent extends BaseAgent {
 		return eventManager;
 	}
 
+	@Override
 	public void sendMessage(ACLMessage message) {
+		
+		Set<AID> receivers = new HashSet<AID>();
+		Iterator it = message.getAllIntendedReceiver();
+		while (it.hasNext()) receivers.add((AID) it.next());
+				
 		try {
-			simulator.countMessage(messageFactory.extractContent(message));
+			simulator.countMessage(messageFactory.extractContent(message), receivers.size());
 		} catch (MessageException e) {
 			e.printStackTrace();
 		}

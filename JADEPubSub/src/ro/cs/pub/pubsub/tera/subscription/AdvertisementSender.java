@@ -63,6 +63,6 @@ public class AdvertisementSender extends BaseTickerBehaviour<TeraAgent> {
 
 		MessageContent content = new AdvertisementMessage(topics);
 		mf.fillContent(message, content);
-		agent.send(message);
+		agent.sendMessage(message);
 	}
 }

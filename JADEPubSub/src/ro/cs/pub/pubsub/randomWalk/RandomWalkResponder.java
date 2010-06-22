@@ -87,7 +87,7 @@ public class RandomWalkResponder extends BaseTemplateBehaviour<BaseAgent> {
 
 		reply.addReceiver(origin);
 		mf.fillContent(reply, content);
-		agent.send(reply);
+		agent.sendMessage(reply);
 	}
 
 	/**

@@ -71,7 +71,7 @@ public class EventManager extends Component<TeraAgent> {
 				e.printStackTrace();
 			}
 
-			agent.send(message);
+			agent.sendMessage(message);
 		}
 	}
 }

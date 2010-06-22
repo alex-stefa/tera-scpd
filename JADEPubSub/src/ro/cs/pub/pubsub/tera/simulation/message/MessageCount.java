@@ -54,33 +54,37 @@ public class MessageCount implements MessageContent {
 	}
 
 	public void count(MessageContent message) {
+		count(message, 1);
+	}
+	
+	public void count(MessageContent message, int times) {
 		if (message == null)
 			return;
 
 		if (message instanceof LogMessageContent)
-			counter[TYPE_LOGGING]++;
+			counter[TYPE_LOGGING] += times;
 
 		if (message instanceof Event)
-			counter[TYPE_EVENT]++;
+			counter[TYPE_EVENT] += times;
 
 		if (message instanceof AdvertisementMessage)
-			counter[TYPE_SUBSCRIPTION_ADVERTISEMENT]++;
+			counter[TYPE_SUBSCRIPTION_ADVERTISEMENT] += times;
 
 		if (message instanceof OverlayMessage) {
 			if (((OverlayMessage) message).isReply())
-				counter[TYPE_SHUFFLE_RESPONSE]++;
+				counter[TYPE_SHUFFLE_RESPONSE] += times;
 			else
-				counter[TYPE_SHUFFLE_REQUEST]++;
+				counter[TYPE_SHUFFLE_REQUEST] += times;
 		}
 
 		if (message instanceof RandomWalkRequest)
-			counter[TYPE_LOOKUP_REQUEST]++;
+			counter[TYPE_LOOKUP_REQUEST] += times;
 
 		if (message instanceof RandomWalkResponse)
-			counter[TYPE_LOOKUP_RESPONSE]++;
+			counter[TYPE_LOOKUP_RESPONSE] += times;
 
 		if (message instanceof MessageCount)
-			counter[TYPE_MESSAGE_COUNT]++;
+			counter[TYPE_MESSAGE_COUNT] += times;
 	}
 
 	@Override
