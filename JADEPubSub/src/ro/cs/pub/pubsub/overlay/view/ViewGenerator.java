@@ -43,7 +43,7 @@ public class ViewGenerator {
 		}
 
 		// add the current agent
-		viewSet.add(agent.getAID());
+		// viewSet.add(agent.getAID());
 
 		return new View(viewSet);
 	}

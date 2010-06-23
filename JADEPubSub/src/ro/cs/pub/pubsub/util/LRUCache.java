@@ -20,11 +20,18 @@ public class LRUCache<T> implements Serializable {
 	}
 
 	public T put(T object) {
+		if (queue.contains(object))
+			queue.remove(object);
 		queue.offer(object);
 		if (queue.size() > maxSize)
 			return queue.poll();
 		return null;
 	}
+	
+	public boolean remove(T object) {
+		return queue.remove(object);
+	}
+	
 
 	public int getMaxSize() {
 		return maxSize;

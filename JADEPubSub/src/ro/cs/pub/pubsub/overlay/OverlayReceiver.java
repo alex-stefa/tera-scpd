@@ -15,8 +15,11 @@ import ro.cs.pub.pubsub.exception.MessageException;
 import ro.cs.pub.pubsub.message.MessageFactory;
 import ro.cs.pub.pubsub.overlay.context.OverlayContext;
 import ro.cs.pub.pubsub.overlay.view.View;
+import ro.cs.pub.pubsub.util.LRUCache;
 
-public class OverlayReceiver extends BaseTemplateBehaviour<BaseAgent> {
+
+public class OverlayReceiver extends BaseTemplateBehaviour<BaseAgent>
+{
 	private static final long serialVersionUID = 1L;
 
 	private static final MessageTemplate template = MessageTemplate.and(
@@ -26,35 +29,57 @@ public class OverlayReceiver extends BaseTemplateBehaviour<BaseAgent> {
 
 	private final OverlayManager manager;
 
-	public OverlayReceiver(OverlayManager manager) {
+	public OverlayReceiver(OverlayManager manager)
+	{
 		super(manager.getAgent(), template);
 		this.manager = manager;
 	}
 
 	@Override
-	protected void onMessage(ACLMessage message) {
-		try {
+	protected void onMessage(ACLMessage message)
+	{
+		try
+		{
 			MessageFactory mf = agent.getMessageFactory();
 			OverlayMessage content = (OverlayMessage) mf
 					.extractContent(message);
 
+			LRUCache<AID> droppedNodes = manager.getOverlayContext(
+					content.getOverlayId()).getDroppedNodes();
+
+			Iterator<AID> it = content.getView().getNeighbors().iterator();
+			while (it.hasNext())
+			{
+				AID next = it.next();
+				if (droppedNodes.contains(next)) it.remove();
+				manager.getOverlayContext(content.getOverlayId()).getNeighborProvider().remove(next);
+			}
+			
+			content.getView().getNeighbors().add(message.getSender());
+			droppedNodes.remove(message.getSender());
+
 			// update the neighbor set
 			updateNeighbors(content.getOverlayId(), content.getView());
 
-			if (!content.isReply()) {
+			if (!content.isReply())
+			{
 				// send the agent's own view
 				manager.addSubBehaviour(new OverlaySender( //
 						manager, content.getOverlayId(), message));
 			}
-		} catch (MessageException e) {
+		}
+		catch (MessageException e)
+		{
 			e.printStackTrace();
 		}
 	}
 
-	private void updateNeighbors(OverlayId overlayId, View view) {
+	private void updateNeighbors(OverlayId overlayId, View view)
+	{
 		OverlayContext context = manager.getOverlayContext(overlayId);
 
-		if (context == null) {
+		if (context == null)
+		{
 			return;
 		}
 
@@ -63,21 +88,25 @@ public class OverlayReceiver extends BaseTemplateBehaviour<BaseAgent> {
 
 		// remove the nodes we know about
 		Iterator<AID> it = incoming.iterator();
-		while (it.hasNext()) {
-			if (np.contains(it.next())) {
+		while (it.hasNext())
+		{
+			if (np.contains(it.next()))
+			{
 				it.remove();
 			}
 		}
 
 		// remove neighbors in a random fashion
 		int viewSize = incoming.size();
-		while (np.size() > np.getMaxSize() - viewSize) {
+		while (np.size() > np.getMaxSize() - viewSize)
+		{
 			it = np.randomIterator();
 			np.remove(it.next());
 		}
 
 		// add the new neighbors
-		for (AID n : incoming) {
+		for (AID n : incoming)
+		{
 			np.add(n);
 		}
 	}

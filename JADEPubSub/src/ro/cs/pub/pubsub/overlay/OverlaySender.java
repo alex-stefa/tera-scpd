@@ -48,22 +48,24 @@ public class OverlaySender extends OneShotBehaviour {
 		try {
 			BaseAgent agent = manager.getAgent();
 			OverlayContext context = manager.getOverlayContext(id);
-			NeighborProvider np = context.getNeighborProvider();
-			ViewGenerator vg = manager.getOverlayContext(id).getViewGenerator();
 			MessageFactory mf = agent.getMessageFactory();
 
 			if (initialMessage == null) {
-				sendInitialMessage(agent, np, mf, vg);
+				sendInitialMessage(agent, context, mf);
 			} else {
-				sendReplyMessage(agent, np, mf, vg);
+				sendReplyMessage(agent, context, mf);
 			}
 		} catch (MessageException e) {
 			e.printStackTrace();
 		}
 	}
 
-	private void sendInitialMessage(BaseAgent agent, NeighborProvider np,
-			MessageFactory mf, ViewGenerator vg) throws MessageException {
+	private void sendInitialMessage(BaseAgent agent, OverlayContext context,
+			MessageFactory mf) throws MessageException {
+		
+		NeighborProvider np = context.getNeighborProvider();
+		ViewGenerator vg = context.getViewGenerator();
+		
 		if (np.size() == 0) {
 			// we don't know any other agent
 			return;
@@ -76,12 +78,14 @@ public class OverlaySender extends OneShotBehaviour {
 		Iterator<AID> it = np.randomIterator();
 		AID receiver = it.next();
 
+		context.getDroppedNodes().put(receiver);
+		
 		// generate the view
 		View view = vg.generateView(receiver);
 
 		// remove the receiver from the neighbor set
 		np.remove(receiver);
-
+		
 		// prepare the message
 		ACLMessage msg = mf.buildMessage( //
 				ACLMessage.INFORM, Names.PROTOCOL_OVERLAY_MANAGEMENT);
@@ -95,8 +99,12 @@ public class OverlaySender extends OneShotBehaviour {
 		agent.sendMessage(msg);
 	}
 
-	private void sendReplyMessage(BaseAgent agent, NeighborProvider np,
-			MessageFactory mf, ViewGenerator vg) throws MessageException {
+	private void sendReplyMessage(BaseAgent agent, OverlayContext context,
+			MessageFactory mf) throws MessageException {
+		
+		NeighborProvider np = context.getNeighborProvider();
+		ViewGenerator vg = context.getViewGenerator();
+
 		// pick a random peer
 		AID receiver = initialMessage.getSender();
 

@@ -43,11 +43,13 @@ public class InitiationResponder extends BaseTemplateBehaviour<Facilitator> {
 
 	@Override
 	protected void onMessage(ACLMessage message) {
+		
+		this.agent.addAgent(message.getSender());
+		
 		try {
 			if (seedMessages.size() < waitFor) {
 				// add to the seed message list
 				seedMessages.add(message);
-				this.agent.addAgent(message.getSender());
 
 				if (seedMessages.size() == waitFor) {
 					// reply to seeders first
