@@ -45,39 +45,39 @@ public class Simulator extends Component<TeraAgent>
 		droppedAgents = null;
 		lastRemaining = -1;
 
-		addSubBehaviour(new MessageCountSender(agent, config
-				.getInt("simulation.messageCount.reportInterval")));
+//		addSubBehaviour(new MessageCountSender(agent, config
+//				.getInt("simulation.messageCount.reportInterval")));
 		addSubBehaviour(new DroppedAgentsNotifier(agent, config
 				.getInt("simulation.cyclonResiliance.checkInterval")));
 		addSubBehaviour(new DroppedAgentsReceiver(agent));
-
-		Topic a = new Topic("A");
-		Topic b = new Topic("B");
-		Topic c = new Topic("C");
-
-		double p = Math.random();
-		if (p < 0.5)
-		{
-			TopicSubscriptionTest t = new TopicSubscriptionTest(agent, 3000, a);
-			addSubBehaviour(t);
-		}
-		else
-		{
-			TopicSubscriptionTest t = new TopicSubscriptionTest(agent, 6000, b);
-			addSubBehaviour(t);
-		}
-		if (p < 0.2)
-		{
-			TopicSubscriptionTest t = new TopicSubscriptionTest(agent, 6000, c);
-			addSubBehaviour(t);
-		}
-
-		if (pubCount++ < 1)
-		{
-			EventPublishingTest t = new EventPublishingTest(agent, 20000, a,
-					new EventContent("Hello!"));
-			addSubBehaviour(t);
-		}
+//
+//		Topic a = new Topic("A");
+//		Topic b = new Topic("B");
+//		Topic c = new Topic("C");
+//
+//		double p = Math.random();
+//		if (p < 0.5)
+//		{
+//			TopicSubscriptionTest t = new TopicSubscriptionTest(agent, 3000, a);
+//			addSubBehaviour(t);
+//		}
+//		else
+//		{
+//			TopicSubscriptionTest t = new TopicSubscriptionTest(agent, 6000, b);
+//			addSubBehaviour(t);
+//		}
+//		if (p < 0.2)
+//		{
+//			TopicSubscriptionTest t = new TopicSubscriptionTest(agent, 6000, c);
+//			addSubBehaviour(t);
+//		}
+//
+//		if (pubCount++ < 1)
+//		{
+//			EventPublishingTest t = new EventPublishingTest(agent, 20000, a,
+//					new EventContent("Hello!"));
+//			addSubBehaviour(t);
+//		}
 	}
 
 	private class TopicSubscriptionTest extends BaseTickerBehaviour<TeraAgent>
