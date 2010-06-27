@@ -25,7 +25,8 @@ public class AgentRemovalStatusReceiver extends
 	protected void onMessage(ACLMessage message) {
 		try {
 			
-			agent.print("Finished: " + agent.finishedAgents.size());
+			agent.print((System.currentTimeMillis() - agent.agentDroppingStarted) + 
+					" Finished: " + agent.finishedAgents.size());
 			
 			AgentRemovalStatus status = (AgentRemovalStatus) agent
 					.getMessageFactory().extractContent(message);

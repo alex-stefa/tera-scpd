@@ -75,7 +75,7 @@ public class Simulator extends Component<TeraAgent>
 		{
 			EventPublishingTest t = new EventPublishingTest(agent, 20000, a,
 					new EventContent("Hello!"));
-			// addSubBehaviour(t);
+			addSubBehaviour(t);
 		}
 	}
 
