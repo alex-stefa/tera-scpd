@@ -1,5 +1,9 @@
 package ro.cs.pub.pubsub.tera.simulation.message;
 
+import java.io.PrintWriter;
+import java.util.LinkedList;
+import java.util.List;
+
 import ro.cs.pub.pubsub.message.MessageContent;
 import ro.cs.pub.pubsub.message.shared.LogMessageContent;
 import ro.cs.pub.pubsub.model.Event;
@@ -9,6 +13,7 @@ import ro.cs.pub.pubsub.randomWalk.message.RandomWalkResponse;
 import ro.cs.pub.pubsub.tera.subscription.AdvertisementMessage;
 
 public class MessageCount implements MessageContent {
+	
 	private static final long serialVersionUID = 1L;
 
 	private static final int typeCount = 8;
@@ -21,34 +26,40 @@ public class MessageCount implements MessageContent {
 	public static final int TYPE_LOOKUP_REQUEST = 5;
 	public static final int TYPE_LOOKUP_RESPONSE = 6;
 	public static final int TYPE_LOOKUP_FORWARD = 7;
+	
+	private List<Long>[] counter;
 
-	private int[] counter;
 
+	@SuppressWarnings("unchecked")
 	public MessageCount() {
-		counter = new int[typeCount];
+		counter = new LinkedList[typeCount];
+		for (int i = 0; i < typeCount; i++) counter[i] = new LinkedList<Long>();
 		clear();
 	}
 
 	public void clear() {
 		for (int i = 0; i < typeCount; i++)
-			counter[i] = 0;
+			counter[i].clear();
 	}
 
 	public MessageCount(MessageCount other) {
 		this();
 		for (int i = 0; i < typeCount; i++)
-			counter[i] = other.counter[i];
+		{
+			counter[i].clear();
+			counter[i].addAll(other.counter[i]);
+		}
 	}
 
 	public void add(MessageCount other) {
 		for (int i = 0; i < typeCount; i++)
-			counter[i] += other.counter[i];
+			counter[i].addAll(other.counter[i]);
 	}
 
 	public int sum() {
 		int sum = 0;
 		for (int i = 0; i < typeCount; i++)
-			sum += counter[i];
+			sum += counter[i].size();
 		return sum;
 	}
 
@@ -59,28 +70,32 @@ public class MessageCount implements MessageContent {
 	public void count(MessageContent message, int times) {
 		if (message == null)
 			return;
+		
+		long timestamp = System.currentTimeMillis();
+		List<Long> additional = new LinkedList<Long>();
+		for (int i = 0; i < times; i++) additional.add(timestamp);
 
 		if (message instanceof LogMessageContent)
-			counter[TYPE_LOGGING] += times;
+			counter[TYPE_LOGGING].addAll(additional);
 
 		if (message instanceof Event)
-			counter[TYPE_EVENT] += times;
+			counter[TYPE_EVENT].addAll(additional);
 
 		if (message instanceof AdvertisementMessage)
-			counter[TYPE_SUBSCRIPTION_ADVERTISEMENT] += times;
+			counter[TYPE_SUBSCRIPTION_ADVERTISEMENT].addAll(additional);
 
 		if (message instanceof OverlayMessage) {
 			if (((OverlayMessage) message).isReply())
-				counter[TYPE_SHUFFLE_RESPONSE] += times;
+				counter[TYPE_SHUFFLE_RESPONSE].addAll(additional);
 			else
-				counter[TYPE_SHUFFLE_REQUEST] += times;
+				counter[TYPE_SHUFFLE_REQUEST].addAll(additional);
 		}
 
 		if (message instanceof RandomWalkRequest)
-			counter[TYPE_LOOKUP_REQUEST] += times;
+			counter[TYPE_LOOKUP_REQUEST].addAll(additional);
 
 		if (message instanceof RandomWalkResponse)
-			counter[TYPE_LOOKUP_RESPONSE] += times;
+			counter[TYPE_LOOKUP_RESPONSE].addAll(additional);
 	}
 
 	@Override
@@ -89,5 +104,12 @@ public class MessageCount implements MessageContent {
 		for (int i = 0; i < typeCount; i++)
 			s += counter[i] + " | ";
 		return s;
+	}
+
+	public void print(PrintWriter pw, int typeEvent)
+	{
+		for (long timestamp : counter[typeEvent])
+			pw.println(timestamp);
+		
 	}
 }

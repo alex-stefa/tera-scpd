@@ -29,6 +29,7 @@ public class Facilitator extends BaseAgent {
 	private final Hashtable<AID, MessageCount> messageCounts = new Hashtable<AID, MessageCount>();
 
 	public final Set<AID> finishedAgents = new HashSet<AID>();
+	public final Hashtable<AID, Set<AID>> droppedAgentReferences = new Hashtable<AID, Set<AID>>(); 
 	public long agentDroppingStarted = -1;
 	public long agentDroppingCompleted = -1;
 

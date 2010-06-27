@@ -4,6 +4,7 @@ import jade.core.AID;
 import jade.lang.acl.ACLMessage;
 import jade.lang.acl.MessageTemplate;
 
+import java.util.LinkedList;
 import java.util.List;
 
 import org.apache.commons.configuration.Configuration;
@@ -137,13 +138,17 @@ public class Simulator extends Component<TeraAgent>
 		protected void onTick()
 		{
 			if (droppedAgents == null) return;
+			
+			List<AID> agentsRemaining = new LinkedList<AID>();
 
-			int remaining = 0;
 			NeighborProvider neighbors = agent.getOverlayManager()
 					.getOverlayContext(Names.OVERLAY_BASE)
 					.getNeighborProvider();
 			for (AID agentId : droppedAgents)
-				if (neighbors.contains(agentId)) remaining++;
+				if (neighbors.contains(agentId))
+					agentsRemaining.add(agentId);
+			
+			int remaining = agentsRemaining.size();
 
 			if (remaining != lastRemaining)
 			{
@@ -173,7 +178,7 @@ public class Simulator extends Component<TeraAgent>
 
 				try
 				{
-					mf.fillContent(message, new AgentRemovalStatus(remaining));
+					mf.fillContent(message, new AgentRemovalStatus(agentsRemaining));
 				}
 				catch (MessageException e)
 				{

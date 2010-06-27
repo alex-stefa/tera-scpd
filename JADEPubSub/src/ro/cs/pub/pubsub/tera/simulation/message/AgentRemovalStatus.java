@@ -1,17 +1,21 @@
 package ro.cs.pub.pubsub.tera.simulation.message;
 
+import jade.core.AID;
+
+import java.util.List;
+
 import ro.cs.pub.pubsub.message.MessageContent;
 
 public class AgentRemovalStatus implements MessageContent {
 	private static final long serialVersionUID = 1L;
 
-	private int agentsRemaining;
+	private List<AID> agentsRemaining;
 
-	public AgentRemovalStatus(int agentsRemaining) {
+	public AgentRemovalStatus(List<AID> agentsRemaining) {
 		this.agentsRemaining = agentsRemaining;
 	}
 
-	public int getAgentsRemaining() {
+	public List<AID> getAgentsRemaining() {
 		return agentsRemaining;
 	}
 }

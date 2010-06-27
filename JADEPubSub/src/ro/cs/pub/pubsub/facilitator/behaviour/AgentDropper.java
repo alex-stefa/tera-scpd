@@ -4,6 +4,7 @@ import jade.core.AID;
 import jade.lang.acl.ACLMessage;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 
 import ro.cs.pub.pubsub.Names;
@@ -31,6 +32,9 @@ public class AgentDropper extends BaseTickerBehaviour<Facilitator> {
 				.getAllAgents());
 		while (dropped.size() < dropCount && iterator.hasNext())
 			dropped.add(iterator.next());
+		
+		for (AID agentId : dropped)
+			agent.droppedAgentReferences.put(agentId, new HashSet<AID>());
 
 		MessageFactory mf = agent.getMessageFactory();
 		ACLMessage message = mf.buildMessage(ACLMessage.INFORM,
