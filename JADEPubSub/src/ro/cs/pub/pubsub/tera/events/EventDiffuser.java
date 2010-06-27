@@ -8,6 +8,7 @@ import ro.cs.pub.pubsub.agent.BaseTemplateBehaviour;
 import ro.cs.pub.pubsub.exception.MessageException;
 import ro.cs.pub.pubsub.exception.TopicNotSubscribed;
 import ro.cs.pub.pubsub.message.MessageFactory;
+import ro.cs.pub.pubsub.message.shared.LogMessageContent;
 import ro.cs.pub.pubsub.model.Event;
 import ro.cs.pub.pubsub.overlay.NeighborProvider;
 import ro.cs.pub.pubsub.tera.agent.TeraAgent;
@@ -37,6 +38,7 @@ public class EventDiffuser extends BaseTemplateBehaviour<TeraAgent> {
 			if (prevMessages.contains(event))
 				return;
 			prevMessages.put(event);
+			agent.sendLoggingMessage(new LogMessageContent(System.currentTimeMillis() + ""));
 
 			if (!this.agent.getSubscriptionManager().isSubscribed(
 					event.getTopic()))

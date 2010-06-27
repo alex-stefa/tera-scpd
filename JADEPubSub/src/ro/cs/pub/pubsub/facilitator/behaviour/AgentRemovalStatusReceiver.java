@@ -75,7 +75,7 @@ public class AgentRemovalStatusReceiver extends
 			pwUndead.println(timestamp + ", " + agentsRemain);
 			
 			flushCounter++;
-			if (flushCounter == 10)
+			if (flushCounter == 1)
 			{
 				pwFinished.flush();
 				pwLinks.flush();
