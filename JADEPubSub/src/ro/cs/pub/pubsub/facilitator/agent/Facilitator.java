@@ -15,11 +15,8 @@ import org.apache.commons.configuration.Configuration;
 
 import ro.cs.pub.pubsub.Names;
 import ro.cs.pub.pubsub.agent.BaseAgent;
-import ro.cs.pub.pubsub.facilitator.behaviour.AgentDropper;
-import ro.cs.pub.pubsub.facilitator.behaviour.AgentRemovalStatusReceiver;
 import ro.cs.pub.pubsub.facilitator.behaviour.InitiationResponder;
 import ro.cs.pub.pubsub.facilitator.behaviour.LogMessageReceiver;
-import ro.cs.pub.pubsub.facilitator.behaviour.MessageCountReceiver;
 import ro.cs.pub.pubsub.tera.simulation.message.MessageCount;
 
 public class Facilitator extends BaseAgent {
@@ -43,13 +40,13 @@ public class Facilitator extends BaseAgent {
 		addBehaviour(new LogMessageReceiver(this));
 		addBehaviour(new InitiationResponder(this, configuration
 				.getInt("initiation.waitFor")));
-		addBehaviour(new MessageCountReceiver(this));
-		//addBehaviour(new MessageCountPrinter(this,
-		// configuration.getInt("simulation.messageCount.printInterval")));
-		addBehaviour(new AgentDropper(this, configuration
-				.getInt("simulation.cyclonResiliance.waitFor"), configuration
-				.getInt("simulation.cyclonResiliance.dropCount")));
-		addBehaviour(new AgentRemovalStatusReceiver(this));
+//		addBehaviour(new MessageCountReceiver(this));
+//		addBehaviour(new MessageCountPrinter(this,
+//		 configuration.getInt("simulation.messageCount.printInterval")));
+//		addBehaviour(new AgentDropper(this, configuration
+//				.getInt("simulation.cyclonResiliance.waitFor"), configuration
+//				.getInt("simulation.cyclonResiliance.dropCount")));
+//		addBehaviour(new AgentRemovalStatusReceiver(this));
 	}
 
 	@Override

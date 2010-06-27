@@ -48,8 +48,10 @@ public class SecondaryApp {
 			String value = (String) jadeConfig.getString(key);
 			aProp.put(key, value);
 		}
+		aProp.setProperty(Profile.MAIN, (new Boolean(false)).toString());
+		
 		Profile p = new ProfileImpl(aProp);
-
+		
 		// set up the container
 		AgentContainer container = rt.createAgentContainer(p);
 

@@ -1,1 +1,1 @@
-java -classpath "./bin;./lib/*" ro.cs.pub.pubsub.SecondaryApp ./config/config1/secondary.properties
+java -Xms400m -Xmx512m -classpath "./bin;./lib/*" ro.cs.pub.pubsub.SecondaryApp ./config/config1/secondary.properties

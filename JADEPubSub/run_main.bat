@@ -1,1 +1,1 @@
-java -classpath "./bin;./lib/*" ro.cs.pub.pubsub.MainApp ./config/config1/main.properties
+java -Xms400m -Xmx512m -classpath "./bin;./lib/*" ro.cs.pub.pubsub.MainApp ./config/config1/main.properties
