@@ -1,7 +1,7 @@
 package tera.protocol;
 
 import java.io.Serializable;
-import java.util.
+
 import tera.utils.GeoHashingService;
 
 
